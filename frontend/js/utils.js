@@ -24,8 +24,8 @@ function goToHome() {
         showPage('reclutadorPage');
         loadMisPostulaciones();
     } else {
-        showPage('dashboardPage');
-        loadPage(0);
+        // Usuario no autenticado, mostrar página de home
+        showPage('homePage');
     }
 }
 
@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         updateHeader();
     } else {
-        showPage('loginPage');
+        // Mostrar página de home si no hay usuario autenticado
+        showPage('homePage');
     }
 });

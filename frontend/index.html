@@ -15,6 +15,77 @@
     </header>
 
     <main>
+        <!-- Página de Home -->
+        <div id="homePage" class="page">
+            <div class="hero-section">
+                <div class="container hero-content">
+                    <h1>Bienvenido a <span class="brand-text">ChapaTuChamba</span></h1>
+                    <p class="subtitle">La plataforma de empleo para recién egresados</p>
+                    <p class="description">Conecta con las mejores oportunidades laborales diseñadas especialmente para ti</p>
+                    
+                    <div class="cta-buttons">
+                        <button class="btn btn-primary btn-large" onclick="showPage('loginPage')">Iniciar Sesión</button>
+                        <button class="btn btn-secondary btn-large" onclick="showPage('registerPage')">Crear Cuenta</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="features-section">
+                <div class="container">
+                    <h2>¿Por qué elegir ChapaTuChamba?</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">👥</div>
+                            <h3>Empresas Verificadas</h3>
+                            <p>Acceso a ofertas de empresas líderes buscando talentos frescos.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📚</div>
+                            <h3>Habilidades Certificadas</h3>
+                            <p>Valida tus habilidades y destácate entre los candidatos.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎯</div>
+                            <h3>Ofertas Personalizadas</h3>
+                            <p>Recibe recomendaciones basadas en tu perfil y habilidades.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📈</div>
+                            <h3>Crece Profesionalmente</h3>
+                            <p>Impulsa tu carrera desde el primer día en el mercado laboral.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="container">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="statsJobs">1000+</h3>
+                            <p>Ofertas Disponibles</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="statsCandidates">5000+</h3>
+                            <p>Candidatos Activos</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="statsCompanies">500+</h3>
+                            <p>Empresas Asociadas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <div class="container cta-content">
+                    <h2>¿Listo para encontrar tu primer empleo?</h2>
+                    <p>Únete a miles de recién egresados que ya han encontrado sus oportunidades</p>
+                    <button class="btn btn-primary btn-large" onclick="showPage('registerPage')">Registrarse Ahora</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Página de Login -->
         <div id="loginPage" class="page">
             <div class="auth-container">
@@ -302,8 +373,8 @@
 
     <script src="js/auth.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/home.js"></script>
     <script src="js/jobs.js"></script>
     <script src="js/applications.js"></script>
     <script src="js/skills.js"></script>
 </body>
-ñ
