@@ -33,25 +33,20 @@ public class PostanteService {
     }
     
     public Postante registrar(Postante postante, MultipartFile cvFile) throws IOException {
-        if (postanteRepository.existsByUsername(postante.getUsername())) {
-            throw new RuntimeException("El nombre de usuario ya existe");
-        }
-        if (postanteRepository.existsByEmail(postante.getEmail())) {
-            throw new RuntimeException("El email ya está registrado");
-        }
+    if (postanteRepository.existsByUsername(postante.getUsername())) {
+        throw new RuntimeException("El nombre de usuario ya existe");
+    }
+
+    if (cvFile != null && !cvFile.isEmpty()) {
+        File directory = new File(uploadDirectory);
+        if (!directory.exists()) directory.mkdirs();
         
-        if (cvFile != null && !cvFile.isEmpty()) {
-            String fileName = System.currentTimeMillis() + "_" + cvFile.getOriginalFilename();
-            File uploadDir = new File(uploadDirectory);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-            File destFile = new File(uploadDir, fileName);
-            cvFile.transferTo(destFile);
-            postante.setCvPath(fileName);
-        }
-        
-        return postanteRepository.save(postante);
+        String fileName = System.currentTimeMillis() + "_" + cvFile.getOriginalFilename();
+        String filePath = uploadDirectory + File.separator + fileName;
+        cvFile.transferTo(new File(filePath));
+        postante.setCvPath(filePath);
+    }
+    return postanteRepository.save(postante);
     }
     
     public Optional<Postante> buscarPorEmail(String email) {
