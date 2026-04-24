@@ -34,12 +34,3 @@ function initializeHome() {
     }
 }
 
-// Actualizar showPage para cargar estadísticas del home
-const originalShowPage = showPage;
-showPage = function(pageId) {
-    originalShowPage.call(this, pageId);
-    
-    if (pageId === 'homePage') {
-        loadHomeStats();
-    }
-};

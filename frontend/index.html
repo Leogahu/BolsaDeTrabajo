@@ -15,7 +15,8 @@
     </header>
 
     <main>
-        <!-- Página de Home -->
+        <div id="dashboardPostulantePage" class="page hidden"></div>
+        <div id="dashboardReclutadorPage" class="page hidden"></div>
         <div id="homePage" class="page">
             <div class="hero-section">
                 <div class="container hero-content">
@@ -87,16 +88,19 @@
         </div>
 
         <!-- Página de Login -->
-        <div id="loginPage" class="page">
+        <div id="loginPage" class="page hidden">
             <div class="auth-container">
                 <div class="card auth-card">
+                    <div class="auth-tabs">
+                        <button id="loginTabPostulante" class="active" onclick="switchLoginTab('postante')">Postulante</button>
+                        <button id="loginTabReclutador" onclick="switchLoginTab('reclutador')">Reclutador</button>
+                    </div>
                     <div class="card-header">
                         <h2>Iniciar Sesión</h2>
                     </div>
-                    
                     <div id="loginMessage" class="hidden"></div>
-                    
                     <form id="loginForm" onsubmit="handleLogin(event)">
+                        <input type="hidden" id="loginTipo" value="postante">
                         <div class="form-group">
                             <label>Usuario</label>
                             <input type="text" id="loginUsername" required>
@@ -107,7 +111,6 @@
                         </div>
                         <button type="submit" class="btn btn-primary" style="width: 100%;">Iniciar Sesión</button>
                     </form>
-                    
                     <div style="text-align: center; margin-top: 1.5rem;">
                         <p style="margin-bottom: 0.5rem;">¿No tienes cuenta?</p>
                         <button class="btn btn-secondary" onclick="showPage('registerPage')">Crear Cuenta</button>
@@ -369,12 +372,52 @@
                 </div>
             </div>
         </div>
+
+        <!-- Dashboard Postulante -->
+        <div id="dashboardPostulantePage" class="page hidden">
+            <div class="container">
+                <div class="filters">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Buscar por palabras clave...">
+                        <button class="btn btn-primary" onclick="loadPage(0)">Buscar</button>
+                    </div>
+                </div>
+                
+                <div class="job-list" id="jobList"></div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard Reclutador -->
+        <div id="dashboardReclutadorPage" class="page hidden">
+            <div class="container">
+                <div class="filters">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Buscar por palabras clave...">
+                        <button class="btn btn-primary" onclick="loadPage(0)">Buscar</button>
+                    </div>
+                </div>
+                
+                <div class="job-list" id="jobList"></div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script src="js/auth.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="js/home.js"></script>
+        <script src="js/jobs.js"></script>
+        <script src="js/applications.js"></script>
+        <script src="js/skills.js"></script>
+        <script src="js/dashboard/dashboardPostulante.js"></script>
+        <script src="js/dashboard/dashboardReclutador.js"></script>
     </main>
 
-    <script src="js/auth.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/home.js"></script>
-    <script src="js/jobs.js"></script>
-    <script src="js/applications.js"></script>
-    <script src="js/skills.js"></script>
+    <footer>
+        <div class="container">
+            <p>© 2024 ChapaTuChamba. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 </body>
+</html>

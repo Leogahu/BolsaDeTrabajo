@@ -1,8 +1,5 @@
-// Authentication functions
 const API_URL = 'http://localhost:8080/api';
-
 let currentUser = null;
-let currentPage = 0;
 let pageHistory = [];
 
 async function login(username, password) {
@@ -61,27 +58,37 @@ async function updateReclutadorProfile(id, data) {
 }
 
 // Event Handlers
-async function handleLogin(e) {
-    e.preventDefault();
+async function handleLogin(event) {
+    event.preventDefault();
+    
     const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
-    
-    const result = await login(username, password);
-    
-    if (result.error) {
-        showMessage('loginMessage', result.error, 'error');
-    } else {
-        currentUser = result;
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        updateHeader();
-        
-        if (currentUser.tipo === 'postante') {
-            showPage('dashboardPage');
-            loadPage(0);
+    const messageDiv = document.getElementById('loginMessage');
+
+    try {
+        const result = await login(username, password);
+
+        if (result.error) {
+            messageDiv.textContent = result.error;
+            messageDiv.classList.remove('hidden', 'success');
+            messageDiv.classList.add('error');
         } else {
-            showPage('reclutadorPage');
-            loadMisPostulaciones();
+            currentUser = result;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            messageDiv.classList.add('hidden');
+            event.target.reset();
+
+            if (currentUser.tipo === 'postante') {
+                renderDashboardPostulante(currentUser); 
+            } else if (currentUser.tipo === 'reclutador') {
+                renderDashboardReclutador(currentUser);
+            }
         }
+    } catch (error) {
+        console.error("Error en el login:", error);
+        messageDiv.textContent = "Error de conexión con el servidor";
+        messageDiv.classList.remove('hidden');
     }
 }
 
@@ -185,7 +192,7 @@ function logout() {
     currentUser = null;
     pageHistory = [];
     localStorage.removeItem('currentUser');
-    showPage('loginPage');
+    showPage('homePage');
 }
 
 function switchRegisterTab(tipo) {
@@ -196,3 +203,14 @@ function switchRegisterTab(tipo) {
     document.getElementById('postanteRegisterForm').classList.toggle('hidden', tipo !== 'postante');
     document.getElementById('reclutadorRegisterForm').classList.toggle('hidden', tipo !== 'reclutador');
 }
+
+window.switchLoginTab = function(tipo) {
+    document.getElementById('loginTipo').value = tipo;
+    document.getElementById('loginTabPostulante').classList.remove('active');
+    document.getElementById('loginTabReclutador').classList.remove('active');
+    if (tipo === 'postante') {
+        document.getElementById('loginTabPostulante').classList.add('active');
+    } else {
+        document.getElementById('loginTabReclutador').classList.add('active');
+    }
+};

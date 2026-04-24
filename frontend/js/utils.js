@@ -1,38 +1,53 @@
 // Utility functions
 function showPage(pageId) {
-    pageHistory.push(pageId);
+    const targetPage = document.getElementById(pageId);
+    if (!targetPage) {
+        console.warn(`La página ${pageId} no existe en el DOM.`);
+        return;
+    }
+
+    if (pageHistory[pageHistory.length - 1] !== pageId) {
+        pageHistory.push(pageId);
+    }
+
     document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-    document.getElementById(pageId).classList.remove('hidden');
     
-    if (pageId === 'perfilPage' && currentUser?.tipo === 'postante') {
-        loadProfileData();
-    } else if (pageId === 'perfilReclutadorPage' && currentUser?.tipo === 'reclutador') {
-        loadReclutadorProfileData();
-    } else if (pageId === 'misPostulacionesPage' && currentUser?.tipo === 'postante') {
-        loadMyApplications();
-    } else if (pageId === 'habilidadesPage' && currentUser?.tipo === 'postante') {
-        loadSkills();
+    targetPage.classList.remove('hidden');
+
+    const pageInitializers = {
+        'perfilPage': () => currentUser?.tipo === 'postante' && loadProfileData(),
+        'perfilReclutadorPage': () => currentUser?.tipo === 'reclutador' && loadReclutadorProfileData(),
+        'misPostulacionesPage': () => currentUser?.tipo === 'postante' && loadMyApplications(),
+        'habilidadesPage': () => currentUser?.tipo === 'postante' && loadSkills(),
+        'dashboardPostulantePage': () => renderDashboardPostulante(currentUser),
+        'dashboardReclutadorPage': () => renderDashboardReclutador(currentUser)
+    };
+
+    if (pageInitializers[pageId]) {
+        pageInitializers[pageId]();
     }
 }
 
 function goToHome() {
     pageHistory = [];
     if (currentUser?.tipo === 'postante') {
-        showPage('dashboardPage');
-        loadPage(0);
+        showPage('dashboardPostulantePage');
+        if (typeof loadPage === 'function') loadPage(0);
     } else if (currentUser?.tipo === 'reclutador') {
-        showPage('reclutadorPage');
-        loadMisPostulaciones();
+        showPage('dashboardReclutadorPage');
+        if (typeof loadMisPostulaciones === 'function') loadMisPostulaciones();
     } else {
-        // Usuario no autenticado, mostrar página de home
         showPage('homePage');
     }
 }
 
 function goBack() {
-    if (pageHistory.length > 0) {
-        const prevPage = pageHistory.pop();
-        showPage(prevPage);
+    if (pageHistory.length > 1) {
+        pageHistory.pop();
+        const prevPage = pageHistory[pageHistory.length - 1];
+        
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+        document.getElementById(prevPage).classList.remove('hidden');
     } else {
         goToHome();
     }
@@ -85,7 +100,6 @@ function updateHeader() {
 
 function loadProfileData() {
     if (!currentUser) return;
-    
     document.getElementById('profileUsername').value = currentUser.username || '';
     document.getElementById('profileNombreCompleto').value = currentUser.nombreCompleto || '';
     document.getElementById('profileEmail').value = currentUser.email || '';
@@ -96,7 +110,6 @@ function loadProfileData() {
 
 function loadReclutadorProfileData() {
     if (!currentUser) return;
-    
     document.getElementById('profileRUsername').value = currentUser.username || '';
     document.getElementById('profileRNombreCompleto').value = currentUser.nombreCompleto || '';
     document.getElementById('profileREmail').value = currentUser.email || '';
@@ -104,21 +117,19 @@ function loadReclutadorProfileData() {
     document.getElementById('profileRPassword').value = '';
 }
 
-// Initialize app
 document.addEventListener('DOMContentLoaded', () => {
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
-        if (currentUser.tipo === 'postante') {
-            showPage('dashboardPage');
-            loadPage(0);
-        } else {
-            showPage('reclutadorPage');
-            loadMisPostulaciones();
-        }
         updateHeader();
+        if (currentUser.tipo === 'postante') {
+            showPage('dashboardPostulantePage');
+            if (typeof loadPage === 'function') loadPage(0);
+        } else {
+            showPage('dashboardReclutadorPage');
+            if (typeof loadMisPostulaciones === 'function') loadMisPostulaciones();
+        }
     } else {
-        // Mostrar página de home si no hay usuario autenticado
         showPage('homePage');
     }
 });
