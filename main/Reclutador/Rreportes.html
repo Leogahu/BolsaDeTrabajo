@@ -1,422 +1,565 @@
-<div style="width: 1280px; height: 1024px; min-height: 1024px; padding-left: 256px; position: relative; background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white; justify-content: center; align-items: flex-start; display: inline-flex">
-  <div style="flex: 1 1 0; align-self: stretch; min-height: 1024px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-    <div style="align-self: stretch; height: 64px; padding-left: 24px; padding-right: 24px; position: relative; background: rgba(255, 255, 255, 0.80); box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-bottom: 1px #E2E8F0 solid; backdrop-filter: blur(6px); justify-content: space-between; align-items: center; display: inline-flex">
-      <div style="width: 384px; padding-left: 16px; padding-right: 16px; padding-top: 8px; padding-bottom: 8px; background: #EFF4FF; border-radius: 9999px; outline: 1px #C3C6D7 solid; outline-offset: -1px; justify-content: flex-start; align-items: center; display: flex">
-        <div style="padding-right: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 15px; height: 15px; background: #737686"></div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Panel de Control</title>
+    <!-- Google Fonts: Inter y Nimbus Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F1F5F9;
+            font-family: 'Inter', 'Nimbus Sans', -apple-system, sans-serif;
+        }
+
+        /* contenedor principal exacto 1280px */
+        .dashboard {
+            width: 1280px;
+            min-height: 1024px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+        }
+
+        /* SIDEBAR izquierda fija */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 64px;
+            background: white;
+            border-right: 1px solid #E2E8F0;
+            padding: 32px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 5;
+            box-shadow: 4px 0px 20px rgba(0,0,0,0.05);
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            transition: all 0.1s;
+            cursor: default;
+        }
+
+        .nav-link.active {
+            background: #EFF6FF;
+            border-right: 4px solid #2563EB;
+            color: #2563EB;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            background: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+        }
+
+        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:19px; }
+        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:24px; height:12px; }
+        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); background-color: currentColor; width:16px; height:16px; }
+        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:20px; }
+        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+
+        /* TOP NAVBAR */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .search-container {
+            width: 384px;
+            background: #EFF4FF;
+            border-radius: 9999px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #C3C6D7;
+        }
+
+        .search-container span {
+            width: 15px;
+            height: 15px;
+            background: #737686;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+
+        .search-container input {
+            background: transparent;
+            border: none;
+            flex: 1;
+            font-size: 16px;
+            color: #6B7280;
+            outline: none;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #D5E3FC;
+            background: #E2E8F0;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 256px;
+            padding: 24px;
+            min-height: 100vh;
+            background: #F8F9FF;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0D1C2E;
+        }
+
+        .page-sub {
+            font-size: 18px;
+            color: #434655;
+            margin-top: 4px;
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 16px;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 1px solid #C3C6D7;
+            border-radius: 8px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* cards row */
+        .stats-row {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            outline: 1px solid rgba(195,198,215,0.30);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .icon-badge {
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(37,99,235,0.1);
+        }
+
+        .trend-badge {
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(45,212,191,0.2);
+            color: #005047;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #434655;
+        }
+
+        .stat-value {
+            font-size: 30px;
+            font-weight: 600;
+            color: #0D1C2E;
+            margin-top: 4px;
+        }
+
+        /* funnel section */
+        .funnel-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            outline: 1px solid rgba(195,198,215,0.30);
+        }
+
+        .funnel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .funnel-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0D1C2E;
+        }
+
+        .funnel-link {
+            font-size: 12px;
+            font-weight: 500;
+            color: #004AC6;
+        }
+
+        .funnel-item {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .funnel-bar {
+            height: 40px;
+            background: rgba(37,99,235,0.1);
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+        }
+
+        .funnel-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0D1C2E;
+        }
+
+        .funnel-number {
+            font-weight: 700;
+            font-size: 14px;
+            color: #0D1C2E;
+        }
+
+        .conv-badge {
+            margin-left: 16px;
+            font-size: 12px;
+            color: #434655;
+            font-weight: 500;
+        }
+
+        /* skills section */
+        .skills-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            min-height: 502px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            outline: 1px solid rgba(195,198,215,0.30);
+        }
+
+        .skills-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0D1C2E;
+            margin-bottom: 16px;
+        }
+
+        .donut-container {
+            display: flex;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .donut-center {
+            width: 128px;
+            height: 128px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .donut-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0D1C2E;
+        }
+
+        .donut-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #434655;
+        }
+
+        .skill-list {
+            margin-top: 32px;
+        }
+
+        .skill-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .skill-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #0D1C2E;
+        }
+
+        .skill-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .skill-percent {
+            font-weight: 700;
+            font-size: 16px;
+            color: #0D1C2E;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .two-columns {
+            display: flex;
+            gap: 24px;
+        }
+
+        .funnel-col {
+            flex: 2;
+        }
+
+        .skills-col {
+            flex: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .two-columns {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="nav-items">
+            <div class="nav-link"><span class="icon icon-dashboard"></span> Dashboard</div>
+            <div class="nav-link"><span class="icon icon-vacantes"></span> Vacantes</div>
+            <div class="nav-link"><span class="icon icon-postulantes"></span> Postulantes</div>
+            <div class="nav-link"><span class="icon icon-publicar"></span> Publicar Empleo</div>
+            <div class="nav-link active"><span class="icon icon-reportes"></span> Reportes</div>
+            <div class="nav-link"><span class="icon icon-config"></span> Configuración</div>
         </div>
-        <div style="flex: 1 1 0; padding-top: 2px; padding-bottom: 2px; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="align-self: stretch; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #6B7280; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Buscar candidatos, vacantes...</div>
-          </div>
+        <div class="nav-items" style="border-top:1px solid #E2E8F0; padding-top:16px;">
+            <div class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</div>
         </div>
-      </div>
-      <div style="justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-        <div style="padding: 8px; border-radius: 9999px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-          <div style="justify-content: center; align-items: flex-start; display: inline-flex">
-            <div style="width: 16px; height: 20px; background: #64748B"></div>
-          </div>
-        </div>
-        <div style="padding: 8px; border-radius: 9999px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-          <div style="justify-content: center; align-items: flex-start; display: inline-flex">
-            <div style="width: 20.10px; height: 20px; background: #64748B"></div>
-          </div>
-        </div>
-        <div style="width: 48px; height: 40px; padding-left: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 40px; height: 40px; overflow: hidden; border-radius: 9999px; outline: 2px #D5E3FC solid; outline-offset: -2px; flex-direction: column; justify-content: center; align-items: flex-start; display: flex">
-            <img style="align-self: stretch; flex: 1 1 0; position: relative" src="https://placehold.co/36x36" />
-          </div>
-        </div>
-      </div>
-      <div style="width: 1279px; height: 64px; padding-left: 24px; padding-right: 24px; left: -255px; top: 0px; position: absolute; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-bottom: 1px #E2E8F0 solid; justify-content: space-between; align-items: center; display: flex">
-        <div style="justify-content: flex-start; align-items: center; gap: 24px; display: flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 152.31px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #2563EB; font-size: 20px; font-family: Nimbus Sans; font-weight: 700; line-height: 28px; word-wrap: break-word">ChapatuChamba</div>
-          </div>
-          <div style="width: 256px; padding-left: 16px; padding-right: 16px; padding-top: 8px; padding-bottom: 8px; background: #F1F5F9; border-radius: 9999px; outline: 1px rgba(0, 0, 0, 0) solid; outline-offset: -1px; justify-content: flex-start; align-items: center; gap: 0px; display: flex">
-            <div style="padding-right: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 18px; height: 18px; background: #94A3B8"></div>
-            </div>
-            <div style="flex: 1 1 0; padding-top: 2px; padding-bottom: 1px; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="align-self: stretch; padding-top: 1px; padding-bottom: 2px; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #94A3B8; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; word-wrap: break-word">Buscar postulante...</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="padding-left: 24px; border-left: 1px #E2E8F0 solid; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-          <div style="padding: 8px; border-radius: 9999px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-            <div style="justify-content: center; align-items: flex-start; display: inline-flex">
-              <div style="width: 16px; height: 20px; background: #64748B"></div>
-            </div>
-          </div>
-          <div style="padding: 8px; border-radius: 9999px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-            <div style="justify-content: center; align-items: flex-start; display: inline-flex">
-              <div style="width: 20.10px; height: 20px; background: #64748B"></div>
-            </div>
-          </div>
-          <div style="width: 40px; height: 32px; padding-left: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <img style="width: 32px; height: 32px; position: relative; border-radius: 9999px; border: 1px #E2E8F0 solid" src="https://placehold.co/32x32" />
-          </div>
-        </div>
-        <div style="width: 1000px; left: 282px; top: 0px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="align-self: stretch; height: 64px; padding-left: 24px; padding-right: 24px; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-bottom: 1px #E2E8F0 solid; justify-content: space-between; align-items: center; display: inline-flex">
-            <div style="justify-content: flex-start; align-items: center; gap: 24px; display: flex">
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 144.25px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #1E293B; font-size: 18px; font-family: Inter; font-weight: 700; line-height: 28px; word-wrap: break-word">Panel de Control</div>
-              </div>
-              <div style="position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 256px; padding-top: 9px; padding-bottom: 10px; padding-left: 36px; padding-right: 16px; background: #F8FAFC; overflow: hidden; border-radius: 8px; outline: 1px #E2E8F0 solid; outline-offset: -1px; justify-content: center; align-items: flex-start; display: inline-flex">
-                  <div style="flex: 1 1 0; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #6B7280; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Buscar...</div>
-                  </div>
-                </div>
-                <div style="height: 20px; left: 12px; top: 9px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                  <div style="width: 10.50px; height: 10.50px; background: #94A3B8"></div>
-                </div>
-              </div>
-            </div>
-            <div style="justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-              <div style="width: 40px; height: 40px; border-radius: 9999px; justify-content: center; align-items: center; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 16px; height: 20px; background: #64748B"></div>
-                </div>
-              </div>
-              <div style="width: 40px; height: 40px; border-radius: 9999px; justify-content: center; align-items: center; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 20.10px; height: 20px; background: #64748B"></div>
-                </div>
-              </div>
-              <div style="width: 40px; height: 32px; padding-left: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 32px; height: 32px; position: relative; background: linear-gradient(45deg, #3B82F6 0%, #2DD4BF 100%); box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; border: 2px white solid"></div>
-              </div>
-            </div>
-          </div>
-          <div style="width: 1283px; height: 64px; padding-left: 24px; padding-right: 24px; left: -283px; top: 0px; position: absolute; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-bottom: 1px #E2E8F0 solid; justify-content: space-between; align-items: center; display: inline-flex">
-            <div style="justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 158.08px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #2563EB; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 28px; word-wrap: break-word">ChapatuChamba</div>
-              </div>
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 103.66px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #64748B; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">Panel de Control</div>
-              </div>
-            </div>
-            <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-              <div style="padding: 8px; border-radius: 9999px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-                <div style="justify-content: center; align-items: flex-start; display: inline-flex">
-                  <div style="width: 16px; height: 20px; background: #64748B"></div>
-                </div>
-              </div>
-              <div style="padding: 8px; border-radius: 9999px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-                <div style="justify-content: center; align-items: flex-start; display: inline-flex">
-                  <div style="width: 20.10px; height: 20px; background: #64748B"></div>
-                </div>
-              </div>
-              <div style="width: 40px; height: 32px; padding-left: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <img style="width: 32px; height: 32px; position: relative; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; border: 1px #E2E8F0 solid" src="https://placehold.co/32x32" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-    <div style="width: 100%; flex: 1 1 0; max-width: 1280px; padding: 24px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: flex">
-      <div style="align-self: stretch; justify-content: space-between; align-items: flex-end; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="width: 276.97px; height: 44px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 36px; font-family: Inter; font-weight: 700; line-height: 44px; word-wrap: break-word">Panel de Control</div>
-          </div>
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="width: 437.33px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 18px; font-family: Inter; font-weight: 400; line-height: 28px; word-wrap: break-word">Métricas de rendimiento y análisis de reclutamiento</div>
-          </div>
+
+    <!-- Top Navbar -->
+    <div class="top-nav">
+        <div class="search-container">
+            <span></span>
+            <input type="text" placeholder="Buscar candidatos, vacantes...">
         </div>
-        <div style="justify-content: flex-start; align-items: center; gap: 15.99px; display: flex">
-          <div style="padding-left: 16px; padding-right: 16px; padding-top: 8px; padding-bottom: 8px; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 8px; outline: 1px #C3C6D7 solid; outline-offset: -1px; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-            <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 15px; height: 16.67px; background: #737686"></div>
-            </div>
-            <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 92.55px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Últimos 30 días</div>
-            </div>
-            <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 10px; height: 6.17px; background: #737686"></div>
-            </div>
-          </div>
-          <div style="padding: 8px; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 8px; outline: 1px #C3C6D7 solid; outline-offset: -1px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-            <div style="justify-content: center; align-items: flex-start; display: inline-flex">
-              <div style="width: 16px; height: 16px; background: #0D1C2E"></div>
-            </div>
-          </div>
+        <div class="header-icons">
+            <div style="width:32px; height:32px; display:flex; align-items:center; justify-content:center;">🔔</div>
+            <div style="width:32px; height:32px; display:flex; align-items:center; justify-content:center;">✉️</div>
+            <div class="avatar"></div>
         </div>
-      </div>
-      <div style="align-self: stretch; padding-top: 24px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="align-self: stretch; height: 160px; padding: 24px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.30) solid; outline-offset: -1px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
-          <div style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex">
-            <div style="padding: 8px; background: rgba(37, 99, 235, 0.10); border-radius: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 16px; height: 20px; background: #004AC6"></div>
-            </div>
-            <div style="padding-left: 8px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; background: rgba(45, 212, 191, 0.20); border-radius: 9999px; justify-content: flex-start; align-items: center; gap: 3.99px; display: flex">
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 11.67px; height: 7px; background: #005047"></div>
-              </div>
-              <div style="width: 33.27px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #005047; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">+12%</div>
-            </div>
-          </div>
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Total Aplicaciones</div>
-            </div>
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 30px; font-family: Inter; font-weight: 600; line-height: 38px; word-wrap: break-word">1,248</div>
-            </div>
-          </div>
-        </div>
-        <div style="align-self: stretch; height: 160px; padding: 24px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.30) solid; outline-offset: -1px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
-          <div style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex">
-            <div style="padding: 8px; background: rgba(98, 250, 227, 0.30); border-radius: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 18px; height: 21px; background: #006B5F"></div>
-            </div>
-            <div style="padding-left: 8px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; background: rgba(45, 212, 191, 0.20); border-radius: 9999px; justify-content: flex-start; align-items: center; gap: 3.99px; display: flex">
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 11.67px; height: 7px; background: #005047"></div>
-              </div>
-              <div style="width: 41.56px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #005047; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">-3 días</div>
-            </div>
-          </div>
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Tiempo de Contratación</div>
-            </div>
-            <div style="align-self: stretch; height: 38px; position: relative">
-              <div style="width: 39.45px; height: 38px; left: 0px; top: 0px; position: absolute; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 30px; font-family: Inter; font-weight: 600; line-height: 38px; word-wrap: break-word">18 </div>
-              <div style="width: 40.19px; height: 28px; left: 39.45px; top: 9px; position: absolute; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 28px; word-wrap: break-word">días</div>
-            </div>
-          </div>
-        </div>
-        <div style="align-self: stretch; height: 160px; padding: 24px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.30) solid; outline-offset: -1px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
-          <div style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex">
-            <div style="padding: 8px; background: rgba(139, 103, 0, 0.20); border-radius: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 22.01px; height: 20px; background: #6D5000"></div>
-            </div>
-            <div style="padding-left: 8px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; background: rgba(244, 63, 94, 0.10); border-radius: 9999px; justify-content: flex-start; align-items: center; gap: 3.99px; display: flex">
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 11.08px; height: 5.25px; background: #93000A"></div>
-              </div>
-              <div style="width: 43.83px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #93000A; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Estable</div>
-            </div>
-          </div>
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Match Promedio</div>
-            </div>
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 30px; font-family: Inter; font-weight: 600; line-height: 38px; word-wrap: break-word">78%</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="align-self: stretch; padding-top: 24px; padding-bottom: 128px; padding-left: 24px; padding-right: 24px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.30) solid; outline-offset: -1px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-          <div style="align-self: stretch; padding-right: 0.01px; justify-content: space-between; align-items: center; display: inline-flex">
-            <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 373.45px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 28px; word-wrap: break-word">Eficiencia del Embudo de Contratación</div>
-            </div>
-            <div style="flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-              <div style="width: 63.92px; height: 16px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #004AC6; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Ver detalle</div>
-            </div>
-          </div>
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: flex">
-            <div style="align-self: stretch; height: 40px; position: relative; justify-content: center; align-items: center; display: inline-flex">
-              <div style="width: 592.66px; height: 40px; left: 0px; top: 0px; position: absolute; background: rgba(37, 99, 235, 0.10); border-top-right-radius: 8px; border-bottom-right-radius: 8px"></div>
-              <div style="width: 592.66px; height: 40px; left: 0px; top: 0px; position: absolute; opacity: 0.20; background: #2563EB; border-top-right-radius: 8px; border-bottom-right-radius: 8px"></div>
-              <div style="flex: 1 1 0; padding-left: 16px; padding-right: 16px; justify-content: space-between; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 131.98px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Vistas de Vacantes</div>
-                </div>
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 41.50px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 700; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">5,420</div>
-                </div>
-              </div>
-            </div>
-            <div style="align-self: stretch; height: 40px; position: relative; justify-content: flex-start; align-items: center; display: inline-flex">
-              <div style="width: 385.22px; height: 40px; left: 0px; top: 0px; position: absolute; background: rgba(37, 99, 235, 0.10); border-top-right-radius: 8px; border-bottom-right-radius: 8px"></div>
-              <div style="width: 385.22px; height: 40px; left: 0px; top: 0px; position: absolute; opacity: 0.40; background: #2563EB; border-top-right-radius: 8px; border-bottom-right-radius: 8px"></div>
-              <div style="width: 385.22px; padding-left: 16px; padding-right: 16px; justify-content: space-between; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 159.98px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Aplicaciones Recibidas</div>
-                </div>
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 38.59px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 700; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">1,248</div>
-                </div>
-              </div>
-              <div style="left: 513.22px; top: 12px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 63.44px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">23% conv.</div>
-              </div>
-            </div>
-            <div style="align-self: stretch; height: 40px; position: relative; justify-content: flex-start; align-items: center; display: inline-flex">
-              <div style="width: 177.80px; height: 40px; left: 0px; top: 0px; position: absolute; background: rgba(37, 99, 235, 0.10); border-top-right-radius: 8px; border-bottom-right-radius: 8px"></div>
-              <div style="width: 177.80px; height: 40px; left: 0px; top: 0px; position: absolute; opacity: 0.60; background: #2563EB; border-top-right-radius: 8px; border-bottom-right-radius: 8px"></div>
-              <div style="width: 177.80px; padding-left: 16px; padding-right: 16.01px; justify-content: space-between; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 77.11px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Entrevistas</div>
-                </div>
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 23.98px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 14px; font-family: Inter; font-weight: 700; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">215</div>
-                </div>
-              </div>
-              <div style="left: 516.30px; top: 12px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 60.36px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">17% conv.</div>
-              </div>
-            </div>
-            <div style="align-self: stretch; height: 40px; position: relative; justify-content: flex-start; align-items: center; display: inline-flex">
-              <div style="width: 88.89px; height: 40px; left: 0px; top: 0px; position: absolute; background: rgba(37, 99, 235, 0.10); border-top-right-radius: 8px; border-bottom-right-radius: 8px"></div>
-              <div style="width: 88.89px; height: 40px; left: 0px; top: 0px; position: absolute; opacity: 0.80; background: #2563EB; border-top-right-radius: 8px; border-bottom-right-radius: 8px"></div>
-              <div style="width: 88.89px; padding-left: 16px; padding-right: 2.36px; justify-content: space-between; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 51.69px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Ofertas</div>
-                </div>
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 18.84px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 14px; font-family: Inter; font-weight: 700; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">64</div>
-                </div>
-              </div>
-              <div style="left: 512.86px; top: 12px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 63.80px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">30% conv.</div>
-              </div>
-            </div>
-            <div style="align-self: stretch; height: 40px; position: relative; justify-content: flex-start; align-items: center; display: inline-flex">
-              <div style="width: 59.27px; height: 40px; left: 0px; top: 0px; position: absolute; background: #2563EB; border-top-right-radius: 8px; border-bottom-right-radius: 8px"></div>
-              <div style="width: 119.94px; padding-left: 16px; justify-content: space-between; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 85.36px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Contratados</div>
-                </div>
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 18.58px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 14px; font-family: Inter; font-weight: 700; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">42</div>
-                </div>
-              </div>
-              <div style="left: 513.34px; top: 12px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 63.31px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">65% conv.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="align-self: stretch; height: 502px; position: relative; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.30) solid; outline-offset: -1px">
-          <div style="width: 259.34px; padding-bottom: 24px; left: 25px; top: 25px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 28px; word-wrap: break-word">Habilidades más<br/>Demandadas</div>
-            </div>
-          </div>
-          <div style="width: 259.34px; left: 25px; top: 321px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: inline-flex">
-            <div style="align-self: stretch; justify-content: space-between; align-items: center; display: inline-flex">
-              <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                <div style="width: 11.67px; height: 12px; background: #2563EB; border-radius: 9999px"></div>
-                <div style="padding-right: 53.42px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 149.22px; height: 48px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Desarrollo Frontend<br/>(React)</div>
-                </div>
-              </div>
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 37.03px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 700; line-height: 24px; word-wrap: break-word">45%</div>
-              </div>
-            </div>
-            <div style="align-self: stretch; justify-content: space-between; align-items: center; display: inline-flex">
-              <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                <div style="width: 12px; height: 12px; background: #3CDDC7; border-radius: 9999px"></div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 129.77px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Análisis de Datos</div>
-                </div>
-              </div>
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 37.38px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 700; line-height: 24px; word-wrap: break-word">30%</div>
-              </div>
-            </div>
-            <div style="align-self: stretch; justify-content: space-between; align-items: center; display: inline-flex">
-              <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                <div style="width: 12px; height: 12px; background: #F9BD22; border-radius: 9999px"></div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 161.52px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Gestión de Proyectos</div>
-                </div>
-              </div>
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 33.11px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 700; line-height: 24px; word-wrap: break-word">15%</div>
-              </div>
-            </div>
-            <div style="align-self: stretch; justify-content: space-between; align-items: center; display: inline-flex">
-              <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                <div style="width: 12px; height: 12px; background: #E2E8F0; border-radius: 9999px"></div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 40.92px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Otras</div>
-                </div>
-              </div>
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 33.94px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 700; line-height: 24px; word-wrap: break-word">10%</div>
-              </div>
-            </div>
-          </div>
-          <div style="width: 259.34px; padding-bottom: 24px; left: 25px; top: 105px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: center; display: flex">
-              <div style="width: 192px; height: 192px; background: rgba(255, 255, 255, 0); box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05) inset; border-radius: 9999px; justify-content: center; align-items: center; display: inline-flex">
-                <div style="width: 128px; height: 128px; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="width: 23.64px; height: 44px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 36px; font-family: Inter; font-weight: 700; line-height: 44px; word-wrap: break-word">4</div>
-                  </div>
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="width: 57.16px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Top Skills</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-  <div style="width: 256px; height: 960px; padding-left: 16px; padding-right: 16px; padding-top: 32px; padding-bottom: 32px; left: 0px; top: 64px; position: absolute; background: white; box-shadow: 4px 0px 20px rgba(0, 0, 0, 0.05); border-right: 1px #E2E8F0 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-    <div style="align-self: stretch; flex: 1 1 0; padding-top: 8px; flex-direction: column; justify-content: center; align-items: flex-start; display: flex">
-      <div style="align-self: stretch; flex: 1 1 0; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 8px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 18px; height: 18px; background: #475569"></div>
-          </div>
-          <div style="width: 68.27px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">Dashboard</div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <div>
+                <div class="page-title">Panel de Control</div>
+                <div class="page-sub">Métricas de rendimiento y análisis de reclutamiento</div>
+            </div>
+            <div class="date-filter">
+                <div class="filter-btn">📅 Últimos 30 días ▼</div>
+                <div class="filter-btn">⚙️</div>
+            </div>
         </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 8px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 20px; height: 19px; background: #475569"></div>
-          </div>
-          <div style="width: 57.41px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">Vacantes</div>
+
+        <!-- 3 stat cards -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="icon-badge" style="background:rgba(37,99,235,0.1);">📊</div>
+                    <div class="trend-badge">▲ +12%</div>
+                </div>
+                <div class="stat-label">Total Aplicaciones</div>
+                <div class="stat-value">1,248</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="icon-badge" style="background:rgba(98,250,227,0.3);">⏱️</div>
+                    <div class="trend-badge">▼ -3 días</div>
+                </div>
+                <div class="stat-label">Tiempo de Contratación</div>
+                <div class="stat-value">18 días</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="icon-badge" style="background:rgba(139,103,0,0.2);">🎯</div>
+                    <div class="trend-badge" style="background:rgba(244,63,94,0.1); color:#93000A;">Estable</div>
+                </div>
+                <div class="stat-label">Match Promedio</div>
+                <div class="stat-value">78%</div>
+            </div>
         </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 8px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 24px; height: 12px; background: #475569"></div>
-          </div>
-          <div style="width: 83px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: 42dot Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">Postulantes</div>
+
+        <!-- Funnel + Skills en dos columnas -->
+        <div class="two-columns">
+            <!-- Columna izquierda: Embudo -->
+            <div class="funnel-col">
+                <div class="funnel-section">
+                    <div class="funnel-header">
+                        <div class="funnel-title">Eficiencia del Embudo de Contratación</div>
+                        <div class="funnel-link">Ver detalle →</div>
+                    </div>
+                    <div class="funnel-item">
+                        <div style="width:100%; background:rgba(37,99,235,0.1); border-radius:0 8px 8px 0; height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;">
+                            <span class="funnel-label">Vistas de Vacantes</span>
+                            <span class="funnel-number">5,420</span>
+                        </div>
+                    </div>
+                    <div class="funnel-item">
+                        <div style="width:71%; background:rgba(37,99,235,0.2); border-radius:0 8px 8px 0; height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;">
+                            <span class="funnel-label">Aplicaciones Recibidas</span>
+                            <span class="funnel-number">1,248</span>
+                        </div>
+                        <span class="conv-badge">23% conv.</span>
+                    </div>
+                    <div class="funnel-item">
+                        <div style="width:33%; background:rgba(37,99,235,0.6); border-radius:0 8px 8px 0; height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;">
+                            <span class="funnel-label" style="color:white;">Entrevistas</span>
+                            <span class="funnel-number" style="color:white;">215</span>
+                        </div>
+                        <span class="conv-badge">17% conv.</span>
+                    </div>
+                    <div class="funnel-item">
+                        <div style="width:16.4%; background:rgba(37,99,235,0.8); border-radius:0 8px 8px 0; height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;">
+                            <span class="funnel-label" style="color:white;">Ofertas</span>
+                            <span class="funnel-number" style="color:white;">64</span>
+                        </div>
+                        <span class="conv-badge">30% conv.</span>
+                    </div>
+                    <div class="funnel-item">
+                        <div style="width:11%; background:#2563EB; border-radius:0 8px 8px 0; height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;">
+                            <span class="funnel-label" style="color:white;">Contratados</span>
+                            <span class="funnel-number" style="color:white;">42</span>
+                        </div>
+                        <span class="conv-badge">65% conv.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha: Habilidades más Demandadas -->
+            <div class="skills-col">
+                <div class="skills-section">
+                    <div class="skills-title">Habilidades más<br>Demandadas</div>
+                    <div class="donut-container">
+                        <div class="donut-center">
+                            <div class="donut-number">4</div>
+                            <div class="donut-label">Top Skills</div>
+                        </div>
+                    </div>
+                    <div class="skill-list">
+                        <div class="skill-row">
+                            <div class="skill-name"><span class="skill-dot" style="background:#2563EB;"></span> Desarrollo Frontend (React)</div>
+                            <div class="skill-percent">45%</div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-name"><span class="skill-dot" style="background:#3CDDC7;"></span> Análisis de Datos</div>
+                            <div class="skill-percent">30%</div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-name"><span class="skill-dot" style="background:#F9BD22;"></span> Gestión de Proyectos</div>
+                            <div class="skill-percent">15%</div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-name"><span class="skill-dot" style="background:#E2E8F0;"></span> Otras</div>
+                            <div class="skill-percent">10%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 8px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 18px; height: 18px; background: #475569"></div>
-          </div>
-          <div style="width: 102.05px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">Publicar Empleo</div>
-        </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; background: #EFF6FF; border-radius: 8px; border-right: 4px #2563EB solid; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 16px; height: 16px; background: #2563EB"></div>
-          </div>
-          <div style="width: 56.80px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #2563EB; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">Reportes</div>
-        </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 8px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 20.10px; height: 20px; background: #475569"></div>
-          </div>
-          <div style="width: 86.30px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">Configuración</div>
-        </div>
-      </div>
     </div>
-    <div style="align-self: stretch; padding-top: 16px; border-top: 1px #E2E8F0 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 18px; height: 18px; background: #475569"></div>
-        </div>
-        <div style="width: 90.47px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 24px; word-wrap: break-word">Cerrar sesión</div>
-      </div>
-    </div>
-  </div>
 </div>
+</body>
+</html>

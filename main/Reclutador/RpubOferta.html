@@ -1,327 +1,503 @@
-<div style="align-self: stretch; align-self: stretch; position: relative; background: #F8F9FF">
-  <div style="width: 1024px; max-width: 1280px; padding-top: 48px; padding-bottom: 64px; padding-left: 64px; padding-right: 64px; left: 0px; top: 64px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 32px; display: inline-flex">
-    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: flex">
-      <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-          <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 36px; font-family: Inter; font-weight: 700; line-height: 44px; word-wrap: break-word">Crear Nueva Vacante</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Crear Nueva Vacante</title>
+    <!-- Google Fonts: Inter y Nimbus Sans respaldo -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F8; /* fondo exterior para contrastar, pero wrapper define gradiente */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* contenedor principal que replica el ancho fijo 1280px y sidebar izquierda */
+        .dashboard {
+            width: 1280px;
+            min-height: 1024px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        /* SIDEBAR izquierda (exactamente como en la imagen) */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: white;
+            border-right: 1px solid #E2E8F0;
+            padding: 24px 16px 24px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 5;
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.1s ease;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: #475569;
+        }
+
+        .nav-link.active {
+            background: #EFF6FF;
+            border-left: 4px solid #2563EB;
+            color: #2563EB;
+            padding-left: 12px; /* compensa el borde */
+        }
+
+        .nav-link .icon {
+            width: 20px;
+            height: 20px;
+            background: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            background-color: currentColor;
+        }
+
+        /* iconos placeholder con mascaras SVG simplificadas para coincidir */
+        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:24px; height:12px; }
+        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); background-color: currentColor; }
+
+        /* top navbar principal */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 256px;
+            right: 0;
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 18px;
+            color: #1E293B;
+        }
+
+        .search-mini {
+            position: relative;
+            width: 256px;
+        }
+
+        .search-mini input {
+            width: 100%;
+            padding: 9px 16px 9px 36px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .search-icon-mini {
+            position: absolute;
+            left: 12px;
+            top: 9px;
+            width: 14px;
+            height: 14px;
+            background: #94A3B8;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: linear-gradient(45deg, #3B82F6, #2DD4BF);
+            border: 2px solid white;
+        }
+
+        /* MAIN CONTENT (formulario) */
+        .form-container {
+            margin-left: 256px;
+            padding: 48px 64px 64px 64px;
+            background: #F8F9FF;
+            width: calc(100% - 256px);
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 48px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            outline: 1px solid rgba(195,198,215,0.30);
+            margin-top: 24px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            max-width: 768px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .step {
+            text-align: center;
+            width: 175px;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            background: #D5E3FC;
+            border-radius: 999px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 400;
+            font-size: 16px;
+            color: #434655;
+        }
+        .step.active .step-circle {
+            background: #2563EB;
+            box-shadow: 0px 0px 0px 4px rgba(37,99,235,0.2);
+            color: white;
+        }
+        .step.completed .step-circle {
+            background: #62FAE3;
+            color: #005047;
+        }
+        .step-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #434655;
+        }
+        .step.active .step-label {
+            color: #004AC6;
+            font-weight: 600;
+        }
+
+        /* form elements */
+        .field-group {
+            margin-bottom: 32px;
+        }
+        .field-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0D1C2E;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .required-star {
+            color: #BA1A1A;
+            margin-left: 2px;
+        }
+        .input-text {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #C3C6D7;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+        }
+        .helper-text {
+            font-size: 14px;
+            color: #434655;
+            margin-top: 4px;
+        }
+        /* opciones de nivel */
+        .level-options {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .level-card {
+            flex: 1;
+            border: 1px solid #C3C6D7;
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            background: white;
+            transition: all 0.1s;
+        }
+        .level-card.highlight {
+            background: #EFF4FF;
+            border-color: #C3C6D7;
+            outline: 2px solid #FFDAD6;
+        }
+        .level-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #0D1C2E;
+            display: flex;
+            justify-content: space-between;
+        }
+        .level-desc {
+            font-size: 14px;
+            color: #434655;
+            margin-top: 8px;
+            margin-bottom: 16px;
+        }
+        .insignia {
+            display: inline-block;
+            background: rgba(98,250,227,0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #005047;
+        }
+        .insignia-warning {
+            background: #FFDAD6;
+            color: #93000A;
+        }
+        .warning-box {
+            background: #FFDAD6;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+            display: flex;
+            gap: 16px;
+            outline: 1px solid rgba(186,26,26,0.2);
+        }
+        .warning-title {
+            font-weight: 600;
+            color: #93000A;
+            margin-bottom: 4px;
+        }
+        .btn-outline-warning {
+            border: 1px solid rgba(186,26,26,0.3);
+            background: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            color: #BA1A1A;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+            border-top: 1px solid rgba(195,198,215,0.3);
+            padding-top: 32px;
+        }
+        .btn-back {
+            font-weight: 600;
+            color: #004AC6;
+            cursor: pointer;
+        }
+        .btn-save {
+            padding: 12px 24px;
+            font-weight: 600;
+            color: #434655;
+            background: transparent;
+        }
+        .btn-continue {
+            background: #2563EB;
+            padding: 12px 32px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0px 4px 20px rgba(37,99,235,0.2);
+            cursor: pointer;
+        }
+        textarea.input-text {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .requisitos-box {
+            border: 2px solid #FFDAD6;
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <!-- SIDEBAR izquierda exacta -->
+    <div class="sidebar">
+        <div class="nav-items">
+            <div class="nav-link"><span class="icon icon-dashboard" style="width:18px; height:18px;"></span> Dashboard</div>
+            <div class="nav-link"><span class="icon icon-vacantes"></span> Vacantes</div>
+            <div class="nav-link"><span class="icon icon-postulantes" style="width:24px; height:12px;"></span> Postulantes</div>
+            <div class="nav-link active"><span class="icon icon-publicar" style="width:18px; height:18px;"></span> Publicar Empleo</div>
+            <div class="nav-link"><span class="icon icon-reportes"></span> Reportes</div>
+            <div class="nav-link"><span class="icon icon-config"></span> Configuración</div>
         </div>
-        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-          <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 18px; font-family: Inter; font-weight: 400; line-height: 28px; word-wrap: break-word">Diseña una oferta atractiva para conectar con el mejor talento joven.</div>
+        <div class="nav-items" style="border-top:1px solid #E2E8F0; padding-top:16px;">
+            <div class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</div>
         </div>
-      </div>
-      <div style="width: 768px; height: 64px; max-width: 768px; position: relative">
-        <div style="width: 175.63px; height: 20px; left: 46.50px; top: 22px; position: absolute">
-          <div style="width: 159.63px; height: 4px; left: 8px; top: -4px; position: absolute; background: #62FAE3; border-radius: 9999px"></div>
-        </div>
-        <div style="width: 175.63px; height: 20px; left: 303.64px; top: 22px; position: absolute">
-          <div style="width: 159.63px; height: 4px; left: 8px; top: -4px; position: absolute; background: #C3C6D7; border-radius: 9999px"></div>
-        </div>
-        <div style="width: 175.63px; height: 20px; left: 542.14px; top: 22px; position: absolute">
-          <div style="width: 159.63px; height: 4px; left: 8px; top: -4px; position: absolute; background: #C3C6D7; border-radius: 9999px"></div>
-        </div>
-        <div style="left: 0px; top: 0px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-          <div style="width: 40px; height: 40px; background: #62FAE3; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; justify-content: center; align-items: center; display: inline-flex">
-            <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 13.58px; height: 10.02px; background: #005047"></div>
-            </div>
-          </div>
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="width: 46.50px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Básicos</div>
-          </div>
-        </div>
-        <div style="left: 222.13px; top: 0px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-          <div style="width: 40px; height: 40px; position: relative; background: #2563EB; border-radius: 9999px; justify-content: center; align-items: center; display: inline-flex">
-            <div style="width: 40px; height: 40px; left: 0px; top: 0px; position: absolute; background: rgba(255, 255, 255, 0); box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.10), 0px 4px 6px -1px rgba(0, 0, 0, 0.10), 0px 0px 0px 4px rgba(37, 99, 235, 0.20); border-radius: 9999px"></div>
-            <div style="width: 9.77px; height: 24px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #EEEFFF; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">2</div>
-          </div>
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="width: 81.52px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #004AC6; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Rol y Detalles</div>
-          </div>
-        </div>
-        <div style="left: 479.27px; top: 0px; position: absolute; opacity: 0.60; flex-direction: column; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-          <div style="width: 40px; height: 40px; background: #D5E3FC; border-radius: 9999px; outline: 1px #C3C6D7 solid; outline-offset: -1px; justify-content: center; align-items: center; display: inline-flex">
-            <div style="width: 9.89px; height: 24px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">3</div>
-          </div>
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="width: 62.88px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Beneficios</div>
-          </div>
-        </div>
-        <div style="left: 717.77px; top: 0px; position: absolute; opacity: 0.60; flex-direction: column; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-          <div style="width: 40px; height: 40px; background: #D5E3FC; border-radius: 9999px; outline: 1px #C3C6D7 solid; outline-offset: -1px; justify-content: center; align-items: center; display: inline-flex">
-            <div style="width: 10.34px; height: 24px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">4</div>
-          </div>
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="width: 50.23px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Revisión</div>
-          </div>
-        </div>
-      </div>
     </div>
-    <div style="align-self: stretch; padding-top: 48px; padding-bottom: 64px; padding-left: 48px; padding-right: 48px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.30) solid; outline-offset: -1px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-      <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 32px; display: flex">
-        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column"><span style="color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Título del Puesto </span><span style="color: #BA1A1A; font-size: 14px; font-family: Inter; font-weight: 600; word-wrap: break-word">*</span></div>
-          </div>
-          <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; background: white; overflow: hidden; border-radius: 8px; outline: 1px #C3C6D7 solid; outline-offset: -1px; justify-content: center; align-items: flex-start; display: inline-flex">
-            <div style="flex: 1 1 0; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Desarrollador Frontend Junior</div>
+
+    <!-- TOP NAVBAR (dentro del área de contenido) -->
+    <div class="top-nav">
+        <div class="logo-area">
+            <div class="logo-text">Panel de Control</div>
+            <div class="search-mini">
+                <input type="text" placeholder="Buscar...">
+                <div class="search-icon-mini"></div>
             </div>
-          </div>
         </div>
-        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column"><span style="color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Nivel de Experiencia / Tipo de Rol </span><span style="color: #BA1A1A; font-size: 14px; font-family: Inter; font-weight: 600; word-wrap: break-word">*</span></div>
-          </div>
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 20px; word-wrap: break-word">Selecciona la categoría que mejor se ajuste. Esto activará nuestras insignias de confianza para los candidatos.</div>
-          </div>
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="align-self: stretch; padding: 24px; position: relative; border-radius: 12px; outline: 1px #C3C6D7 solid; outline-offset: -1px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="align-self: stretch; padding-bottom: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; justify-content: space-between; align-items: center; display: inline-flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 72.33px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 24px; word-wrap: break-word">Prácticas</div>
-                  </div>
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 22px; height: 18px; background: #C3C6D7"></div>
-                  </div>
-                </div>
-              </div>
-              <div style="align-self: stretch; padding-bottom: 16px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; padding-bottom: 20.50px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                  <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 20px; word-wrap: break-word">Enfoque 100% en aprendizaje.<br/>Ideal para estudiantes.</div>
-                </div>
-              </div>
-              <div style="padding-left: 8px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; background: rgba(98, 250, 227, 0.20); border-radius: 4px; justify-content: flex-start; align-items: center; display: inline-flex">
-                <div style="width: 87.31px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #005047; font-size: 12px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">Sin Experiencia</div>
-              </div>
-              <div style="width: 253.33px; height: 181px; left: 1px; top: 1px; position: absolute; border-radius: 12px; border: 2px rgba(0, 0, 0, 0) solid"></div>
-            </div>
-            <div style="align-self: stretch; padding: 24px; position: relative; border-radius: 12px; outline: 1px #C3C6D7 solid; outline-offset: -1px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="align-self: stretch; padding-bottom: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; justify-content: space-between; align-items: center; display: inline-flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 57.95px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 24px; word-wrap: break-word">Trainee</div>
-                  </div>
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 20px; height: 12px; background: #C3C6D7"></div>
-                  </div>
-                </div>
-              </div>
-              <div style="align-self: stretch; padding-bottom: 16px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                  <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 20px; word-wrap: break-word">Programa formativo para<br/>recién egresados de alto<br/>potencial.</div>
-                </div>
-              </div>
-              <div style="padding-left: 8px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; background: rgba(249, 189, 34, 0.20); border-radius: 4px; justify-content: flex-start; align-items: center; display: inline-flex">
-                <div style="width: 79.39px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #8B6700; font-size: 12px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">Talento Joven</div>
-              </div>
-              <div style="width: 253.33px; height: 180px; left: 1px; top: 1px; position: absolute; border-radius: 12px; border: 2px rgba(0, 0, 0, 0) solid"></div>
-            </div>
-            <div style="align-self: stretch; padding: 24px; position: relative; background: #EFF4FF; border-radius: 12px; outline: 1px #C3C6D7 solid; outline-offset: -1px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 253.33px; height: 180px; left: 1px; top: 1px; position: absolute; background: rgba(255, 218, 214, 0.05); border-radius: 12px; border: 2px #FFDAD6 solid"></div>
-              <div style="align-self: stretch; padding-bottom: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; justify-content: space-between; align-items: center; display: inline-flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 49.14px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 24px; word-wrap: break-word">Junior</div>
-                  </div>
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 22px; height: 21px; background: #BA1A1A"></div>
-                  </div>
-                </div>
-              </div>
-              <div style="align-self: stretch; padding-bottom: 16px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                  <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 20px; word-wrap: break-word">Rol de entrada oficial.<br/>Requiere bases sólidas pero<br/>mentoria.</div>
-                </div>
-              </div>
-              <div style="padding-left: 8px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; background: #FFDAD6; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 4px; justify-content: flex-start; align-items: center; display: inline-flex">
-                <div style="width: 63.34px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #93000A; font-size: 12px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">Junior Real</div>
-              </div>
-            </div>
-          </div>
+        <div class="header-icons">
+            <div style="width:40px; height:40px; display:flex; justify-content:center; align-items:center;"><div style="width:20px;height:20px;background:#64748B; mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9\'/%3E%3C/svg%3E"); background-size:contain;"></div></div>
+            <div style="width:40px; height:40px; display:flex; justify-content:center; align-items:center;"><div style="width:20px;height:20px;background:#64748B; mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E"); background-size:contain;"></div></div>
+            <div class="avatar-sm"></div>
         </div>
-        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column"><span style="color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Descripción General </span><span style="color: #BA1A1A; font-size: 14px; font-family: Inter; font-weight: 600; word-wrap: break-word">*</span></div>
-          </div>
-          <div style="align-self: stretch; padding-top: 12px; padding-bottom: 60px; padding-left: 16px; padding-right: 16px; background: white; overflow: hidden; border-radius: 8px; outline: 1px #C3C6D7 solid; outline-offset: -1px; justify-content: center; align-items: flex-start; display: inline-flex">
-            <div style="flex: 1 1 0; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #6B7280; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Describe el propósito principal del rol en tu equipo...</div>
-            </div>
-          </div>
-        </div>
-        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column"><span style="color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Requisitos y Experiencia </span><span style="color: #BA1A1A; font-size: 14px; font-family: Inter; font-weight: 600; word-wrap: break-word">*</span></div>
-          </div>
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 20px; word-wrap: break-word">Enumera las habilidades clave. Sé realista con lo que es absolutamente necesario.</div>
-          </div>
-          <div style="align-self: stretch; padding-top: 12px; padding-bottom: 36px; padding-left: 16px; padding-right: 16px; background: white; overflow: hidden; border-radius: 8px; outline: 2px #FFDAD6 solid; outline-offset: -2px; justify-content: center; align-items: flex-start; display: inline-flex">
-            <div style="flex: 1 1 0; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">- Dominio de HTML, CSS y JavaScript moderno.<br/>- Experiencia con frameworks como React o Vue.<br/>- 2+ años de experiencia comprobable en agencias.<br/>- Portafolio demostrable de proyectos web.</div>
-            </div>
-          </div>
-          <div style="align-self: stretch; padding: 16px; background: #FFDAD6; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 8px; outline: 1px rgba(186, 26, 26, 0.20) solid; outline-offset: -1px; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
-            <div style="padding-top: 2px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="width: 22px; height: 19px; background: #BA1A1A"></div>
-            </div>
-            <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
-              <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="width: 262.28px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #93000A; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 24px; word-wrap: break-word">Inconsistencia de Nivel Detectada</div>
-              </div>
-              <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="width: 719.09px; height: 40px; justify-content: center; display: flex; flex-direction: column"><span style="color: rgba(147, 0, 10, 0.90); font-size: 14px; font-family: Inter; font-weight: 400; line-height: 20px; word-wrap: break-word">Has marcado este rol con la insignia </span><span style="color: rgba(147, 0, 10, 0.90); font-size: 14px; font-family: Inter; font-weight: 700; word-wrap: break-word">'Junior Real'</span><span style="color: rgba(147, 0, 10, 0.90); font-size: 14px; font-family: Inter; font-weight: 400; line-height: 20px; word-wrap: break-word">, pero en los requisitos solicitas </span><span style="color: rgba(147, 0, 10, 0.90); font-size: 14px; font-family: Inter; font-weight: 700; word-wrap: break-word">'2+ años de experiencia'</span><span style="color: rgba(147, 0, 10, 0.90); font-size: 14px; font-family: Inter; font-weight: 400; line-height: 20px; word-wrap: break-word">.<br/>En ChapatuChamba, consideramos que un rol Junior debe requerir máximo 1 año de experiencia profesional.</span></div>
-              </div>
-              <div style="align-self: stretch; padding-top: 8px; justify-content: flex-start; align-items: flex-start; gap: 11.99px; display: inline-flex">
-                <div style="padding-left: 12px; padding-right: 12px; padding-top: 6px; padding-bottom: 6px; background: white; border-radius: 4px; outline: 1px rgba(186, 26, 26, 0.30) solid; outline-offset: -1px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-                  <div style="width: 135.33px; height: 20px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #BA1A1A; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; word-wrap: break-word">Modificar requisitos</div>
-                </div>
-                <div style="padding-top: 6.50px; padding-bottom: 7.50px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-                  <div style="width: 191.58px; height: 20px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #93000A; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; word-wrap: break-word">Cambiar a nivel Semi-Senior</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="align-self: stretch; padding-top: 32px; border-top: 1px rgba(195, 198, 215, 0.30) solid; justify-content: space-between; align-items: center; display: inline-flex">
-          <div style="padding-left: 24px; padding-right: 24px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-            <div style="width: 36.66px; height: 20px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #004AC6; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Atrás</div>
-          </div>
-          <div style="justify-content: flex-start; align-items: flex-start; gap: 15.99px; display: flex">
-            <div style="padding-top: 15.50px; padding-bottom: 16.50px; padding-left: 24px; padding-right: 24px; border-radius: 12px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-              <div style="width: 120.19px; height: 20px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Guardar Borrador</div>
-            </div>
-            <div style="padding-left: 32px; padding-right: 32px; padding-top: 12px; padding-bottom: 12px; background: #2563EB; box-shadow: 0px 4px 20px rgba(37, 99, 235, 0.20); border-radius: 12px; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-              <div style="width: 68.02px; height: 20px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #EEEFFF; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Continuar</div>
-              <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                <div style="width: 12px; height: 12px; background: #EEEFFF"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+
+    <!-- CONTENIDO PRINCIPAL formulario -->
+    <div class="form-container">
+        <div>
+            <h1 style="font-size:36px; font-weight:700; color:#0D1C2E;">Crear Nueva Vacante</h1>
+            <p style="font-size:18px; color:#434655; margin-top:8px;">Diseña una oferta atractiva para conectar con el mejor talento joven.</p>
+        </div>
+
+        <!-- indicador de pasos -->
+        <div class="step-indicator" style="margin-top: 32px;">
+            <div class="step completed">
+                <div class="step-circle">✓</div>
+                <div class="step-label">Básicos</div>
+            </div>
+            <div class="step active">
+                <div class="step-circle">2</div>
+                <div class="step-label">Rol y Detalles</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <div class="step-label">Beneficios</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">4</div>
+                <div class="step-label">Revisión</div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <!-- Título del puesto -->
+            <div class="field-group">
+                <div class="field-label">Título del Puesto <span class="required-star">*</span></div>
+                <input class="input-text" type="text" value="Desarrollador Frontend Junior">
+            </div>
+
+            <!-- Nivel de Experiencia -->
+            <div class="field-group">
+                <div class="field-label">Nivel de Experiencia / Tipo de Rol <span class="required-star">*</span></div>
+                <div class="helper-text">Selecciona la categoría que mejor se ajuste. Esto activará nuestras insignias de confianza para los candidatos.</div>
+                <div class="level-options" style="margin-top: 16px;">
+                    <div class="level-card">
+                        <div class="level-title">Prácticas <span style="width:22px;height:18px;background:#C3C6D7;"></span></div>
+                        <div class="level-desc">Enfoque 100% en aprendizaje.<br>Ideal para estudiantes.</div>
+                        <div class="insignia">Sin Experiencia</div>
+                    </div>
+                    <div class="level-card">
+                        <div class="level-title">Trainee <span style="width:20px;height:12px;background:#C3C6D7;"></span></div>
+                        <div class="level-desc">Programa formativo para<br>recién egresados de alto potencial.</div>
+                        <div class="insignia" style="background:rgba(249,189,34,0.2); color:#8B6700;">Talento Joven</div>
+                    </div>
+                    <div class="level-card highlight">
+                        <div class="level-title">Junior <span style="width:22px;height:21px;background:#BA1A1A;"></span></div>
+                        <div class="level-desc">Rol de entrada oficial.<br>Requiere bases sólidas pero mentoría.</div>
+                        <div class="insignia insignia-warning">Junior Real</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Descripción General -->
+            <div class="field-group">
+                <div class="field-label">Descripción General <span class="required-star">*</span></div>
+                <textarea class="input-text" rows="2" placeholder="Describe el propósito principal del rol en tu equipo..."></textarea>
+            </div>
+
+            <!-- Requisitos y Experiencia -->
+            <div class="field-group">
+                <div class="field-label">Requisitos y Experiencia <span class="required-star">*</span></div>
+                <div class="helper-text">Enumera las habilidades clave. Sé realista con lo que es absolutamente necesario.</div>
+                <div class="requisitos-box" style="margin-top: 8px;">
+                    <div style="color:#0D1C2E; font-size:16px; line-height:24px;">
+                        - Dominio de HTML, CSS y JavaScript moderno.<br>
+                        - Experiencia con frameworks como React o Vue.<br>
+                        - 2+ años de experiencia comprobable en agencias.<br>
+                        - Portafolio demostrable de proyectos web.
+                    </div>
+                </div>
+            </div>
+
+            <!-- ALERTA INCONSISTENCIA -->
+            <div class="warning-box">
+                <div style="width:22px; height:19px; background:#BA1A1A; flex-shrink:0;"></div>
+                <div>
+                    <div class="warning-title">Inconsistencia de Nivel Detectada</div>
+                    <div style="color:rgba(147,0,10,0.9); font-size:14px; line-height:20px;">
+                        Has marcado este rol con la insignia <strong>'Junior Real'</strong>, pero en los requisitos solicitas <strong>'2+ años de experiencia'</strong>.<br>
+                        En ChapatuChamba, consideramos que un rol Junior debe requerir máximo 1 año de experiencia profesional.
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 12px;">
+                        <div class="btn-outline-warning">Modificar requisitos</div>
+                        <div style="font-weight:600; color:#93000A; padding:6px 0; cursor:default;">Cambiar a nivel Semi-Senior</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="action-buttons">
+                <div class="btn-back">← Atrás</div>
+                <div style="display:flex; gap:16px;">
+                    <div class="btn-save">Guardar Borrador</div>
+                    <div class="btn-continue">Continuar <span style="font-size:16px;">→</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div style="width: 1024px; left: 0px; top: 0px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-  <div style="align-self: stretch; height: 64px; padding-left: 24px; padding-right: 24px; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-bottom: 1px #E2E8F0 solid; justify-content: space-between; align-items: center; display: inline-flex">
-    <div style="justify-content: flex-start; align-items: center; gap: 24px; display: flex">
-      <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="width: 144.25px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #1E293B; font-size: 18px; font-family: Inter; font-weight: 700; line-height: 28px; word-wrap: break-word">Panel de Control</div>
-      </div>
-      <div style="position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="width: 256px; padding-top: 9px; padding-bottom: 10px; padding-left: 36px; padding-right: 16px; background: #F8FAFC; overflow: hidden; border-radius: 8px; outline: 1px #E2E8F0 solid; outline-offset: -1px; justify-content: center; align-items: flex-start; display: inline-flex">
-          <div style="flex: 1 1 0; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #6B7280; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Buscar...</div>
-          </div>
-        </div>
-        <div style="height: 20px; left: 12px; top: 9px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-          <div style="width: 10.50px; height: 10.50px; background: #94A3B8"></div>
-        </div>
-      </div>
-    </div>
-    <div style="justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-      <div style="width: 40px; height: 40px; border-radius: 9999px; justify-content: center; align-items: center; display: flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-          <div style="width: 16px; height: 20px; background: #64748B"></div>
-        </div>
-      </div>
-      <div style="width: 40px; height: 40px; border-radius: 9999px; justify-content: center; align-items: center; display: flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-          <div style="width: 20.10px; height: 20px; background: #64748B"></div>
-        </div>
-      </div>
-      <div style="width: 40px; height: 32px; padding-left: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="width: 32px; height: 32px; position: relative; background: linear-gradient(45deg, #3B82F6 0%, #2DD4BF 100%); box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; border: 2px white solid"></div>
-      </div>
-    </div>
-  </div>
-  <div style="width: 1280px; height: 64px; padding-left: 24px; padding-right: 24px; left: -256px; top: 0px; position: absolute; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-bottom: 1px #E2E8F0 solid; justify-content: space-between; align-items: center; display: inline-flex">
-    <div style="justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-      <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="width: 158.08px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #2563EB; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 28px; word-wrap: break-word">ChapatuChamba</div>
-      </div>
-      <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="width: 103.66px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #64748B; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">Panel de Control</div>
-      </div>
-    </div>
-    <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-      <div style="padding: 8px; border-radius: 9999px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-        <div style="justify-content: center; align-items: flex-start; display: inline-flex">
-          <div style="width: 16px; height: 20px; background: #64748B"></div>
-        </div>
-      </div>
-      <div style="padding: 8px; border-radius: 9999px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-        <div style="justify-content: center; align-items: flex-start; display: inline-flex">
-          <div style="width: 20.10px; height: 20px; background: #64748B"></div>
-        </div>
-      </div>
-      <div style="width: 40px; height: 32px; padding-left: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <img style="width: 32px; height: 32px; position: relative; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; border: 1px #E2E8F0 solid" src="https://placehold.co/32x32" />
-      </div>
-    </div>
-  </div>
-</div>
-<div style="width: 256px; height: 959px; padding-left: 16px; padding-right: 16px; padding-top: 24px; padding-bottom: 24px; left: 0px; top: 0px; position: absolute; background: white; border-right: 1px #E2E8F0 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 31px; display: inline-flex">
-  <div style="width: 256px; height: 966px; left: 0px; top: -7px; position: absolute; background: rgba(255, 255, 255, 0); box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.10), 0px 10px 15px -3px rgba(0, 0, 0, 0.10)"></div>
-  <div style="align-self: stretch; flex: 1 1 0; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-    <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 8px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-      <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="width: 18px; height: 18px; background: #475569"></div>
-      </div>
-      <div style="width: 73.02px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Inter; font-weight: 500; line-height: 20px; word-wrap: break-word">Dashboard</div>
-    </div>
-    <div style="align-self: stretch; padding-top: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 8px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 20px; height: 19px; background: #475569"></div>
-        </div>
-        <div style="width: 62.11px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Inter; font-weight: 500; line-height: 20px; word-wrap: break-word">Vacantes</div>
-      </div>
-    </div>
-    <div style="align-self: stretch; padding-top: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 8px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 24px; height: 12px; background: #475569"></div>
-        </div>
-        <div style="width: 104px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Inter; font-weight: 500; line-height: 20px; word-wrap: break-word">Postulantes</div>
-      </div>
-    </div>
-    <div style="align-self: stretch; padding-top: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; background: #EFF6FF; border-radius: 8px; border-left: 4px #2563EB solid; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="width: 18px; height: 18px; background: #488AE9"></div>
-          </div>
-        </div>
-        <div style="width: 108.17px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #2563EB; font-size: 14px; font-family: Inter; font-weight: 500; line-height: 20px; word-wrap: break-word">Publicar Empleo</div>
-      </div>
-    </div>
-    <div style="align-self: stretch; padding-top: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 8px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 16px; height: 16px; background: #475569"></div>
-        </div>
-        <div style="width: 60.27px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Inter; font-weight: 500; line-height: 20px; word-wrap: break-word">Reportes</div>
-      </div>
-    </div>
-    <div style="align-self: stretch; padding-top: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 8px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 20.10px; height: 20px; background: #475569"></div>
-        </div>
-        <div style="width: 94.91px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Inter; font-weight: 500; line-height: 20px; word-wrap: break-word">Configuración</div>
-      </div>
-    </div>
-  </div>
-  <div style="align-self: stretch; padding-top: 16px; border-top: 1px #E2E8F0 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-    <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-      <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="width: 18px; height: 18px; background: #475569"></div>
-      </div>
-      <div style="width: 90.47px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 24px; word-wrap: break-word">Cerrar sesión</div>
-    </div>
-  </div>
-</div>      
+</body>
+</html>
