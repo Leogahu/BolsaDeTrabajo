@@ -422,41 +422,41 @@
 </head>
 <body>
 <div class="dashboard-container">
-    <!-- Sidebar izquierda -->
-    <div class="sidebar">
-        <div class="sidebar-nav">
-            <div class="nav-item active">
-                <div class="icon-dashboard"></div>
-                <span class="nav-text">Dashboard</span>
+        <!-- Sidebar izquierda -->
+        <div class="sidebar">
+            <div class="sidebar-nav">
+                <a href="Rdashboard.html" class="nav-item active">
+                    <div class="icon-dashboard"></div>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="Rvacantes.html" class="nav-item">
+                    <div class="icon-vacantes"></div>
+                    <span class="nav-text">Vacantes</span>
+                </a>
+                <a href="Rgestion.html" class="nav-item">
+                    <div class="icon-postulantes"></div>
+                    <span class="nav-text">Postulantes</span>
+                </a>
+                <a href="RpubOferta.html" class="nav-item">
+                    <div class="icon-publicar"></div>
+                    <span class="nav-text">Publicar Empleo</span>
+                </a>
+                <a href="Rreportes.html" class="nav-item">
+                    <div class="icon-reportes"></div>
+                    <span class="nav-text">Reportes</span>
+                </a>
+                <a href="Rportal.html" class="nav-item">
+                    <div class="icon-config"></div>
+                    <span class="nav-text">Configuración</span>
+                </a>
             </div>
-            <div class="nav-item">
-                <div class="icon-vacantes"></div>
-                <span class="nav-text">Vacantes</span>
-            </div>
-            <div class="nav-item">
-                <div class="icon-postulantes"></div>
-                <span class="nav-text">Postulantes</span>
-            </div>
-            <div class="nav-item">
-                <div class="icon-publicar"></div>
-                <span class="nav-text">Publicar Empleo</span>
-            </div>
-            <div class="nav-item">
-                <div class="icon-reportes"></div>
-                <span class="nav-text">Reportes</span>
-            </div>
-            <div class="nav-item">
-                <div class="icon-config"></div>
-                <span class="nav-text">Configuración</span>
+            <div class="sidebar-nav" style="border-top: 1px solid #E2E8F0; padding-top: 16px;">
+                <a href="login.html" class="nav-item">
+                    <div class="icon-logout"></div>
+                    <span class="nav-text">Cerrar sesión</span>
+                </a>
             </div>
         </div>
-        <div class="sidebar-nav" style="border-top: 1px solid #E2E8F0; padding-top: 16px;">
-            <div class="nav-item">
-                <div class="icon-logout"></div>
-                <span class="nav-text">Cerrar sesión</span>
-            </div>
-        </div>
-    </div>
 
     <!-- Top Navbar -->
     <div class="top-navbar">
@@ -639,7 +639,36 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-</body>
+            </div>
+        </div>
+        
+        <script>
+            // Active state handling for sidebar navigation
+            document.addEventListener('DOMContentLoaded', function() {
+                const currentPath = window.location.pathname;
+                const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+                
+                // Find all nav items
+                const navItems = document.querySelectorAll('.nav-item');
+                
+                // Remove active class from all
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Add active class to matching item
+                navItems.forEach(item => {
+                    const link = item.getAttribute('href');
+                    if (link && (fileName === link || (fileName === '' && link === 'Rdashboard.html'))) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                // Special case for dashboard (when on root or no file specified)
+                if (fileName === '' || fileName === 'Rdashboard.html') {
+                    document.querySelector('.nav-item[href="Rdashboard.html"]').classList.add('active');
+                }
+            });
+        </script>
+    </body>
 </html>

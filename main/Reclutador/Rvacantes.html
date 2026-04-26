@@ -368,15 +368,15 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="nav-items">
-            <div class="nav-link"><span class="icon icon-dashboard"></span> Dashboard</div>
-            <div class="nav-link active"><span class="icon icon-vacantes"></span> Vacantes</div>
-            <div class="nav-link"><span class="icon icon-postulantes"></span> Postulantes</div>
-            <div class="nav-link"><span class="icon icon-publicar"></span> Publicar Empleo</div>
-            <div class="nav-link"><span class="icon icon-reportes"></span> Reportes</div>
-            <div class="nav-link"><span class="icon icon-config"></span> Configuración</div>
+            <a href="Rdashboard.html" class="nav-link"><span class="icon icon-dashboard"></span> Dashboard</a>
+            <a href="Rvacantes.html" class="nav-link active"><span class="icon icon-vacantes"></span> Vacantes</a>
+            <a href="Rgestion.html" class="nav-link"><span class="icon icon-postulantes"></span> Postulantes</a>
+            <a href="RpubOferta.html" class="nav-link"><span class="icon icon-publicar"></span> Publicar Empleo</a>
+            <a href="Rreportes.html" class="nav-link"><span class="icon icon-reportes"></span> Reportes</a>
+            <a href="Rportal.html" class="nav-link"><span class="icon icon-config"></span> Configuración</a>
         </div>
         <div class="nav-items" style="border-top:1px solid #E2E8F0; margin-top:auto; padding-top:16px;">
-            <div class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</div>
+            <a href="login.html" class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</a>
         </div>
     </div>
 
@@ -513,5 +513,34 @@
         </div>
     </div>
 </div>
+    
+    <script>
+        // Active state handling for sidebar navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+            
+            // Find all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Remove active class from all
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Add active class to matching link
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Special case for dashboard (when on root or no file specified)
+            if (fileName === '' || fileName === 'Rdashboard.html') {
+                document.querySelector('.nav-link[href="Rdashboard.html"]').classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html>
