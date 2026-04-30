@@ -2,10 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ChapatuChamba - Configuración</title>
-    <!-- Google Fonts: Inter y Nimbus Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ChapaTuChamba - Configuración</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,205 +14,260 @@
 
         body {
             background: #F1F5F9;
-            font-family: 'Inter', 'Nimbus Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* contenedor principal */
-        .dashboard {
-            width: 1280px;
-            min-height: 1466px;
-            margin: 0 auto;
-            position: relative;
-            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
-        }
-
-        /* SIDEBAR izquierda */
+        /* ========== SIDEBAR FIJA IZQUIERDA (mismo estilo que te gustó) ========== */
         .sidebar {
-            width: 256px;
-            height: 100%;
-            position: absolute;
+            width: 280px;
+            height: 100vh;
+            position: fixed;
             left: 0;
-            top: 64px;
-            background: #F8F9FF;
-            border-right: 1px solid #C3C6D7;
-            padding: 32px 16px;
+            top: 0;
+            background: white;
+            border-right: 1px solid #E9EFF5;
+            padding: 32px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            z-index: 5;
-            box-shadow: 4px 0px 20px rgba(0,0,0,0.05);
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
         }
 
-        .nav-items {
+        /* Logo dentro del sidebar */
+        .sidebar-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #E9EFF5;
+        }
+
+        .sidebar-logo {
+            font-weight: 800;
+            font-size: 24px;
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            color: #94A3B8;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* Navegación */
+        .sidebar-nav {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 8px;
+            flex: 1;
         }
 
-        .nav-link {
+        .nav-item {
             display: flex;
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
-            border-radius: 8px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: #475569;
+            font-weight: 500;
             font-size: 14px;
+        }
+
+        .nav-item:hover {
+            background: #F1F5F9;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+            color: #2563EB;
+        }
+
+        .nav-item.active .nav-text {
             font-weight: 600;
-            color: #434655;
-            transition: all 0.1s;
-            cursor: default;
         }
 
-        .nav-link.active {
+        .nav-icon {
+            font-size: 18px;
+            width: 24px;
+        }
+
+        .nav-text {
+            font-size: 14px;
+        }
+
+        /* Botón toggle para móvil */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            left: 16px;
+            top: 16px;
+            z-index: 101;
             background: #2563EB;
-            color: #EEEFFF;
-            border-right: 4px solid #004AC6;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .icon {
-            width: 20px;
-            height: 20px;
-            background: currentColor;
-            mask-size: contain;
-            mask-repeat: no-repeat;
-        }
-
-        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
-        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:19px; }
-        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:24px; height:12px; }
-        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
-        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); background-color: currentColor; width:16px; height:16px; }
-        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:20px; }
-        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
-
-        /* TOP NAVBAR */
-        .top-nav {
-            position: absolute;
+        /* ========== TOP NAVBAR ========== */
+        .top-navbar {
+            position: fixed;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 64px;
-            background: rgba(248,249,255,0.80);
-            backdrop-filter: blur(6px);
-            border-bottom: 1px solid #C3C6D7;
+            left: 280px;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid #E9EFF5;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 24px;
-            z-index: 10;
-            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+            padding: 0 32px;
+            z-index: 99;
+            height: 70px;
         }
 
-        .search-container {
-            width: 448px;
+        /* Buscador */
+        .search-wrapper {
             position: relative;
+            width: 320px;
         }
 
-        .search-container input {
+        .search-input {
             width: 100%;
-            padding: 10px 16px 10px 40px;
-            background: #EFF4FF;
-            border: none;
-            border-radius: 9999px;
-            font-size: 16px;
-            color: #737686;
+            padding: 10px 16px 10px 42px;
+            background: #F8FAFC;
+            border-radius: 40px;
+            border: 1px solid #E2E8F0;
+            font-size: 14px;
             outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #2563EB;
+            background: white;
         }
 
         .search-icon {
             position: absolute;
-            left: 12px;
-            top: 9px;
-            width: 15px;
-            height: 15px;
-            background: #737686;
-            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
-            background-size: contain;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #94A3B8;
         }
 
+        /* Acciones header */
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
         }
 
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 4px 8px 4px 4px;
-            border-radius: 9999px;
+        .notif-btn, .msg-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            color: #64748B;
         }
 
-        .avatar {
-            width: 32px;
-            height: 32px;
+        .notif-badge {
+            position: absolute;
+            top: -2px;
+            right: -5px;
+            width: 8px;
+            height: 8px;
+            background: #EF4444;
             border-radius: 50%;
-            background: linear-gradient(45deg, #3B82F6, #2DD4BF);
-            border: 2px solid #F8F9FF;
         }
 
-        /* MAIN CONTENT */
+        .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #E2E8F0;
+            background: linear-gradient(135deg, #3B82F6, #2DD4BF);
+            cursor: pointer;
+        }
+
+        /* ========== MAIN CONTENT ========== */
         .main-content {
-            margin-left: 256px;
-            padding: 48px;
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 32px 40px 48px 40px;
+            min-height: calc(100vh - 70px);
             background: #F8F9FF;
-            min-height: 100vh;
         }
 
+        /* Page Header */
         .page-header {
-            margin-bottom: 48px;
-        }
-
-        .page-title {
-            font-size: 36px;
-            font-weight: 700;
-            color: #0D1C2E;
-        }
-
-        .page-sub {
-            font-size: 16px;
-            color: #434655;
-            margin-top: 8px;
-        }
-
-        /* Tarjetas */
-        .settings-card {
-            background: white;
-            border-radius: 12px;
-            outline: 1px solid #C3C6D7;
-            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-            overflow: hidden;
             margin-bottom: 32px;
         }
 
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0F172A;
+        }
+
+        .page-subtitle {
+            font-size: 15px;
+            color: #64748B;
+            margin-top: 6px;
+        }
+
+        /* Settings Cards */
+        .settings-card {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #E9EFF5;
+            overflow: hidden;
+            margin-bottom: 28px;
+            transition: all 0.2s;
+        }
+
         .card-header {
-            padding: 24px;
-            background: #F8F9FF;
-            border-bottom: 1px solid #C3C6D7;
+            padding: 20px 24px;
+            background: #FAFBFD;
+            border-bottom: 1px solid #E9EFF5;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .card-header-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 22px;
         }
 
         .card-header-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #0D1C2E;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0F172A;
         }
 
         .card-header-sub {
             font-size: 12px;
-            color: #434655;
-            font-weight: 500;
+            color: #64748B;
+            margin-top: 2px;
         }
 
         .card-body {
@@ -223,21 +277,21 @@
         /* Formularios */
         .form-row {
             display: flex;
-            gap: 24px;
-            margin-bottom: 16px;
+            gap: 20px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
 
         .form-group {
             flex: 1;
-            min-width: 250px;
+            min-width: 200px;
         }
 
         .form-label {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
-            color: #434655;
-            margin-bottom: 4px;
+            color: #475569;
+            margin-bottom: 6px;
             display: block;
         }
 
@@ -245,11 +299,22 @@
             width: 100%;
             padding: 12px 16px;
             background: white;
-            border: 1px solid #C3C6D7;
-            border-radius: 8px;
-            font-size: 16px;
-            color: #0D1C2E;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
             outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
         }
 
         .password-wrapper {
@@ -258,100 +323,136 @@
 
         .eye-icon {
             position: absolute;
-            right: 16px;
+            right: 14px;
             top: 50%;
             transform: translateY(-50%);
-            width: 18px;
-            height: 16px;
-            background: #737686;
-            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'/%3E%3C/svg%3E");
-            background-size: contain;
-            cursor: default;
+            font-size: 18px;
+            cursor: pointer;
+            color: #94A3B8;
         }
 
+        /* Buttons */
         .button-group {
             display: flex;
             justify-content: flex-end;
             gap: 12px;
-            margin-top: 16px;
+            margin-top: 20px;
         }
 
         .btn-cancel {
             padding: 10px 24px;
-            background: #E6EEFF;
-            border-radius: 8px;
+            background: #F1F5F9;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
             font-weight: 600;
-            color: #004AC6;
-            border: none;
-            cursor: default;
+            font-size: 13px;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: #E2E8F0;
         }
 
         .btn-primary {
             padding: 10px 24px;
-            background: #004AC6;
-            border-radius: 8px;
-            font-weight: 600;
-            color: white;
+            background: #2563EB;
             border: none;
-            cursor: default;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .upload-area {
-            padding: 24px;
-            background: #EFF4FF;
-            border-radius: 8px;
-            border: 2px solid #C3C6D7;
-            text-align: center;
-            margin-top: 8px;
+        .btn-primary:hover {
+            background: #1D4ED8;
         }
 
+        /* Upload Area */
         .logo-preview {
-            width: 96px;
-            height: 96px;
-            background: #E6EEFF;
-            border-radius: 12px;
-            border: 1px solid #C3C6D7;
+            width: 80px;
+            height: 80px;
+            background: #F1F5F9;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 32px;
         }
 
-        /* Notificaciones */
+        .upload-area {
+            flex: 1;
+            padding: 20px;
+            background: #F8FAFC;
+            border-radius: 12px;
+            border: 2px dashed #CBD5E1;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: #2563EB;
+            background: #EFF6FF;
+        }
+
+        /* Notification Items */
         .notification-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 14px 0;
+            border-bottom: 1px solid #E9EFF5;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
         }
 
         .toggle-switch {
             width: 48px;
             height: 24px;
             background: #2563EB;
-            border-radius: 9999px;
+            border-radius: 30px;
             position: relative;
+            cursor: pointer;
         }
 
         .toggle-switch-off {
-            background: #D5E3FC;
+            background: #CBD5E1;
         }
 
         .toggle-knob {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: white;
             border-radius: 50%;
             position: absolute;
-            right: 0;
-            top: 0;
+            right: 2px;
+            top: 2px;
+            transition: all 0.2s;
         }
 
-        /* Team */
+        .toggle-switch-off .toggle-knob {
+            right: auto;
+            left: 2px;
+        }
+
+        /* Team Members */
         .team-member {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 14px 0;
+            border-bottom: 1px solid #E9EFF5;
+        }
+
+        .team-member:last-child {
+            border-bottom: none;
         }
 
         .member-info {
@@ -361,208 +462,462 @@
         }
 
         .member-avatar {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            background: #FFDF9F;
+            background: #EFF6FF;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             font-size: 14px;
-            color: #261A00;
+            color: #2563EB;
         }
 
         .member-badge {
-            background: #E6EEFF;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
+            background: #F1F5F9;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
             font-weight: 500;
-            color: #434655;
+            color: #475569;
         }
 
         .invite-btn {
-            padding: 10px 20px;
-            border: 1px solid #004AC6;
-            border-radius: 8px;
+            padding: 12px;
+            border: 1px dashed #2563EB;
+            border-radius: 10px;
             text-align: center;
             font-weight: 600;
-            color: #004AC6;
-            margin-top: 24px;
+            font-size: 13px;
+            color: #2563EB;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .invite-btn:hover {
+            background: #EFF6FF;
+            border-style: solid;
+        }
+
+        /* Two Columns Layout */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            .top-navbar {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 90px 24px 40px 24px;
+            }
+            
+            .two-columns {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-navbar {
+                justify-content: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                height: auto;
+                padding: 12px 16px;
+            }
+            
+            .search-wrapper {
+                width: 100%;
+                order: 1;
+            }
+            
+            .header-actions {
+                order: 2;
+            }
+            
+            .main-content {
+                padding: 110px 16px 32px 16px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .button-group {
+                justify-content: stretch;
+            }
+            
+            .btn-cancel, .btn-primary {
+                flex: 1;
+                text-align: center;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 100px 16px 32px 16px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .upload-area {
+                margin-top: 12px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="dashboard">
-     <!-- Sidebar -->
-     <div class="sidebar">
-         <div class="nav-items">
-             <a href="Rdashboard.html" class="nav-link"><span class="icon icon-dashboard"></span> Dashboard</a>
-             <a href="Rvacantes.html" class="nav-link"><span class="icon icon-vacantes"></span> Vacantes</a>
-             <a href="Rgestion.html" class="nav-link"><span class="icon icon-postulantes"></span> Postulantes</a>
-             <a href="RpubOferta.html" class="nav-link"><span class="icon icon-publicar"></span> Publicar Empleo</a>
-             <a href="Rreportes.html" class="nav-link"><span class="icon icon-reportes"></span> Reportes</a>
-             <a href="Rportal.html" class="nav-link active"><span class="icon icon-config"></span> Configuración</a>
-         </div>
-         <div class="nav-items" style="border-top:1px solid #E2E8F0; padding-top:16px;">
-             <a href="login.html" class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</a>
-         </div>
-     </div>
 
-    <!-- Top Navbar -->
-    <div class="top-nav">
-        <div class="search-container">
-            <input type="text" placeholder="Buscar candidatos, vacantes...">
-            <div class="search-icon"></div>
+<button class="sidebar-toggle" id="sidebarToggle">☰</button>
+
+<!-- ========== SIDEBAR (mismo diseño que te gustó) ========== -->
+<div class="sidebar" id="sidebar">
+    <div>
+        <div class="sidebar-header">
+            <div class="sidebar-logo">ChapaTuChamba</div>
+            <div class="sidebar-subtitle">Panel de Control</div>
         </div>
-        <div class="header-actions">
-            <div style="padding:8px; position:relative;">🔔<div style="width:8px; height:8px; background:#BA1A1A; border-radius:50%; position:absolute; top:4px; right:4px;"></div></div>
-            <div style="padding:8px;">✉️</div>
-            <div style="width:1px; height:32px; background:#C3C6D7;"></div>
-            <div class="user-profile">
-                <div class="avatar"></div>
-                <div><div style="font-size:12px; font-weight:500;">Carlos M.</div><div style="font-size:10px; color:#434655;">Admin</div></div>
-                <div>▼</div>
+        <div class="sidebar-nav">
+            <a href="Rdashboard.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="Rvacantes.html" class="nav-item">
+                <span class="nav-icon">💼</span>
+                <span class="nav-text">Vacantes</span>
+            </a>
+            <a href="Rgestion.html" class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Postulantes</span>
+            </a>
+            <a href="RpubOferta.html" class="nav-item">
+                <span class="nav-icon">📝</span>
+                <span class="nav-text">Publicar Empleo</span>
+            </a>
+            <a href="Rreportes.html" class="nav-item">
+                <span class="nav-icon">📈</span>
+                <span class="nav-text">Reportes</span>
+            </a>
+            <a href="Rportal.html" class="nav-item active">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">Configuración</span>
+            </a>
+        </div>
+    </div>
+    <div class="sidebar-nav" style="border-top: 1px solid #E9EFF5; padding-top: 16px;">
+        <a href="login.html" class="nav-item">
+            <span class="nav-icon">🚪</span>
+            <span class="nav-text">Cerrar sesión</span>
+        </a>
+    </div>
+</div>
+
+<!-- ========== TOP NAVBAR ========== -->
+<div class="top-navbar">
+    <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="Buscar configuraciones...">
+    </div>
+    <div class="header-actions">
+        <button class="notif-btn">
+            🔔
+            <span class="notif-badge"></span>
+        </button>
+        <button class="msg-btn">
+            💬
+        </button>
+        <div class="avatar-img"></div>
+    </div>
+</div>
+
+<!-- ========== MAIN CONTENT ========== -->
+<div class="main-content">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-title">Panel de Control</div>
+        <div class="page-subtitle">Gestiona la configuración de tu cuenta y preferencias de la empresa.</div>
+    </div>
+
+    <!-- Ajustes de Perfil -->
+    <div class="settings-card">
+        <div class="card-header">
+            <div class="card-header-icon" style="background:#EFF6FF;">👤</div>
+            <div>
+                <div class="card-header-title">Ajustes de Perfil</div>
+                <div class="card-header-sub">Información personal y seguridad de la cuenta.</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Nombre Completo</label>
+                    <input class="form-input" type="text" value="Carlos Mendoza">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Cargo / Rol</label>
+                    <input class="form-input" type="text" value="Director de Adquisición de Talento">
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label class="form-label">Correo Electrónico</label>
+                <input class="form-input" type="email" value="carlos.m@tecnosoluciones.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Contraseña</label>
+                <div class="password-wrapper">
+                    <input class="form-input" type="password" value="password123" id="passwordInput">
+                    <span class="eye-icon" id="togglePassword">👁️</span>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn-cancel" id="btnCancelProfile">Cancelar</button>
+                <button class="btn-primary" id="btnSaveProfile">Guardar Cambios</button>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="page-header">
-            <div class="page-title">Panel de Control</div>
-            <div class="page-sub">Gestiona la configuración de tu cuenta y preferencias de la empresa.</div>
+    <!-- Información de la Empresa -->
+    <div class="settings-card">
+        <div class="card-header">
+            <div class="card-header-icon" style="background:#FEF3C7;">🏢</div>
+            <div>
+                <div class="card-header-title">Información de la Empresa</div>
+                <div class="card-header-sub">Detalles visibles para los candidatos.</div>
+            </div>
         </div>
-
-        <!-- Ajustes de Perfil -->
-        <div class="settings-card">
-            <div class="card-header">
-                <div class="card-header-icon" style="background:#E6EEFF;"><span style="color:#004AC6;">👤</span></div>
-                <div>
-                    <div class="card-header-title">Ajustes de Perfil</div>
-                    <div class="card-header-sub">Información personal y seguridad de la cuenta.</div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="logo-preview">📷</div>
+                <div style="flex: 1;">
+                    <label class="form-label">Logo de la Empresa</label>
+                    <div class="upload-area" id="uploadArea">
+                        <div>📂 Arrastra un archivo o <strong style="color:#2563EB;">explora</strong></div>
+                        <div style="font-size: 11px; color: #94A3B8; margin-top: 6px;">PNG, JPG, GIF hasta 5MB</div>
+                    </div>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group">
-                        <div class="form-label">Nombre Completo</div>
-                        <input class="form-input" type="text" value="Carlos Mendoza">
-                    </div>
-                    <div class="form-group">
-                        <div class="form-label">Cargo / Rol</div>
-                        <input class="form-input" type="text" value="Director de Adquisición de Talento">
-                    </div>
-                </div>
-                <div class="form-group" style="margin-bottom:16px;">
-                    <div class="form-label">Correo Electrónico</div>
-                    <input class="form-input" type="email" value="carlos.m@tecnosoluciones.com">
+            <div class="form-row" style="margin-top: 20px;">
+                <div class="form-group">
+                    <label class="form-label">Nombre de la Empresa</label>
+                    <input class="form-input" type="text" value="TecnoSoluciones S.A.">
                 </div>
                 <div class="form-group">
-                    <div class="form-label">Contraseña</div>
-                    <div class="password-wrapper">
-                        <input class="form-input" type="password" value="password123" style="padding-right:40px;">
-                        <div class="eye-icon"></div>
-                    </div>
-                </div>
-                <div class="button-group">
-                    <button class="btn-cancel">Cancelar</button>
-                    <button class="btn-primary">Guardar Cambios</button>
+                    <label class="form-label">Sitio Web</label>
+                    <input class="form-input" type="text" value="https://tecnosoluciones.com">
                 </div>
             </div>
+            <div class="form-group">
+                <label class="form-label">Descripción Breve</label>
+                <textarea class="form-input" rows="3">Somos una empresa líder en desarrollo de software, enfocada en crear soluciones innovadoras para el sector financiero. Buscamos talento joven con ganas de aprender y crecer.</textarea>
+            </div>
+            <div class="button-group">
+                <button class="btn-primary" id="btnUpdateCompany">Actualizar Empresa</button>
+            </div>
         </div>
+    </div>
 
-        <!-- Información de la Empresa -->
+    <!-- Two Columns: Notificaciones + Equipo -->
+    <div class="two-columns">
+        <!-- Notificaciones -->
         <div class="settings-card">
             <div class="card-header">
-                <div class="card-header-icon" style="background:#FFDF9F;"><span>🏢</span></div>
-                <div>
-                    <div class="card-header-title">Información de la Empresa</div>
-                    <div class="card-header-sub">Detalles visibles para los candidatos.</div>
-                </div>
+                <div class="card-header-icon" style="background:#DCFCE7;">🔔</div>
+                <div class="card-header-title">Notificaciones</div>
             </div>
             <div class="card-body">
-                <div class="form-row" style="align-items:flex-start;">
-                    <div class="logo-preview">📷</div>
-                    <div style="flex:1;">
-                        <div class="form-label">Logo de la Empresa</div>
-                        <div class="upload-area">
-                            <div>📂 Arrastra un archivo o <strong style="color:#004AC6;">explora</strong></div>
-                            <div style="font-size:12px; color:#434655; margin-top:8px;">PNG, JPG, GIF hasta 5MB</div>
-                        </div>
+                <div class="notification-item">
+                    <div>
+                        <div style="font-weight: 600;">Nuevos Candidatos</div>
+                        <div style="font-size: 12px; color: #64748B;">Al recibir una postulación</div>
                     </div>
+                    <div class="toggle-switch" id="toggleCandidates"></div>
                 </div>
-                <div class="form-row" style="margin-top:24px;">
-                    <div class="form-group">
-                        <div class="form-label">Nombre de la Empresa</div>
-                        <input class="form-input" type="text" value="TecnoSoluciones S.A.">
+                <div class="notification-item">
+                    <div>
+                        <div style="font-weight: 600;">Mensajes Directos</div>
+                        <div style="font-size: 12px; color: #64748B;">Candidatos o equipo</div>
                     </div>
-                    <div class="form-group">
-                        <div class="form-label">Sitio Web</div>
-                        <input class="form-input" type="text" value="https://tecnosoluciones.com">
+                    <div class="toggle-switch" id="toggleMessages"></div>
+                </div>
+                <div class="notification-item">
+                    <div>
+                        <div style="font-weight: 600;">Alertas del Sistema</div>
+                        <div style="font-size: 12px; color: #64748B;">Mantenimiento y pagos</div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-label">Descripción Breve</div>
-                    <textarea class="form-input" rows="3" style="resize:none;">Somos una empresa líder en desarrollo de software, enfocada en crear soluciones innovadoras para el sector financiero. Buscamos talento joven con ganas de aprender y crecer.</textarea>
-                </div>
-                <div class="button-group">
-                    <button class="btn-primary">Actualizar Empresa</button>
+                    <div class="toggle-switch toggle-switch-off" id="toggleAlerts"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Notificaciones y Equipo en dos columnas -->
-        <div class="form-row">
-            <!-- Notificaciones -->
-            <div class="form-group">
-                <div class="settings-card">
-                    <div class="card-header">
-                        <div class="card-header-icon" style="background:#62FAE3;">🔔</div>
-                        <div class="card-header-title">Notificaciones</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="notification-item">
-                            <div><div style="font-weight:600;">Nuevos Candidatos</div><div style="font-size:12px; color:#434655;">Al recibir una postulación</div></div>
-                            <div class="toggle-switch"><div class="toggle-knob"></div></div>
-                        </div>
-                        <div class="notification-item">
-                            <div><div style="font-weight:600;">Mensajes Directos</div><div style="font-size:12px; color:#434655;">Candidatos o equipo</div></div>
-                            <div class="toggle-switch"><div class="toggle-knob"></div></div>
-                        </div>
-                        <div class="notification-item">
-                            <div><div style="font-weight:600;">Alertas del Sistema</div><div style="font-size:12px; color:#434655;">Mantenimiento y pagos</div></div>
-                            <div class="toggle-switch toggle-switch-off"><div class="toggle-knob" style="left:0;"></div></div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Equipo -->
+        <div class="settings-card">
+            <div class="card-header">
+                <div class="card-header-icon" style="background:#EFF6FF;">👥</div>
+                <div class="card-header-title">Equipo</div>
             </div>
-
-            <!-- Equipo -->
-            <div class="form-group">
-                <div class="settings-card">
-                    <div class="card-header">
-                        <div class="card-header-icon" style="background:#DCE9FF;">👥</div>
-                        <div class="card-header-title">Equipo</div>
+            <div class="card-body">
+                <div class="team-member">
+                    <div class="member-info">
+                        <div class="member-avatar" style="background:#2563EB; color:white;">CM</div>
+                        <div>
+                            <div style="font-weight: 600;">Carlos Mendoza</div>
+                            <div style="font-size: 12px; color: #64748B;">Propietario</div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="team-member">
-                            <div class="member-info"><div class="avatar" style="background:#E2E8F0;"></div><div><div style="font-weight:600;">Carlos Mendoza</div><div style="font-size:12px; color:#434655;">Propietario</div></div></div>
-                            <div class="member-badge">Tú</div>
+                    <div class="member-badge">Tú</div>
+                </div>
+                <div class="team-member">
+                    <div class="member-info">
+                        <div class="member-avatar">LM</div>
+                        <div>
+                            <div style="font-weight: 600;">Laura Martínez</div>
+                            <div style="font-size: 12px; color: #64748B;">Reclutador IT</div>
                         </div>
-                        <div class="team-member">
-                            <div class="member-info"><div class="member-avatar">LM</div><div><div style="font-weight:600;">Laura Martínez</div><div style="font-size:12px; color:#434655;">Reclutador IT</div></div></div>
-                        </div>
-                        <div class="team-member">
-                            <div class="member-info"><div class="member-avatar" style="background:#2563EB; color:white;">JS</div><div><div style="font-weight:600;">Javier Silva</div><div style="font-size:12px; color:#434655;">Asistente</div></div></div>
-                        </div>
-                        <div class="invite-btn">+ Invitar Nuevo Miembro</div>
                     </div>
                 </div>
+                <div class="team-member">
+                    <div class="member-info">
+                        <div class="member-avatar" style="background:#FEF3C7;">JS</div>
+                        <div>
+                            <div style="font-weight: 600;">Javier Silva</div>
+                            <div style="font-size: 12px; color: #64748B;">Asistente</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="invite-btn" id="inviteMember">+ Invitar Nuevo Miembro</div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Sidebar toggle para móvil
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+        });
+    }
+    
+    // Cerrar sidebar al hacer click en enlace en móvil
+    const navLinks = document.querySelectorAll('.nav-item');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.remove('open');
+            }
+        });
+    });
+    
+    // Active state handling
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+        
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        navItems.forEach(item => {
+            const href = item.getAttribute('href');
+            if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
+                item.classList.add('active');
+            }
+        });
+        
+        if (fileName === '' || fileName === 'Rdashboard.html') {
+            const dashboardLink = document.querySelector('.nav-item[href="Rdashboard.html"]');
+            if (dashboardLink) dashboardLink.classList.add('active');
+        }
+    });
+    
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('passwordInput');
+    
+    if (togglePassword) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+    }
+    
+    // Botones funcionales
+    document.getElementById('btnCancelProfile')?.addEventListener('click', () => {
+        alert('❌ Cambios cancelados');
+    });
+    
+    document.getElementById('btnSaveProfile')?.addEventListener('click', () => {
+        alert('✅ Perfil actualizado correctamente');
+    });
+    
+    document.getElementById('btnUpdateCompany')?.addEventListener('click', () => {
+        alert('🏢 Información de la empresa actualizada');
+    });
+    
+    document.getElementById('inviteMember')?.addEventListener('click', () => {
+        alert('📧 Enviar invitación a nuevo miembro');
+    });
+    
+    // Upload area
+    document.getElementById('uploadArea')?.addEventListener('click', () => {
+        alert('📁 Selector de archivos (demo)');
+    });
+    
+    // Toggles demo
+    document.getElementById('toggleCandidates')?.addEventListener('click', function() {
+        alert('🔔 Notificaciones de nuevos candidatos: ' + (this.classList.contains('toggle-switch-off') ? 'Activadas' : 'Desactivadas'));
+    });
+    
+    document.getElementById('toggleMessages')?.addEventListener('click', function() {
+        alert('💬 Notificaciones de mensajes: ' + (this.classList.contains('toggle-switch-off') ? 'Activadas' : 'Desactivadas'));
+    });
+    
+    document.getElementById('toggleAlerts')?.addEventListener('click', function() {
+        alert('⚠️ Alertas del sistema: ' + (this.classList.contains('toggle-switch-off') ? 'Activadas' : 'Desactivadas'));
+    });
+    
+    // Notificaciones demo
+    document.querySelector('.notif-btn')?.addEventListener('click', () => {
+        alert('📬 No tienes notificaciones nuevas');
+    });
+    
+    document.querySelector('.msg-btn')?.addEventListener('click', () => {
+        alert('💬 Bandeja de mensajes');
+    });
+</script>
 </body>
 </html>

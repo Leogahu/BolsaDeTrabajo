@@ -2,10 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ChapatuChamba - Vacantes</title>
-    <!-- Google Fonts: Inter y Nimbus Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ChapaTuChamba - Vacantes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,153 +14,219 @@
 
         body {
             background: #F1F5F9;
-            font-family: 'Inter', 'Nimbus Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
         }
 
-        .dashboard {
-            width: 1280px;
-            min-height: 1024px;
-            margin: 0 auto;
-            position: relative;
-            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
-        }
-
-        /* SIDEBAR */
+        /* ========== SIDEBAR FIJA IZQUIERDA (mismo estilo que te gustó) ========== */
         .sidebar {
-            width: 256px;
-            height: 100%;
-            position: absolute;
+            width: 280px;
+            height: 100vh;
+            position: fixed;
             left: 0;
-            top: 64px;
+            top: 0;
             background: white;
-            border-right: 1px solid #E2E8F0;
-            padding: 24px 0;
+            border-right: 1px solid #E9EFF5;
+            padding: 32px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            z-index: 5;
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
         }
 
-        .nav-items {
+        /* Logo dentro del sidebar */
+        .sidebar-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #E9EFF5;
+        }
+
+        .sidebar-logo {
+            font-weight: 800;
+            font-size: 24px;
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            color: #94A3B8;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* Navegación */
+        .sidebar-nav {
             display: flex;
             flex-direction: column;
+            gap: 8px;
+            flex: 1;
         }
 
-        .nav-link {
+        .nav-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
             color: #475569;
-            cursor: default;
+            font-weight: 500;
+            font-size: 14px;
         }
 
-        .nav-link.active {
+        .nav-item:hover {
+            background: #F1F5F9;
+        }
+
+        .nav-item.active {
             background: #EFF6FF;
-            border-right: 4px solid #2563EB;
             color: #2563EB;
         }
 
-        .icon {
-            width: 20px;
-            height: 20px;
-            background: currentColor;
-            mask-size: contain;
-            mask-repeat: no-repeat;
+        .nav-item.active .nav-text {
+            font-weight: 600;
         }
 
-        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); width:18px; height:18px; }
-        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); width:20px; height:19px; }
-        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); width:24px; height:12px; }
-        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); width:18px; height:18px; }
-        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); width:16px; height:16px; }
-        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); width:20px; height:20px; }
-        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); width:18px; height:18px; }
+        .nav-icon {
+            font-size: 18px;
+            width: 24px;
+        }
 
-        /* TOP NAVBAR */
-        .top-nav {
-            position: absolute;
+        .nav-text {
+            font-size: 14px;
+        }
+
+        /* Botón toggle para móvil */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            left: 16px;
+            top: 16px;
+            z-index: 101;
+            background: #2563EB;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* ========== TOP NAVBAR ========== */
+        .top-navbar {
+            position: fixed;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 64px;
-            background: rgba(248,249,255,0.80);
-            backdrop-filter: blur(6px);
-            border-bottom: 1px solid #C3C6D7;
+            left: 280px;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid #E9EFF5;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 24px;
-            z-index: 10;
+            padding: 0 32px;
+            z-index: 99;
+            height: 70px;
         }
 
-        .search-container {
-            width: 448px;
+        /* Buscador */
+        .search-wrapper {
             position: relative;
+            width: 320px;
         }
 
-        .search-container input {
+        .search-input {
             width: 100%;
-            padding: 10px 16px 10px 40px;
-            background: #EFF4FF;
-            border: none;
-            border-radius: 9999px;
-            font-size: 16px;
-            color: #737686;
+            padding: 10px 16px 10px 42px;
+            background: #F8FAFC;
+            border-radius: 40px;
+            border: 1px solid #E2E8F0;
+            font-size: 14px;
             outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #2563EB;
+            background: white;
         }
 
         .search-icon {
             position: absolute;
-            left: 12px;
-            top: 9px;
-            width: 15px;
-            height: 15px;
-            background: #737686;
-            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
-            background-size: contain;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #94A3B8;
         }
 
-        .user-profile {
+        /* Acciones header */
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 4px 8px 4px 4px;
-            border-radius: 9999px;
+            gap: 20px;
         }
 
-        .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #3B82F6, #2DD4BF);
-            border: 2px solid #F8F9FF;
-        }
-
-        /* MAIN CONTENT */
-        .main-content {
-            margin-left: 256px;
-            padding: 32px;
-            background: #F8F9FF;
-            min-height: 100vh;
-        }
-
-        .page-title {
-            font-size: 36px;
-            font-weight: 700;
-            color: #0D1C2E;
-            margin-bottom: 8px;
-        }
-
-        .page-sub {
-            font-size: 14px;
-            font-weight: 600;
+        .notif-btn, .msg-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
             color: #64748B;
-            margin-bottom: 24px;
         }
 
+        .notif-badge {
+            position: absolute;
+            top: -2px;
+            right: -5px;
+            width: 8px;
+            height: 8px;
+            background: #EF4444;
+            border-radius: 50%;
+        }
+
+        .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #E2E8F0;
+            background: linear-gradient(135deg, #3B82F6, #2DD4BF);
+            cursor: pointer;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 32px 40px 48px 40px;
+            min-height: calc(100vh - 70px);
+            background: #F8F9FF;
+        }
+
+        /* Page Header */
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 6px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #64748B;
+            margin-bottom: 28px;
+        }
+
+        /* Filter Tabs */
         .filter-tabs {
             display: flex;
             gap: 8px;
@@ -169,17 +234,22 @@
             padding: 4px;
             border-radius: 12px;
             border: 1px solid #E2E8F0;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
             width: fit-content;
         }
 
         .filter-tab {
             padding: 8px 24px;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
             color: #64748B;
-            cursor: default;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tab:hover {
+            background: #F1F5F9;
         }
 
         .filter-tab.active {
@@ -187,28 +257,105 @@
             color: #2563EB;
         }
 
-        /* Tarjetas de vacantes */
+        /* Jobs Grid */
         .jobs-grid {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 20px;
         }
 
-        .job-card {
-            background: white;
-            border-radius: 24px;
+        /* Promo Card */
+        .promo-card {
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            border-radius: 20px;
             padding: 24px;
-            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            color: white;
             position: relative;
             overflow: hidden;
+        }
+
+        .promo-card-bg {
+            position: absolute;
+            right: -40px;
+            top: -40px;
+            width: 160px;
+            height: 160px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            filter: blur(32px);
+        }
+
+        .promo-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .avatars-group {
+            display: flex;
+        }
+
+        .avatars-group div {
+            width: 32px;
+            height: 32px;
+            background: #E2E8F0;
+            border-radius: 50%;
+            border: 2px solid #2563EB;
+        }
+
+        .avatars-group div:not(:first-child) {
+            margin-left: -8px;
+        }
+
+        .avatar-more {
+            background: #60A5FA !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .promo-link {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .promo-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Job Card */
+        .job-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid #E9EFF5;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
         }
 
         .job-card-border {
             position: absolute;
             left: 0;
-            top: 0;
-            width: 8px;
-            height: 100%;
+            top: 20px;
+            width: 6px;
+            height: calc(100% - 40px);
+            border-radius: 0 4px 4px 0;
         }
 
         .job-card-header {
@@ -216,73 +363,55 @@
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .job-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #0D1C2E;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0F172A;
         }
 
         .badge-group {
             display: flex;
             gap: 8px;
             margin-top: 8px;
+            flex-wrap: wrap;
         }
 
         .badge {
             padding: 4px 12px;
-            border-radius: 9999px;
-            font-size: 11px;
+            border-radius: 30px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
         }
 
-        .badge-junior-real {
-            background: #F43F5E;
-            color: white;
-        }
-
-        .badge-sin-exp {
-            background: #2DD4BF;
-            color: #0F172A;
-        }
-
-        .badge-talento-joven {
-            background: #FBBF24;
-            color: #0F172A;
-        }
+        .badge-junior-real { background: #FEE2E2; color: #991B1B; }
+        .badge-sin-exp { background: #DCFCE7; color: #166534; }
+        .badge-talento-joven { background: #FEF3C7; color: #92400E; }
 
         .status-badge {
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 10px;
-            border-radius: 9999px;
+            padding: 4px 12px;
+            border-radius: 30px;
             font-size: 12px;
             font-weight: 500;
         }
 
-        .status-active {
-            background: #DCFCE7;
-            color: #166534;
-        }
-
-        .status-paused {
-            background: #FEF3C7;
-            color: #92400E;
-        }
-
-        .status-closed {
-            background: #F1F5F9;
-            color: #64748B;
-        }
+        .status-active { background: #DCFCE7; color: #166534; }
+        .status-paused { background: #FEF3C7; color: #92400E; }
+        .status-closed { background: #F1F5F9; color: #64748B; }
 
         .metrics-row {
             display: flex;
             gap: 32px;
             padding-top: 16px;
-            border-top: 1px solid #F1F5F9;
+            border-top: 1px solid #E9EFF5;
+            flex-wrap: wrap;
         }
 
         .metric {
@@ -295,53 +424,147 @@
             font-weight: 700;
             text-transform: uppercase;
             color: #94A3B8;
+            letter-spacing: 0.5px;
         }
 
         .metric-value {
             font-size: 14px;
             font-weight: 500;
-            color: #0D1C2E;
+            color: #0F172A;
         }
 
         .metric-highlight {
-            color: #004AC6;
+            color: #2563EB;
             font-weight: 700;
         }
 
-        .action-icons {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-left: 24px;
-            border-left: 1px solid #F1F5F9;
-        }
-
-        .promo-card {
-            background: #2563EB;
-            border-radius: 24px;
-            padding: 24px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 24px;
-        }
-
-        .promo-card-bg {
+        .card-actions {
             position: absolute;
-            right: -40px;
-            top: -40px;
-            width: 160px;
-            height: 160px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            filter: blur(32px);
+            right: 20px;
+            top: 20px;
+            display: flex;
+            gap: 8px;
         }
 
+        .card-action-btn {
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #E9EFF5;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .card-action-btn:hover {
+            background: #F1F5F9;
+        }
+
+        /* Boost Card */
+        .boost-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid #E9EFF5;
+        }
+
+        .boost-icon {
+            width: 48px;
+            height: 48px;
+            background: #EFF6FF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 24px;
+        }
+
+        .boost-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0F172A;
+        }
+
+        .boost-text {
+            font-size: 12px;
+            color: #64748B;
+            margin: 8px 0 16px;
+        }
+
+        .boost-btn {
+            border: 2px solid #2563EB;
+            border-radius: 12px;
+            padding: 10px 20px;
+            display: inline-block;
+            font-weight: 700;
+            font-size: 13px;
+            color: #2563EB;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .boost-btn:hover {
+            background: #2563EB;
+            color: white;
+        }
+
+        /* Compact Job Card */
+        .compact-job-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid #E9EFF5;
+            transition: all 0.2s;
+        }
+
+        .compact-job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .compact-icon {
+            width: 48px;
+            height: 48px;
+            background: #F1F5F9;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .compact-info {
+            flex: 1;
+        }
+
+        .compact-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0F172A;
+        }
+
+        .compact-ref {
+            font-size: 10px;
+            font-weight: 700;
+            color: #94A3B8;
+        }
+
+        .compact-badge {
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        /* Pagination */
         .pagination {
             display: flex;
             justify-content: center;
             gap: 8px;
-            margin-top: 24px;
+            margin-top: 32px;
         }
 
         .page-item {
@@ -352,8 +575,15 @@
             justify-content: center;
             border-radius: 12px;
             border: 1px solid #E2E8F0;
+            background: white;
             color: #475569;
-            cursor: default;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-item:hover {
+            border-color: #2563EB;
+            color: #2563EB;
         }
 
         .page-item.active {
@@ -361,186 +591,391 @@
             color: white;
             border: none;
         }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            .top-navbar {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 90px 24px 40px 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-navbar {
+                justify-content: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                height: auto;
+                padding: 12px 16px;
+            }
+            
+            .search-wrapper {
+                width: 100%;
+                order: 1;
+            }
+            
+            .header-actions {
+                order: 2;
+            }
+            
+            .main-content {
+                padding: 110px 16px 32px 16px;
+            }
+            
+            .filter-tabs {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .filter-tab {
+                flex: 1;
+                text-align: center;
+                padding: 8px 12px;
+            }
+            
+            .metrics-row {
+                gap: 16px;
+            }
+            
+            .promo-stats {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .compact-job-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .card-actions {
+                position: static;
+                justify-content: flex-end;
+                margin-top: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 100px 16px 32px 16px;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+            
+            .job-card-header {
+                flex-direction: column;
+            }
+            
+            .metrics-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="dashboard">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="nav-items">
-            <a href="Rdashboard.html" class="nav-link"><span class="icon icon-dashboard"></span> Dashboard</a>
-            <a href="Rvacantes.html" class="nav-link active"><span class="icon icon-vacantes"></span> Vacantes</a>
-            <a href="Rgestion.html" class="nav-link"><span class="icon icon-postulantes"></span> Postulantes</a>
-            <a href="RpubOferta.html" class="nav-link"><span class="icon icon-publicar"></span> Publicar Empleo</a>
-            <a href="Rreportes.html" class="nav-link"><span class="icon icon-reportes"></span> Reportes</a>
-            <a href="Rportal.html" class="nav-link"><span class="icon icon-config"></span> Configuración</a>
+
+<button class="sidebar-toggle" id="sidebarToggle">☰</button>
+
+<!-- ========== SIDEBAR (mismo diseño que te gustó) ========== -->
+<div class="sidebar" id="sidebar">
+    <div>
+        <div class="sidebar-header">
+            <div class="sidebar-logo">ChapaTuChamba</div>
+            <div class="sidebar-subtitle">Panel de Control</div>
         </div>
-        <div class="nav-items" style="border-top:1px solid #E2E8F0; margin-top:auto; padding-top:16px;">
-            <a href="login.html" class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</a>
+        <div class="sidebar-nav">
+            <a href="Rdashboard.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="Rvacantes.html" class="nav-item active">
+                <span class="nav-icon">💼</span>
+                <span class="nav-text">Vacantes</span>
+            </a>
+            <a href="Rgestion.html" class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Postulantes</span>
+            </a>
+            <a href="RpubOferta.html" class="nav-item">
+                <span class="nav-icon">📝</span>
+                <span class="nav-text">Publicar Empleo</span>
+            </a>
+            <a href="Rreportes.html" class="nav-item">
+                <span class="nav-icon">📈</span>
+                <span class="nav-text">Reportes</span>
+            </a>
+            <a href="Rportal.html" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">Configuración</span>
+            </a>
         </div>
     </div>
-
-    <!-- Top Navbar -->
-    <div class="top-nav">
-        <div class="search-container">
-            <input type="text" placeholder="Buscar candidatos, vacantes...">
-            <div class="search-icon"></div>
-        </div>
-        <div class="user-profile">
-            <div class="avatar"></div>
-            <div><div style="font-size:12px; font-weight:500;">Carlos M.</div><div style="font-size:10px; color:#434655;">Admin</div></div>
-            <div>▼</div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="page-title">Vacantes</div>
-        <div class="page-sub">Gestiona tus procesos de reclutamiento activos</div>
-
-        <div class="filter-tabs">
-            <div class="filter-tab active">Todas</div>
-            <div class="filter-tab">Activas</div>
-            <div class="filter-tab">Pausadas</div>
-            <div class="filter-tab">Cerradas</div>
-        </div>
-
-        <div class="jobs-grid">
-            <!-- Promo Card -->
-            <div class="promo-card">
-                <div class="promo-card-bg"></div>
-                <div style="position:relative; z-index:2;">
-                    <div style="font-size:14px; font-weight:600; opacity:0.8;">Rendimiento Total</div>
-                    <div style="font-size:36px; font-weight:700;">158</div>
-                    <div style="font-size:14px; opacity:0.9;">Nuevos postulantes hoy</div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
-                        <div style="display:flex;">
-                            <div style="width:32px; height:32px; background:#E2E8F0; border-radius:50%; border:2px solid #2563EB;"></div>
-                            <div style="width:32px; height:32px; background:#E2E8F0; border-radius:50%; border:2px solid #2563EB; margin-left:-8px;"></div>
-                            <div style="width:32px; height:32px; background:#E2E8F0; border-radius:50%; border:2px solid #2563EB; margin-left:-8px;"></div>
-                            <div style="width:32px; height:32px; background:#60A5FA; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white; margin-left:-8px; border:2px solid #2563EB;">+12</div>
-                        </div>
-                        <div style="background:rgba(255,255,255,0.2); padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700;">Ver Detalles</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Vacante 1 -->
-            <div class="job-card">
-                <div class="job-card-border" style="background:#2563EB;"></div>
-                <div class="job-card-header">
-                    <div>
-                        <div class="job-title">Frontend Developer Jr. (React)</div>
-                        <div class="badge-group">
-                            <span class="badge badge-junior-real">JUNIOR REAL</span>
-                            <span class="badge badge-sin-exp">SIN EXPERIENCIA</span>
-                        </div>
-                    </div>
-                    <div class="status-badge status-active"><span style="width:6px; height:6px; background:#22C55E; border-radius:50%;"></span> Activa</div>
-                </div>
-                <div class="metrics-row">
-                    <div class="metric"><span class="metric-label">PUBLICADO</span><span class="metric-value">12 de Oct, 2023</span></div>
-                    <div class="metric"><span class="metric-label">POSTULANTES</span><span class="metric-value metric-highlight">24 perfiles →</span></div>
-                    <div class="metric"><span class="metric-label">VISTAS</span><span class="metric-value">1,240</span></div>
-                </div>
-                <div style="position:absolute; right:24px; top:24px; display:flex; gap:8px;">
-                    <div style="padding:8px; border-radius:8px; border:1px solid #F1F5F9;">⋮</div>
-                    <div style="padding:8px; border-radius:8px; border:1px solid #F1F5F9;">✎</div>
-                </div>
-            </div>
-
-            <!-- Vacante 2 -->
-            <div class="job-card">
-                <div class="job-card-border" style="background:#F9BD22;"></div>
-                <div class="job-card-header">
-                    <div>
-                        <div class="job-title">UX/UI Designer Trainee</div>
-                        <div class="badge-group">
-                            <span class="badge badge-talento-joven">TALENTO JOVEN</span>
-                            <span class="badge badge-sin-exp">SIN EXPERIENCIA</span>
-                        </div>
-                    </div>
-                    <div class="status-badge status-paused"><span style="width:6px; height:6px; background:#F59E0B; border-radius:50%;"></span> Pausada</div>
-                </div>
-                <div class="metrics-row">
-                    <div class="metric"><span class="metric-label">PUBLICADO</span><span class="metric-value">05 de Oct, 2023</span></div>
-                    <div class="metric"><span class="metric-label">POSTULANTES</span><span class="metric-value metric-highlight">48 perfiles →</span></div>
-                    <div class="metric"><span class="metric-label">VISTAS</span><span class="metric-value">3,892</span></div>
-                </div>
-                <div style="position:absolute; right:24px; top:24px; display:flex; gap:8px;">
-                    <div style="padding:8px; border-radius:8px; border:1px solid #F1F5F9;">⋮</div>
-                    <div style="padding:8px; border-radius:8px; border:1px solid #F1F5F9;">✎</div>
-                </div>
-            </div>
-
-            <!-- Card especial: ¿Necesitas contratar rápido? -->
-            <div style="background:white; border-radius:24px; padding:24px; text-align:center; box-shadow:0px 4px 20px rgba(0,0,0,0.05);">
-                <div style="width:48px; height:48px; background:#DBEAFE; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">⚡</div>
-                <div style="font-size:16px; font-weight:700; color:#0D1C2E;">¿Necesitas contratar rápido?</div>
-                <div style="font-size:12px; color:#64748B; margin:8px 0 16px;">Destaca tu vacante para llegar a un<br>300% más de estudiantes talentosos.</div>
-                <div style="border:2px solid #2563EB; border-radius:12px; padding:10px; width:fit-content; margin:0 auto; font-weight:700; color:#2563EB;">Impulsar Vacante</div>
-            </div>
-
-            <!-- Vacante 3 - Backend Dev -->
-            <div style="background:white; border-radius:24px; padding:24px; display:flex; align-items:center; gap:24px; box-shadow:0px 4px 20px rgba(0,0,0,0.05);">
-                <div style="width:48px; height:48px; background:#F1F5F9; border-radius:12px; display:flex; align-items:center; justify-content:center;">📁</div>
-                <div style="flex:1;">
-                    <div style="font-size:16px; font-weight:700;">Backend Dev (Node.js)</div>
-                    <div style="font-size:10px; font-weight:700; color:#94A3B8;">Ref: NOD-2023</div>
-                    <div class="badge badge-junior-real" style="display:inline-block; margin-top:8px;">JUNIOR REAL</div>
-                    <div style="font-size:12px; color:#94A3B8; margin-top:8px;">Publicado: Sep 28</div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-                        <div class="status-badge status-closed"><span style="width:6px; height:6px; background:#CBD5E1; border-radius:50%;"></span> Cerrada</div>
-                        <div style="color:#004AC6; font-weight:700;">12 postulantes</div>
-                    </div>
-                </div>
-                <div style="display:flex; gap:8px;">
-                    <div style="padding:8px;">⋮</div>
-                    <div style="padding:8px;">⋯</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Paginación -->
-        <div class="pagination">
-            <div class="page-item">‹</div>
-            <div class="page-item active">1</div>
-            <div class="page-item">2</div>
-            <div class="page-item">3</div>
-            <div style="padding:0 8px; display:flex; align-items:center;">...</div>
-            <div class="page-item">8</div>
-            <div class="page-item">›</div>
-        </div>
+    <div class="sidebar-nav" style="border-top: 1px solid #E9EFF5; padding-top: 16px;">
+        <a href="login.html" class="nav-item">
+            <span class="nav-icon">🚪</span>
+            <span class="nav-text">Cerrar sesión</span>
+        </a>
     </div>
 </div>
+
+<!-- ========== TOP NAVBAR ========== -->
+<div class="top-navbar">
+    <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="Buscar vacantes, candidatos...">
+    </div>
+    <div class="header-actions">
+        <button class="notif-btn">
+            🔔
+            <span class="notif-badge"></span>
+        </button>
+        <button class="msg-btn">
+            💬
+        </button>
+        <div class="avatar-img"></div>
+    </div>
+</div>
+
+<!-- ========== MAIN CONTENT ========== -->
+<div class="main-content">
+    <div class="page-title">Vacantes</div>
+    <div class="page-subtitle">Gestiona tus procesos de reclutamiento activos</div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+        <button class="filter-tab active" id="filterAll">Todas</button>
+        <button class="filter-tab" id="filterActive">Activas</button>
+        <button class="filter-tab" id="filterPaused">Pausadas</button>
+        <button class="filter-tab" id="filterClosed">Cerradas</button>
+    </div>
+
+    <div class="jobs-grid">
+        <!-- Promo Card - Rendimiento Total -->
+        <div class="promo-card">
+            <div class="promo-card-bg"></div>
+            <div style="position: relative; z-index: 2;">
+                <div style="font-size: 13px; font-weight: 600; opacity: 0.8;">Rendimiento Total</div>
+                <div style="font-size: 42px; font-weight: 800;">158</div>
+                <div style="font-size: 13px; opacity: 0.9;">Nuevos postulantes hoy</div>
+                <div class="promo-stats">
+                    <div class="avatars-group">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div class="avatar-more">+12</div>
+                    </div>
+                    <div class="promo-link" id="viewDetails">Ver Detalles →</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vacante 1 - Frontend Developer Jr. -->
+        <div class="job-card">
+            <div class="job-card-border" style="background: #2563EB;"></div>
+            <div class="job-card-header">
+                <div>
+                    <div class="job-title">Frontend Developer Jr. (React)</div>
+                    <div class="badge-group">
+                        <span class="badge badge-junior-real">JUNIOR REAL</span>
+                        <span class="badge badge-sin-exp">SIN EXPERIENCIA</span>
+                    </div>
+                </div>
+                <div class="status-badge status-active">
+                    <span style="width: 8px; height: 8px; background: #22C55E; border-radius: 50%;"></span>
+                    Activa
+                </div>
+            </div>
+            <div class="metrics-row">
+                <div class="metric">
+                    <span class="metric-label">PUBLICADO</span>
+                    <span class="metric-value">12 de Oct, 2023</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">POSTULANTES</span>
+                    <span class="metric-value metric-highlight">24 perfiles →</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">VISITAS</span>
+                    <span class="metric-value">1,240</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="card-action-btn" onclick="alert('Opciones de vacante')">⋮</button>
+                <button class="card-action-btn" onclick="alert('Editar vacante')">✎</button>
+            </div>
+        </div>
+
+        <!-- Vacante 2 - UX/UI Designer Trainee -->
+        <div class="job-card">
+            <div class="job-card-border" style="background: #F59E0B;"></div>
+            <div class="job-card-header">
+                <div>
+                    <div class="job-title">UX/UI Designer Trainee</div>
+                    <div class="badge-group">
+                        <span class="badge badge-talento-joven">TALENTO JOVEN</span>
+                        <span class="badge badge-sin-exp">SIN EXPERIENCIA</span>
+                    </div>
+                </div>
+                <div class="status-badge status-paused">
+                    <span style="width: 8px; height: 8px; background: #F59E0B; border-radius: 50%;"></span>
+                    Pausada
+                </div>
+            </div>
+            <div class="metrics-row">
+                <div class="metric">
+                    <span class="metric-label">PUBLICADO</span>
+                    <span class="metric-value">05 de Oct, 2023</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">POSTULANTES</span>
+                    <span class="metric-value metric-highlight">48 perfiles →</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">VISITAS</span>
+                    <span class="metric-value">3,892</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="card-action-btn" onclick="alert('Opciones de vacante')">⋮</button>
+                <button class="card-action-btn" onclick="alert('Editar vacante')">✎</button>
+            </div>
+        </div>
+
+        <!-- Boost Card - ¿Necesitas contratar rápido? -->
+        <div class="boost-card">
+            <div class="boost-icon">⚡</div>
+            <div class="boost-title">¿Necesitas contratar rápido?</div>
+            <div class="boost-text">Destaca tu vacante para llegar a un<br>300% más de estudiantes talentosos.</div>
+            <div class="boost-btn" id="boostVacancy">Impulsar Vacante</div>
+        </div>
+
+        <!-- Vacante 3 - Backend Dev (Compacta) -->
+        <div class="compact-job-card">
+            <div class="compact-icon">📁</div>
+            <div class="compact-info">
+                <div class="compact-title">Backend Dev (Node.js)</div>
+                <div class="compact-ref">Ref: NOD-2023</div>
+                <div class="compact-badge">
+                    <span class="badge badge-junior-real">JUNIOR REAL</span>
+                </div>
+                <div style="font-size: 11px; color: #94A3B8; margin-top: 6px;">Publicado: Sep 28</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 8px;">
+                    <div class="status-badge status-closed">
+                        <span style="width: 8px; height: 8px; background: #CBD5E1; border-radius: 50%;"></span>
+                        Cerrada
+                    </div>
+                    <div style="color: #2563EB; font-weight: 700;">12 postulantes</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="card-action-btn" onclick="alert('Opciones')">⋮</button>
+                <button class="card-action-btn" onclick="alert('Más opciones')">⋯</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <div class="page-item" onclick="alert('Página anterior')">‹</div>
+        <div class="page-item active">1</div>
+        <div class="page-item" onclick="alert('Ir a página 2')">2</div>
+        <div class="page-item" onclick="alert('Ir a página 3')">3</div>
+        <div style="padding: 0 8px; display: flex; align-items: center;">...</div>
+        <div class="page-item" onclick="alert('Ir a página 8')">8</div>
+        <div class="page-item" onclick="alert('Página siguiente')">›</div>
+    </div>
+</div>
+
+<script>
+    // Sidebar toggle para móvil
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
     
-    <script>
-        // Active state handling for sidebar navigation
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentPath = window.location.pathname;
-            const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
-            
-            // Find all nav links
-            const navLinks = document.querySelectorAll('.nav-link');
-            
-            // Remove active class from all
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            // Add active class to matching link
-            navLinks.forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
-                    link.classList.add('active');
-                }
-            });
-            
-            // Special case for dashboard (when on root or no file specified)
-            if (fileName === '' || fileName === 'Rdashboard.html') {
-                document.querySelector('.nav-link[href="Rdashboard.html"]').classList.add('active');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+        });
+    }
+    
+    // Cerrar sidebar al hacer click en enlace en móvil
+    const navLinks = document.querySelectorAll('.nav-item');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.remove('open');
             }
         });
-    </script>
+    });
+    
+    // Active state handling
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+        
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        navItems.forEach(item => {
+            const href = item.getAttribute('href');
+            if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
+                item.classList.add('active');
+            }
+        });
+        
+        if (fileName === '' || fileName === 'Rdashboard.html') {
+            const dashboardLink = document.querySelector('.nav-item[href="Rdashboard.html"]');
+            if (dashboardLink) dashboardLink.classList.add('active');
+        }
+    });
+    
+    // Filter tabs functionality
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            filterTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            alert(`Filtrando por: ${this.textContent}`);
+        });
+    });
+    
+    // Botones funcionales
+    document.getElementById('viewDetails')?.addEventListener('click', () => {
+        alert('📊 Ver detalles completos del rendimiento');
+    });
+    
+    document.getElementById('boostVacancy')?.addEventListener('click', () => {
+        alert('🚀 Impulsar vacante - Llega a más talento joven');
+    });
+    
+    // Notificaciones demo
+    document.querySelector('.notif-btn')?.addEventListener('click', () => {
+        alert('📬 No tienes notificaciones nuevas');
+    });
+    
+    document.querySelector('.msg-btn')?.addEventListener('click', () => {
+        alert('💬 Bandeja de mensajes');
+    });
+</script>
 </body>
 </html>

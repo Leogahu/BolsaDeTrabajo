@@ -2,10 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ChapatuChamba - Crear cuenta empresa</title>
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ChapaTuChamba - Crear cuenta empresa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,41 +13,53 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #F8F9FF;
+            overflow-x: hidden;
         }
 
-        /* Contenedor principal 1280px */
+        /* Contenedor principal responsivo */
         .register-container {
-            width: 1280px;
-            min-height: 1024px;
-            margin: 0 auto;
             display: flex;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
             background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
         }
 
-        /* COLUMNA IZQUIERDA - AZUL */
+        /* ========== COLUMNA IZQUIERDA - AZUL CON IMAGEN ========== */
         .hero-section {
-            width: 533.33px;
-            background: #2563EB;
+            flex: 1;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 64px;
+            padding: 48px 40px;
+            min-height: 100vh;
         }
 
+        /* Imagen de fondo */
         .hero-bg-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.8;
-            mix-blend-mode: overlay;
-            background: url('https://placehold.co/533x1024') center/cover no-repeat;
-            pointer-events: none;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        /* Overlay azul semitransparente sobre la imagen */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.92) 0%, rgba(29, 78, 216, 0.92) 100%);
+            z-index: 1;
         }
 
         .hero-content {
@@ -61,29 +72,28 @@
         }
 
         .logo-white {
-            font-size: 36px;
-            font-weight: 700;
+            font-size: 28px;
+            font-weight: 800;
             color: white;
-            line-height: 44px;
-            margin-bottom: 80px;
+            margin-bottom: 60px;
         }
 
         .hero-text h1 {
-            font-size: 36px;
+            font-size: clamp(28px, 5vw, 36px);
             font-weight: 700;
             color: white;
-            line-height: 44px;
-            margin-bottom: 16px;
+            line-height: 1.3;
+            margin-bottom: 20px;
         }
 
         .hero-text p {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 400;
-            color: rgba(255,255,255,0.9);
-            line-height: 28px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
         }
 
-        /* COLUMNA DERECHA - FORMULARIO */
+        /* ========== COLUMNA DERECHA - FORMULARIO ========== */
         .form-section {
             flex: 1;
             background: white;
@@ -91,13 +101,14 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 1024px;
+            padding: 48px 32px;
+            overflow-y: auto;
         }
 
         .form-wrapper {
             width: 100%;
-            max-width: 528px;
-            padding: 48px;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         .form-header {
@@ -105,49 +116,53 @@
         }
 
         .form-header h2 {
-            font-size: 30px;
-            font-weight: 600;
-            color: #0D1C2E;
-            line-height: 38px;
+            font-size: clamp(24px, 5vw, 30px);
+            font-weight: 700;
+            color: #0F172A;
             margin-bottom: 8px;
         }
 
         .login-link {
-            font-size: 16px;
-            color: #434655;
+            font-size: 14px;
+            color: #64748B;
         }
 
         .login-link a {
-            color: #004AC6;
+            color: #2563EB;
             text-decoration: none;
-            font-weight: 400;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
         }
 
         /* Toggle candidato/empresa */
         .role-toggle {
-            background: #EFF4FF;
+            background: #F1F5F9;
             padding: 4px;
             border-radius: 12px;
             display: inline-flex;
             margin-bottom: 32px;
-            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+            width: 100%;
         }
 
         .role-option {
-            padding: 8px 24px;
+            flex: 1;
+            padding: 10px 24px;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
-            color: #434655;
+            color: #64748B;
             cursor: pointer;
+            text-align: center;
             transition: all 0.2s;
         }
 
         .role-option.active {
             background: white;
-            color: #004AC6;
-            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-            outline: 1px solid rgba(195,198,215,0.20);
+            color: #2563EB;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         /* Botón LinkedIn */
@@ -156,21 +171,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 16px;
-            padding: 16px 24px;
+            gap: 12px;
+            padding: 14px 24px;
             background: white;
-            border: 1px solid #C3C6D7;
+            border: 1px solid #E2E8F0;
             border-radius: 12px;
             font-size: 14px;
             font-weight: 600;
-            color: #0D1C2E;
+            color: #0F172A;
             cursor: pointer;
-            margin-bottom: 32px;
-            transition: background 0.2s;
+            margin-bottom: 24px;
+            transition: all 0.2s;
         }
 
         .linkedin-btn:hover {
             background: #F8FAFC;
+            border-color: #CBD5E1;
         }
 
         .linkedin-icon {
@@ -185,32 +201,32 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .divider-line {
             flex: 1;
             height: 1px;
-            background: rgba(195,198,215,0.5);
+            background: #E2E8F0;
         }
 
         .divider-text {
             font-size: 12px;
             font-weight: 500;
-            color: #434655;
+            color: #94A3B8;
             white-space: nowrap;
         }
 
         /* Campos de formulario */
         .input-group {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .input-label {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            color: #0D1C2E;
-            margin-bottom: 4px;
+            color: #0F172A;
+            margin-bottom: 6px;
             display: block;
         }
 
@@ -219,82 +235,91 @@
             width: 100%;
         }
 
-        .input-wrapper input {
+        .input-wrapper input,
+        .input-wrapper select {
             width: 100%;
-            padding: 16px 16px 16px 44px;
+            padding: 14px 16px 14px 44px;
             background: white;
-            border: 1px solid #C3C6D7;
+            border: 1px solid #E2E8F0;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 14px;
             font-family: 'Inter', sans-serif;
-            color: #0D1C2E;
+            color: #0F172A;
             outline: none;
-            transition: border 0.2s;
+            transition: all 0.2s;
         }
 
-        .input-wrapper input:focus {
+        .input-wrapper input:focus,
+        .input-wrapper select:focus {
             border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .input-icon {
             position: absolute;
-            left: 16px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
             width: 18px;
             height: 18px;
-            background: #737686;
+            background: #94A3B8;
             mask-size: contain;
             mask-repeat: no-repeat;
+            pointer-events: none;
         }
 
-        .icon-building { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E"); background-color: #737686; }
-        .icon-document { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'/%3E%3C/svg%3E"); background-color: #737686; }
-        .icon-mail { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'/%3E%3C/svg%3E"); background-color: #737686; }
-        .icon-lock { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'/%3E%3C/svg%3E"); background-color: #737686; }
-        .icon-eye { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'/%3E%3C/svg%3E"); background-color: #737686; right: 16px; left: auto; cursor: pointer; }
+        .icon-building { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E"); background-color: #94A3B8; }
+        .icon-document { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'/%3E%3C/svg%3E"); background-color: #94A3B8; }
+        .icon-mail { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'/%3E%3C/svg%3E"); background-color: #94A3B8; }
+        .icon-lock { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'/%3E%3C/svg%3E"); background-color: #94A3B8; }
+        .icon-eye { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'/%3E%3C/svg%3E"); background-color: #94A3B8; pointer-events: auto; cursor: pointer; right: 14px; left: auto; }
 
         /* Select personalizado */
         .custom-select {
-            width: 100%;
-            padding: 16px 16px 16px 44px;
-            background: white;
-            border: 1px solid #C3C6D7;
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: 'Inter', sans-serif;
-            color: #0D1C2E;
             appearance: none;
-            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 16px;
         }
 
+        /* Checkbox */
         .checkbox-group {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
             margin: 24px 0;
         }
 
         .checkbox-group input {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
             cursor: pointer;
+            accent-color: #2563EB;
         }
 
         .checkbox-group label {
-            font-size: 14px;
-            color: #434655;
+            font-size: 13px;
+            color: #64748B;
             cursor: pointer;
+            line-height: 1.4;
         }
 
         .checkbox-group a {
-            color: #004AC6;
+            color: #2563EB;
             text-decoration: none;
+            font-weight: 500;
         }
 
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+
+        /* Botón crear cuenta */
         .btn-create {
             width: 100%;
-            padding: 16px 32px;
+            padding: 14px 32px;
             background: #2563EB;
             border: none;
             border-radius: 12px;
@@ -302,27 +327,93 @@
             font-weight: 600;
             color: white;
             cursor: pointer;
-            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
         .btn-create:hover {
-            background: #1d4ed8;
+            background: #1D4ED8;
+            transform: translateY(-1px);
         }
 
-        /* Sector dropdown placeholder */
-        select.custom-select option {
-            color: #0D1C2E;
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .register-container {
+                flex-direction: column;
+            }
+
+            .hero-section {
+                min-height: 380px;
+                padding: 32px 24px;
+            }
+
+            .logo-white {
+                margin-bottom: 30px;
+                font-size: 24px;
+            }
+
+            .hero-text h1 {
+                font-size: 26px;
+            }
+
+            .hero-text p {
+                font-size: 14px;
+            }
+
+            .form-section {
+                padding: 40px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section {
+                padding: 24px 20px;
+                min-height: 320px;
+            }
+
+            .hero-text h1 {
+                font-size: 22px;
+            }
+
+            .form-section {
+                padding: 32px 20px;
+            }
+
+            .form-wrapper {
+                padding: 0;
+            }
+
+            .role-option {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            .linkedin-btn {
+                padding: 12px 20px;
+            }
+
+            .input-wrapper input,
+            .input-wrapper select {
+                padding: 12px 16px 12px 40px;
+                font-size: 13px;
+            }
+
+            .checkbox-group label {
+                font-size: 11px;
+            }
         }
     </style>
 </head>
 <body>
 <div class="register-container">
-    <!-- Columna izquierda - Hero -->
+    <!-- Columna izquierda - Hero con imagen de fondo -->
     <div class="hero-section">
-        <div class="hero-bg-image"></div>
+        <!-- IMAGEN DE FONDO - CAMBIA LA URL POR TU IMAGEN -->
+        <img class="hero-bg-image" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=1000&fit=crop" alt="Jóvenes profesionales trabajando">
+        <!-- Overlay azul semitransparente -->
+        <div class="hero-overlay"></div>
+        
         <div class="hero-content">
-            <div class="logo-white">ChapatuChamba</div>
+            <div class="logo-white">ChapaTuChamba</div>
             <div class="hero-text">
                 <h1>Encuentra el talento<br>joven que impulsará tu<br>empresa.</h1>
                 <p>Conecta con estudiantes y recién graduados<br>listos para aportar valor desde el primer día.<br>Construye tu equipo del futuro hoy.</p>
@@ -336,17 +427,17 @@
         <div class="form-wrapper">
             <div class="form-header">
                 <h2>Crear cuenta</h2>
-                <div class="login-link">¿Ya tienes una cuenta? <a href="#">Inicia sesión aquí</a></div>
+                <div class="login-link">¿Ya tienes una cuenta? <a href="#" id="loginLink">Inicia sesión aquí</a></div>
             </div>
 
             <!-- Toggle Candidato / Empresa -->
             <div class="role-toggle">
-                <div class="role-option" id="btn-candidato">Soy Candidato</div>
-                <div class="role-option active" id="btn-empresa">Soy Empresa</div>
+                <div class="role-option" id="btnCandidato">Soy Candidato</div>
+                <div class="role-option active" id="btnEmpresa">Soy Empresa</div>
             </div>
 
             <!-- Botón LinkedIn -->
-            <div class="linkedin-btn">
+            <div class="linkedin-btn" id="linkedinBtn">
                 <div class="linkedin-icon"></div>
                 <span>Registrarse con LinkedIn</span>
             </div>
@@ -360,7 +451,7 @@
 
             <!-- Formulario de empresa -->
             <div class="input-group">
-                <div class="input-label">Nombre de la Empresa</div>
+                <label class="input-label">Nombre de la Empresa</label>
                 <div class="input-wrapper">
                     <div class="input-icon icon-building"></div>
                     <input type="text" placeholder="Ej. TechCorp Perú" value="TechCorp Perú">
@@ -368,7 +459,7 @@
             </div>
 
             <div class="input-group">
-                <div class="input-label">RUC o ID Fiscal</div>
+                <label class="input-label">RUC o ID Fiscal</label>
                 <div class="input-wrapper">
                     <div class="input-icon icon-document"></div>
                     <input type="text" placeholder="11 dígitos" value="20541234567">
@@ -376,23 +467,25 @@
             </div>
 
             <div class="input-group">
-                <div class="input-label">Sector</div>
+                <label class="input-label">Sector</label>
                 <div class="input-wrapper">
                     <div class="input-icon icon-building"></div>
                     <select class="custom-select">
-                        <option value="" disabled selected>Selecciona un sector ▼</option>
-                        <option>Tecnología / Software</option>
+                        <option value="" disabled>Selecciona un sector</option>
+                        <option selected>Tecnología / Software</option>
                         <option>Finanzas / Banca</option>
                         <option>Consultoría</option>
                         <option>Marketing / Publicidad</option>
                         <option>Recursos Humanos</option>
+                        <option>E-commerce / Retail</option>
+                        <option>Educación</option>
                         <option>Otro</option>
                     </select>
                 </div>
             </div>
 
             <div class="input-group">
-                <div class="input-label">Correo Corporativo</div>
+                <label class="input-label">Correo Corporativo</label>
                 <div class="input-wrapper">
                     <div class="input-icon icon-mail"></div>
                     <input type="email" placeholder="tu@empresa.com" value="contacto@techcorp.pe">
@@ -400,11 +493,11 @@
             </div>
 
             <div class="input-group">
-                <div class="input-label">Contraseña</div>
+                <label class="input-label">Contraseña</label>
                 <div class="input-wrapper">
                     <div class="input-icon icon-lock"></div>
-                    <input type="password" placeholder="Mínimo 8 caracteres" value="demo1234">
-                    <div class="input-icon icon-eye" style="right: 16px; left: auto; cursor: pointer;" id="togglePassword"></div>
+                    <input type="password" id="passwordInput" placeholder="Mínimo 8 caracteres" value="demo1234">
+                    <div class="input-icon icon-eye" id="togglePassword"></div>
                 </div>
             </div>
 
@@ -417,36 +510,51 @@
             </div>
 
             <!-- Botón crear cuenta -->
-            <button class="btn-create">Crear cuenta de empresa</button>
+            <button class="btn-create" id="createAccountBtn">Crear cuenta de empresa</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Toggle entre Candidato y Empresa (solo efecto visual, redirigir si se desea)
-    const btnCandidato = document.getElementById('btn-candidato');
-    const btnEmpresa = document.getElementById('btn-empresa');
+    // Toggle entre Candidato y Empresa
+    const btnCandidato = document.getElementById('btnCandidato');
+    const btnEmpresa = document.getElementById('btnEmpresa');
 
     btnCandidato.addEventListener('click', function() {
-        // Redirigir a registro de candidato si se desea
-        alert("Redirigir a registro de candidato");
-        // window.location.href = "../Candidatos/register.html";
+        alert("🔀 Redirigiendo al registro de candidato...");
     });
+
     btnEmpresa.addEventListener('click', function() {
         btnCandidato.classList.remove('active');
         btnEmpresa.classList.add('active');
-        // ya estamos en empresa
     });
 
     // Mostrar/ocultar contraseña
     const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.querySelector('input[type="password"]');
+    const passwordInput = document.getElementById('passwordInput');
+    
     if (togglePassword && passwordInput) {
         togglePassword.addEventListener('click', function() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
         });
     }
+
+    // Botón LinkedIn
+    document.getElementById('linkedinBtn')?.addEventListener('click', () => {
+        alert('🔗 Redirigiendo a LinkedIn para autenticación...');
+    });
+
+    // Botón crear cuenta
+    document.getElementById('createAccountBtn')?.addEventListener('click', () => {
+        alert('🏢 Cuenta de empresa creada exitosamente. Revisa tu correo para verificar.');
+    });
+
+    // Link de inicio de sesión
+    document.getElementById('loginLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('🔐 Redirigiendo a inicio de sesión...');
+    });
 </script>
 </body>
 </html>

@@ -2,10 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ChapatuChamba - Crear Nueva Vacante</title>
-    <!-- Google Fonts: Inter y Nimbus Sans respaldo -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ChapaTuChamba - Crear Nueva Vacante</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,519 +13,888 @@
         }
 
         body {
-            background: #EFF3F8; /* fondo exterior para contrastar, pero wrapper define gradiente */
+            background: #F1F5F9;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* contenedor principal que replica el ancho fijo 1280px y sidebar izquierda */
-        .dashboard {
-            width: 1280px;
-            min-height: 1024px;
-            margin: 0 auto;
-            position: relative;
-            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-        }
-
-        /* SIDEBAR izquierda (exactamente como en la imagen) */
+        /* ========== SIDEBAR FIJA IZQUIERDA (mismo estilo que te gustó) ========== */
         .sidebar {
-            width: 256px;
-            height: 100%;
-            position: absolute;
+            width: 280px;
+            height: 100vh;
+            position: fixed;
             left: 0;
             top: 0;
             background: white;
-            border-right: 1px solid #E2E8F0;
-            padding: 24px 16px 24px 16px;
+            border-right: 1px solid #E9EFF5;
+            padding: 32px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            z-index: 5;
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
         }
 
-        .nav-items {
+        /* Logo dentro del sidebar */
+        .sidebar-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #E9EFF5;
+        }
+
+        .sidebar-logo {
+            font-weight: 800;
+            font-size: 24px;
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            color: #94A3B8;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* Navegación */
+        .sidebar-nav {
             display: flex;
             flex-direction: column;
             gap: 8px;
+            flex: 1;
         }
 
-        .nav-link {
+        .nav-item {
             display: flex;
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
-            border-radius: 8px;
-            transition: all 0.1s ease;
+            border-radius: 12px;
+            transition: all 0.2s ease;
             cursor: pointer;
-            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            color: #475569;
             font-weight: 500;
             font-size: 14px;
-            line-height: 20px;
-            color: #475569;
         }
 
-        .nav-link.active {
+        .nav-item:hover {
+            background: #F1F5F9;
+        }
+
+        .nav-item.active {
             background: #EFF6FF;
-            border-left: 4px solid #2563EB;
             color: #2563EB;
-            padding-left: 12px; /* compensa el borde */
         }
 
-        .nav-link .icon {
-            width: 20px;
-            height: 20px;
-            background: currentColor;
-            mask-size: contain;
-            mask-repeat: no-repeat;
-            background-color: currentColor;
+        .nav-item.active .nav-text {
+            font-weight: 600;
         }
 
-        /* iconos placeholder con mascaras SVG simplificadas para coincidir */
-        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); background-color: currentColor; }
-        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); background-color: currentColor; }
-        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:24px; height:12px; }
-        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); background-color: currentColor; }
-        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); background-color: currentColor; }
-        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); background-color: currentColor; }
-        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .nav-icon {
+            font-size: 18px;
+            width: 24px;
+        }
 
-        /* top navbar principal */
-        .top-nav {
-            position: absolute;
+        .nav-text {
+            font-size: 14px;
+        }
+
+        /* Botón toggle para móvil */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            left: 16px;
+            top: 16px;
+            z-index: 101;
+            background: #2563EB;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* ========== TOP NAVBAR ========== */
+        .top-navbar {
+            position: fixed;
             top: 0;
-            left: 256px;
+            left: 280px;
             right: 0;
-            height: 64px;
             background: white;
-            border-bottom: 1px solid #E2E8F0;
+            border-bottom: 1px solid #E9EFF5;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 24px;
-            z-index: 10;
-            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+            padding: 0 32px;
+            z-index: 99;
+            height: 70px;
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .logo-text {
-            font-weight: 700;
-            font-size: 18px;
-            color: #1E293B;
-        }
-
-        .search-mini {
+        /* Buscador */
+        .search-wrapper {
             position: relative;
-            width: 256px;
+            width: 320px;
         }
 
-        .search-mini input {
+        .search-input {
             width: 100%;
-            padding: 9px 16px 9px 36px;
+            padding: 10px 16px 10px 42px;
             background: #F8FAFC;
+            border-radius: 40px;
             border: 1px solid #E2E8F0;
-            border-radius: 8px;
             font-size: 14px;
-            color: #6B7280;
+            outline: none;
+            transition: all 0.2s;
         }
 
-        .search-icon-mini {
-            position: absolute;
-            left: 12px;
-            top: 9px;
-            width: 14px;
-            height: 14px;
-            background: #94A3B8;
-            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
-            background-size: contain;
-        }
-
-        .header-icons {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .avatar-sm {
-            width: 32px;
-            height: 32px;
-            border-radius: 999px;
-            background: linear-gradient(45deg, #3B82F6, #2DD4BF);
-            border: 2px solid white;
-        }
-
-        /* MAIN CONTENT (formulario) */
-        .form-container {
-            margin-left: 256px;
-            padding: 48px 64px 64px 64px;
-            background: #F8F9FF;
-            width: calc(100% - 256px);
-        }
-
-        .form-card {
+        .search-input:focus {
+            border-color: #2563EB;
             background: white;
-            border-radius: 12px;
-            padding: 48px;
-            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-            outline: 1px solid rgba(195,198,215,0.30);
-            margin-top: 24px;
         }
 
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #94A3B8;
+        }
+
+        /* Acciones header */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notif-btn, .msg-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            color: #64748B;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -2px;
+            right: -5px;
+            width: 8px;
+            height: 8px;
+            background: #EF4444;
+            border-radius: 50%;
+        }
+
+        .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #E2E8F0;
+            background: linear-gradient(135deg, #3B82F6, #2DD4BF);
+            cursor: pointer;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 32px 40px 48px 40px;
+            min-height: calc(100vh - 70px);
+            background: #F8F9FF;
+        }
+
+        /* Títulos */
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #0F172A;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #64748B;
+            margin-bottom: 32px;
+        }
+
+        /* Step indicator */
         .step-indicator {
             display: flex;
             justify-content: space-between;
-            max-width: 768px;
+            max-width: 600px;
             margin-bottom: 32px;
             position: relative;
         }
 
         .step {
             text-align: center;
-            width: 175px;
+            flex: 1;
         }
+
         .step-circle {
             width: 40px;
             height: 40px;
-            background: #D5E3FC;
-            border-radius: 999px;
+            background: #E2E8F0;
+            border-radius: 50%;
             margin: 0 auto 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 400;
-            font-size: 16px;
-            color: #434655;
+            font-weight: 600;
+            font-size: 14px;
+            color: #64748B;
+            transition: all 0.2s;
         }
+
         .step.active .step-circle {
             background: #2563EB;
-            box-shadow: 0px 0px 0px 4px rgba(37,99,235,0.2);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+        }
+
+        .step.completed .step-circle {
+            background: #10B981;
             color: white;
         }
-        .step.completed .step-circle {
-            background: #62FAE3;
-            color: #005047;
-        }
+
         .step-label {
             font-size: 12px;
             font-weight: 500;
-            color: #434655;
+            color: #64748B;
         }
+
         .step.active .step-label {
-            color: #004AC6;
+            color: #2563EB;
             font-weight: 600;
         }
 
-        /* form elements */
+        /* Form card */
+        .form-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E9EFF5;
+        }
+
         .field-group {
             margin-bottom: 32px;
         }
+
         .field-label {
             font-size: 14px;
             font-weight: 600;
-            color: #0D1C2E;
+            color: #0F172A;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
+            gap: 4px;
         }
+
         .required-star {
-            color: #BA1A1A;
-            margin-left: 2px;
+            color: #EF4444;
         }
-        .input-text {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #C3C6D7;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: 'Inter', sans-serif;
-            background: white;
-        }
+
         .helper-text {
-            font-size: 14px;
-            color: #434655;
+            font-size: 13px;
+            color: #64748B;
             margin-top: 4px;
         }
-        /* opciones de nivel */
-        .level-options {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-        .level-card {
-            flex: 1;
-            border: 1px solid #C3C6D7;
+
+        .input-text, textarea.input-text {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #E2E8F0;
             border-radius: 12px;
-            padding: 24px;
-            position: relative;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .input-text:focus, textarea.input-text:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea.input-text {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Level options */
+        .level-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .level-card {
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 20px;
             background: white;
-            transition: all 0.1s;
+            transition: all 0.2s;
+            cursor: pointer;
         }
+
+        .level-card:hover {
+            border-color: #2563EB;
+            transform: translateY(-2px);
+        }
+
         .level-card.highlight {
-            background: #EFF4FF;
-            border-color: #C3C6D7;
-            outline: 2px solid #FFDAD6;
+            border-color: #2563EB;
+            background: #EFF6FF;
         }
+
         .level-title {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 16px;
-            color: #0D1C2E;
+            color: #0F172A;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
         }
+
         .level-desc {
-            font-size: 14px;
-            color: #434655;
-            margin-top: 8px;
-            margin-bottom: 16px;
+            font-size: 13px;
+            color: #64748B;
+            margin-bottom: 12px;
+            line-height: 1.4;
         }
+
         .insignia {
             display: inline-block;
-            background: rgba(98,250,227,0.2);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #005047;
+            background: #DCFCE7;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #166534;
         }
+
         .insignia-warning {
-            background: #FFDAD6;
-            color: #93000A;
+            background: #FEF3C7;
+            color: #92400E;
         }
+
+        /* Requisitos box */
+        .requisitos-box {
+            background: #F8FAFC;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 8px;
+            border-left: 4px solid #2563EB;
+        }
+
+        .requisitos-box div {
+            color: #0F172A;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Warning box */
         .warning-box {
-            background: #FFDAD6;
-            border-radius: 8px;
-            padding: 16px;
-            margin-top: 24px;
+            background: #FEF2F2;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 24px 0;
             display: flex;
             gap: 16px;
-            outline: 1px solid rgba(186,26,26,0.2);
+            border: 1px solid #FEE2E2;
         }
-        .warning-title {
-            font-weight: 600;
-            color: #93000A;
-            margin-bottom: 4px;
-        }
-        .btn-outline-warning {
-            border: 1px solid rgba(186,26,26,0.3);
-            background: white;
-            padding: 6px 12px;
-            border-radius: 4px;
-            color: #BA1A1A;
-            font-weight: 600;
+
+        .warning-icon {
+            width: 24px;
+            height: 24px;
+            background: #EF4444;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-size: 14px;
-            cursor: pointer;
-            display: inline-block;
         }
+
+        .warning-title {
+            font-weight: 700;
+            color: #991B1B;
+            margin-bottom: 6px;
+        }
+
+        .warning-text {
+            color: #7F1D1D;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .warning-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline-warning {
+            background: white;
+            border: 1px solid #FCA5A5;
+            padding: 8px 16px;
+            border-radius: 10px;
+            color: #991B1B;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline-warning:hover {
+            background: #FEE2E2;
+        }
+
+        .btn-link-warning {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            color: #991B1B;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* Action buttons */
         .action-buttons {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 32px;
-            border-top: 1px solid rgba(195,198,215,0.3);
-            padding-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #E9EFF5;
         }
+
         .btn-back {
+            background: none;
+            border: none;
             font-weight: 600;
-            color: #004AC6;
+            color: #64748B;
             cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
+        .btn-back:hover {
+            color: #2563EB;
+        }
+
+        .right-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
         .btn-save {
+            background: none;
+            border: 1px solid #E2E8F0;
             padding: 12px 24px;
+            border-radius: 12px;
             font-weight: 600;
-            color: #434655;
-            background: transparent;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
         }
+
+        .btn-save:hover {
+            border-color: #2563EB;
+            color: #2563EB;
+        }
+
         .btn-continue {
             background: #2563EB;
+            border: none;
             padding: 12px 32px;
             border-radius: 12px;
             color: white;
             font-weight: 600;
-            display: inline-flex;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0px 4px 20px rgba(37,99,235,0.2);
-            cursor: pointer;
         }
-        textarea.input-text {
-            resize: vertical;
-            min-height: 80px;
+
+        .btn-continue:hover {
+            background: #1D4ED8;
+            transform: translateY(-1px);
         }
-        .requisitos-box {
-            border: 2px solid #FFDAD6;
-            border-radius: 8px;
-            padding: 12px 16px;
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            .top-navbar {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 90px 20px 40px 20px;
+            }
+            
+            .level-options {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-navbar {
+                justify-content: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                height: auto;
+                padding: 12px 16px;
+            }
+            
+            .search-wrapper {
+                width: 100%;
+                order: 1;
+            }
+            
+            .header-actions {
+                order: 2;
+            }
+            
+            .main-content {
+                padding-top: 110px;
+            }
+            
+            .form-card {
+                padding: 24px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .right-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 100px 16px 32px 16px;
+            }
+            
+            .form-card {
+                padding: 20px;
+            }
+            
+            .warning-box {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-<div class="dashboard">
-    <!-- SIDEBAR izquierda exacta -->
-     <div class="sidebar">
-         <div class="nav-items">
-             <a href="Rdashboard.html" class="nav-link"><span class="icon icon-dashboard" style="width:18px; height:18px;"></span> Dashboard</a>
-             <a href="Rvacantes.html" class="nav-link"><span class="icon icon-vacantes"></span> Vacantes</a>
-             <a href="Rgestion.html" class="nav-link"><span class="icon icon-postulantes" style="width:24px; height:12px;"></span> Postulantes</a>
-             <a href="RpubOferta.html" class="nav-link active"><span class="icon icon-publicar" style="width:18px; height:18px;"></span> Publicar Empleo</a>
-             <a href="Rreportes.html" class="nav-link"><span class="icon icon-reportes"></span> Reportes</a>
-             <a href="Rportal.html" class="nav-link"><span class="icon icon-config"></span> Configuración</a>
-         </div>
-         <div class="nav-items" style="border-top:1px solid #E2E8F0; padding-top:16px;">
-             <a href="login.html" class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</a>
-         </div>
-     </div>
 
-    <!-- TOP NAVBAR (dentro del área de contenido) -->
-    <div class="top-nav">
-        <div class="logo-area">
-            <div class="logo-text">Panel de Control</div>
-            <div class="search-mini">
-                <input type="text" placeholder="Buscar...">
-                <div class="search-icon-mini"></div>
-            </div>
+<button class="sidebar-toggle" id="sidebarToggle">☰</button>
+
+<!-- ========== SIDEBAR (mismo diseño que te gustó) ========== -->
+<div class="sidebar" id="sidebar">
+    <div>
+        <div class="sidebar-header">
+            <div class="sidebar-logo">ChapaTuChamba</div>
+            <div class="sidebar-subtitle">Panel de Control</div>
         </div>
-        <div class="header-icons">
-            <div style="width:40px; height:40px; display:flex; justify-content:center; align-items:center;"><div style="width:20px;height:20px;background:#64748B; mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9\'/%3E%3C/svg%3E"); background-size:contain;"></div></div>
-            <div style="width:40px; height:40px; display:flex; justify-content:center; align-items:center;"><div style="width:20px;height:20px;background:#64748B; mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E"); background-size:contain;"></div></div>
-            <div class="avatar-sm"></div>
+        <div class="sidebar-nav">
+            <a href="Rdashboard.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="Rvacantes.html" class="nav-item">
+                <span class="nav-icon">💼</span>
+                <span class="nav-text">Vacantes</span>
+            </a>
+            <a href="Rgestion.html" class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Postulantes</span>
+            </a>
+            <a href="RpubOferta.html" class="nav-item active">
+                <span class="nav-icon">📝</span>
+                <span class="nav-text">Publicar Empleo</span>
+            </a>
+            <a href="Rreportes.html" class="nav-item">
+                <span class="nav-icon">📈</span>
+                <span class="nav-text">Reportes</span>
+            </a>
+            <a href="Rportal.html" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">Configuración</span>
+            </a>
+        </div>
+    </div>
+    <div class="sidebar-nav" style="border-top: 1px solid #E9EFF5; padding-top: 16px;">
+        <a href="login.html" class="nav-item">
+            <span class="nav-icon">🚪</span>
+            <span class="nav-text">Cerrar sesión</span>
+        </a>
+    </div>
+</div>
+
+<!-- ========== TOP NAVBAR ========== -->
+<div class="top-navbar">
+    <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="Buscar candidatos, vacantes...">
+    </div>
+    <div class="header-actions">
+        <button class="notif-btn">
+            🔔
+            <span class="notif-badge"></span>
+        </button>
+        <button class="msg-btn">
+            💬
+        </button>
+        <div class="avatar-img"></div>
+    </div>
+</div>
+
+<!-- ========== MAIN CONTENT ========== -->
+<div class="main-content">
+    <div class="page-title">Crear Nueva Vacante</div>
+    <div class="page-subtitle">Diseña una oferta atractiva para conectar con el mejor talento joven.</div>
+
+    <!-- Step Indicator -->
+    <div class="step-indicator">
+        <div class="step completed">
+            <div class="step-circle">✓</div>
+            <div class="step-label">Básicos</div>
+        </div>
+        <div class="step active">
+            <div class="step-circle">2</div>
+            <div class="step-label">Rol y Detalles</div>
+        </div>
+        <div class="step">
+            <div class="step-circle">3</div>
+            <div class="step-label">Beneficios</div>
+        </div>
+        <div class="step">
+            <div class="step-circle">4</div>
+            <div class="step-label">Revisión</div>
         </div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL formulario -->
-    <div class="form-container">
-        <div>
-            <h1 style="font-size:36px; font-weight:700; color:#0D1C2E;">Crear Nueva Vacante</h1>
-            <p style="font-size:18px; color:#434655; margin-top:8px;">Diseña una oferta atractiva para conectar con el mejor talento joven.</p>
+    <!-- Form Card -->
+    <div class="form-card">
+        <!-- Título del Puesto -->
+        <div class="field-group">
+            <div class="field-label">
+                Título del Puesto
+                <span class="required-star">*</span>
+            </div>
+            <input class="input-text" type="text" value="Desarrollador Frontend Junior">
         </div>
 
-        <!-- indicador de pasos -->
-        <div class="step-indicator" style="margin-top: 32px;">
-            <div class="step completed">
-                <div class="step-circle">✓</div>
-                <div class="step-label">Básicos</div>
+        <!-- Nivel de Experiencia -->
+        <div class="field-group">
+            <div class="field-label">
+                Nivel de Experiencia / Tipo de Rol
+                <span class="required-star">*</span>
             </div>
-            <div class="step active">
-                <div class="step-circle">2</div>
-                <div class="step-label">Rol y Detalles</div>
-            </div>
-            <div class="step">
-                <div class="step-circle">3</div>
-                <div class="step-label">Beneficios</div>
-            </div>
-            <div class="step">
-                <div class="step-circle">4</div>
-                <div class="step-label">Revisión</div>
+            <div class="helper-text">Selecciona la categoría que mejor se ajuste. Esto activará nuestras insignias de confianza para los candidatos.</div>
+            
+            <div class="level-options">
+                <div class="level-card">
+                    <div class="level-title">
+                        Prácticas
+                        <span>🎓</span>
+                    </div>
+                    <div class="level-desc">Enfoque 100% en aprendizaje.<br>Ideal para estudiantes.</div>
+                    <span class="insignia">Sin Experiencia</span>
+                </div>
+                
+                <div class="level-card">
+                    <div class="level-title">
+                        Trainee
+                        <span>📚</span>
+                    </div>
+                    <div class="level-desc">Programa formativo para recién egresados de alto potencial.</div>
+                    <span class="insignia" style="background:#FEF3C7; color:#92400E;">Talento Joven</span>
+                </div>
+                
+                <div class="level-card highlight">
+                    <div class="level-title">
+                        Junior
+                        <span>🚀</span>
+                    </div>
+                    <div class="level-desc">Rol de entrada oficial. Requiere bases sólidas pero mentoría.</div>
+                    <span class="insignia insignia-warning">Junior Real</span>
+                </div>
             </div>
         </div>
 
-        <div class="form-card">
-            <!-- Título del puesto -->
-            <div class="field-group">
-                <div class="field-label">Título del Puesto <span class="required-star">*</span></div>
-                <input class="input-text" type="text" value="Desarrollador Frontend Junior">
+        <!-- Descripción General -->
+        <div class="field-group">
+            <div class="field-label">
+                Descripción General
+                <span class="required-star">*</span>
             </div>
+            <textarea class="input-text" rows="3" placeholder="Describe el propósito principal del rol en tu equipo..."></textarea>
+        </div>
 
-            <!-- Nivel de Experiencia -->
-            <div class="field-group">
-                <div class="field-label">Nivel de Experiencia / Tipo de Rol <span class="required-star">*</span></div>
-                <div class="helper-text">Selecciona la categoría que mejor se ajuste. Esto activará nuestras insignias de confianza para los candidatos.</div>
-                <div class="level-options" style="margin-top: 16px;">
-                    <div class="level-card">
-                        <div class="level-title">Prácticas <span style="width:22px;height:18px;background:#C3C6D7;"></span></div>
-                        <div class="level-desc">Enfoque 100% en aprendizaje.<br>Ideal para estudiantes.</div>
-                        <div class="insignia">Sin Experiencia</div>
-                    </div>
-                    <div class="level-card">
-                        <div class="level-title">Trainee <span style="width:20px;height:12px;background:#C3C6D7;"></span></div>
-                        <div class="level-desc">Programa formativo para<br>recién egresados de alto potencial.</div>
-                        <div class="insignia" style="background:rgba(249,189,34,0.2); color:#8B6700;">Talento Joven</div>
-                    </div>
-                    <div class="level-card highlight">
-                        <div class="level-title">Junior <span style="width:22px;height:21px;background:#BA1A1A;"></span></div>
-                        <div class="level-desc">Rol de entrada oficial.<br>Requiere bases sólidas pero mentoría.</div>
-                        <div class="insignia insignia-warning">Junior Real</div>
-                    </div>
-                </div>
+        <!-- Requisitos y Experiencia -->
+        <div class="field-group">
+            <div class="field-label">
+                Requisitos y Experiencia
+                <span class="required-star">*</span>
             </div>
-
-            <!-- Descripción General -->
-            <div class="field-group">
-                <div class="field-label">Descripción General <span class="required-star">*</span></div>
-                <textarea class="input-text" rows="2" placeholder="Describe el propósito principal del rol en tu equipo..."></textarea>
-            </div>
-
-            <!-- Requisitos y Experiencia -->
-            <div class="field-group">
-                <div class="field-label">Requisitos y Experiencia <span class="required-star">*</span></div>
-                <div class="helper-text">Enumera las habilidades clave. Sé realista con lo que es absolutamente necesario.</div>
-                <div class="requisitos-box" style="margin-top: 8px;">
-                    <div style="color:#0D1C2E; font-size:16px; line-height:24px;">
-                        - Dominio de HTML, CSS y JavaScript moderno.<br>
-                        - Experiencia con frameworks como React o Vue.<br>
-                        - 2+ años de experiencia comprobable en agencias.<br>
-                        - Portafolio demostrable de proyectos web.
-                    </div>
-                </div>
-            </div>
-
-            <!-- ALERTA INCONSISTENCIA -->
-            <div class="warning-box">
-                <div style="width:22px; height:19px; background:#BA1A1A; flex-shrink:0;"></div>
+            <div class="helper-text">Enumera las habilidades clave. Sé realista con lo que es absolutamente necesario.</div>
+            <div class="requisitos-box">
                 <div>
-                    <div class="warning-title">Inconsistencia de Nivel Detectada</div>
-                    <div style="color:rgba(147,0,10,0.9); font-size:14px; line-height:20px;">
-                        Has marcado este rol con la insignia <strong>'Junior Real'</strong>, pero en los requisitos solicitas <strong>'2+ años de experiencia'</strong>.<br>
-                        En ChapatuChamba, consideramos que un rol Junior debe requerir máximo 1 año de experiencia profesional.
-                    </div>
-                    <div style="display: flex; gap: 12px; margin-top: 12px;">
-                        <div class="btn-outline-warning">Modificar requisitos</div>
-                        <div style="font-weight:600; color:#93000A; padding:6px 0; cursor:default;">Cambiar a nivel Semi-Senior</div>
-                    </div>
+                    • Dominio de HTML, CSS y JavaScript moderno.<br>
+                    • Experiencia con frameworks como React o Vue.<br>
+                    • 2+ años de experiencia comprobable en agencias.<br>
+                    • Portafolio demostrable de proyectos web.
                 </div>
             </div>
+        </div>
 
-            <!-- Botones de acción -->
-            <div class="action-buttons">
-                <div class="btn-back">← Atrás</div>
-                <div style="display:flex; gap:16px;">
-                    <div class="btn-save">Guardar Borrador</div>
-                    <div class="btn-continue">Continuar <span style="font-size:16px;">→</span></div>
+        <!-- Alerta de Inconsistencia -->
+        <div class="warning-box">
+            <div class="warning-icon">⚠️</div>
+            <div style="flex: 1;">
+                <div class="warning-title">Inconsistencia de Nivel Detectada</div>
+                <div class="warning-text">
+                    Has marcado este rol con la insignia <strong>'Junior Real'</strong>, pero en los requisitos solicitas <strong>'2+ años de experiencia'</strong>.<br>
+                    En ChapatuChamba, consideramos que un rol Junior debe requerir máximo 1 año de experiencia profesional.
+                </div>
+                <div class="warning-buttons">
+                    <button class="btn-outline-warning" id="modificarRequisitos">Modificar requisitos</button>
+                    <button class="btn-link-warning" id="cambiarNivel">Cambiar a nivel Semi-Senior</button>
                 </div>
             </div>
-         </div>
-     </div>
- </div>
-     
-     <script>
-         // Active state handling for sidebar navigation
-         document.addEventListener('DOMContentLoaded', function() {
-             const currentPath = window.location.pathname;
-             const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
-             
-             // Find all nav links
-             const navLinks = document.querySelectorAll('.nav-link');
-             
-             // Remove active class from all
-             navLinks.forEach(link => {
-                 link.classList.remove('active');
-             });
-             
-             // Add active class to matching link
-             navLinks.forEach(link => {
-                 const href = link.getAttribute('href');
-                 if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
-                     link.classList.add('active');
-                 }
-             });
-             
-             // Special case for dashboard (when on root or no file specified)
-             if (fileName === '' || fileName === 'Rdashboard.html') {
-                 document.querySelector('.nav-link[href="Rdashboard.html"]').classList.add('active');
-             }
-         });
-     </script>
- </body>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="action-buttons">
+            <button class="btn-back" id="btnBack">
+                ← Atrás
+            </button>
+            <div class="right-buttons">
+                <button class="btn-save" id="btnSaveDraft">Guardar Borrador</button>
+                <button class="btn-continue" id="btnContinue">
+                    Continuar
+                    <span>→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sidebar toggle para móvil
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+        });
+    }
+    
+    // Cerrar sidebar al hacer click en enlace en móvil
+    const navLinks = document.querySelectorAll('.nav-item');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.remove('open');
+            }
+        });
+    });
+    
+    // Active state handling
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+        
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        navItems.forEach(item => {
+            const href = item.getAttribute('href');
+            if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
+                item.classList.add('active');
+            }
+        });
+        
+        if (fileName === '' || fileName === 'Rdashboard.html') {
+            const dashboardLink = document.querySelector('.nav-item[href="Rdashboard.html"]');
+            if (dashboardLink) dashboardLink.classList.add('active');
+        }
+    });
+    
+    // Funcionalidad de botones
+    document.getElementById('btnBack')?.addEventListener('click', () => {
+        alert('← Volviendo al paso anterior');
+    });
+    
+    document.getElementById('btnSaveDraft')?.addEventListener('click', () => {
+        alert('💾 Borrador guardado correctamente');
+    });
+    
+    document.getElementById('btnContinue')?.addEventListener('click', () => {
+        alert('➡️ Continuando al siguiente paso: Beneficios');
+    });
+    
+    document.getElementById('modificarRequisitos')?.addEventListener('click', () => {
+        alert('✏️ Modificar requisitos - Reduciendo años de experiencia');
+    });
+    
+    document.getElementById('cambiarNivel')?.addEventListener('click', () => {
+        alert('🔄 Nivel cambiado a Semi-Senior');
+    });
+    
+    // Notificaciones demo
+    document.querySelector('.notif-btn')?.addEventListener('click', () => {
+        alert('📬 No tienes notificaciones nuevas');
+    });
+    
+    document.querySelector('.msg-btn')?.addEventListener('click', () => {
+        alert('💬 Bandeja de mensajes');
+    });
+</script>
+</body>
 </html>
