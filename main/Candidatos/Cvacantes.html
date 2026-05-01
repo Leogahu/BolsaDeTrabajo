@@ -1,288 +1,654 @@
-<div style="width: 1280px; min-height: 1024px; position: relative; background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-  <div style="align-self: stretch; padding-left: 256px; position: relative; justify-content: center; align-items: flex-start; display: inline-flex">
-    <div style="flex: 1 1 0; align-self: stretch; max-width: 1280px; padding: 24px; background: #F8F9FF; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-      <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 88.55px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #737686; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Oportunidades</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Curso</title>
+    <!-- Google Fonts: Inter y Nimbus Sans (fallback a sistema) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F1F5F9; /* fondo exterior suave para contraste, pero el diseño original tiene el wrapper blanco/gris */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* contenedor principal: igual ancho 1280px, centrado, relativo para sidebar absolute */
+        .dashboard-container {
+            width: 1280px;
+            min-height: 1241px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        /* SIDEBAR izquierda fija estilo imagen */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #F8FAFC;
+            border-right: 1px solid #E2E8F0;
+            padding: 80px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #EFF6FF;
+        }
+
+        .nav-item:hover .nav-text {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-item:hover div[class^="icon-"] {
+            background: #2563EB !important;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+        }
+
+        .nav-item.active .nav-text {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-item.active div[class^="icon-"] {
+            background: #2563EB !important;
+        }
+
+        .nav-text {
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 21px;
+            color: #475569;
+        }
+
+        /* iconos de reemplazo mediante pseudo o background simplificado */
+        .icon-dashboard { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-oportunidades { width: 20px; height: 19px; background: #2563EB; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3Crect width='20' height='14' x='2' y='6' rx='2'/%3E%3C/svg%3E") no-repeat center; background-size: contain; background-color: #475569; }
+        .icon-postulaciones { width: 20px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-pruebas { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z'/%3E%3Cpath d='M12 17h.01'/%3E%3Cpath d='M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-perfil { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-alertas { width: 20px; height: 20px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.268 21a2 2 0 0 0 3.464 0'/%3E%3Cpath d='M22 8c0-2.3-.8-4.3-2-6'/%3E%3Cpath d='M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326'/%3E%3Cpath d='M4 2C2.8 3.7 2 5.7 2 8'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-entrevistas { width: 20px; height: 20px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='10' r='8'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3Cpath d='M7 22h10'/%3E%3Cpath d='M12 22v-4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-logout { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+
+        /* Main content */
+        .main-content {
+            margin-left: 256px;
+            padding: 96px 48px 72px 48px;
+            width: calc(100% - 256px);
+        }
+
+        /* Header (navbar) duplicado pero fijo en la parte superior, siguiendo el diseño */
+        .top-navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: white;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: #2563EB;
+            line-height: 28px;
+        }
+
+        .panel-text {
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748B;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 464px;
+            max-width: 464px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: #EFF4FF;
+            border-radius: 9999px;
+            border: 1px solid #C3C6D7;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #6B7280;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            background: #C3C6D7;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C3C6D7'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            padding: 8px;
+            border-radius: 9999px;
+            cursor: default;
+            position: relative;
+        }
+
+        .bell-icon {
+            width: 16px;
+            height: 20px;
+            background: #64748B;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .dot-notify {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: #BA1A1A;
+            border-radius: 9999px;
+        }
+
+        .avatar-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            border: 1px solid #E2E8F0;
+            background: #E6EEFF;
+        }
+
+        /* grillas y tarjetas */
+        .stats-grid {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+            outline: 1px solid rgba(195, 198, 215, 0.30);
+            outline-offset: -1px;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .icon-bg {
+            width: 40px;
+            height: 40px;
+            background: #E6EEFF;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .badge-positive {
+            background: #DCE9FF;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #004AC6;
+            line-height: 16px;
+        }
+
+        .stat-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #434655;
+            letter-spacing: 0.14px;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0D1C2E;
+            line-height: 44px;
+        }
+
+        .warning-card {
+            background: #FFDAD6;
+            outline: 1px solid rgba(186, 26, 26, 0.20);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .warning-blur {
+            position: absolute;
+            width: 96px;
+            height: 96px;
+            right: 0;
+            top: -15px;
+            background: rgba(186,26,26,0.10);
+            filter: blur(12px);
+            border-radius: 9999px;
+        }
+
+        .vacancy-row {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            outline: 1px solid rgba(195,198,215,0.30);
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .tag-dev { background: #62FAE3; color: #005047; }
+        .tag-design { background: #FFDF9F; color: #261A00; }
+
+        .applicant-count {
+            background: #EFF4FF;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .funnel-step {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .progress-bar {
+            height: 32px;
+            background: #E6EEFF;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: rgba(0, 74, 198, 0.5);
+            border-radius: 9999px;
+        }
+
+        /* Ajustes tipográficos */
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0D1C2E;
+        }
+
+        .text-muted {
+            color: #434655;
+            font-size: 16px;
+        }
+
+        hr {
+            margin: 16px 0;
+        }
+
+        .mt-24 { margin-top: 24px; }
+
+        /* Nuevos estilos para el contenido de la vacante */
+.job-detail-container {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.card {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+}
+
+.job-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.company-logo {
+    width: 64px;
+    height: 64px;
+    background: #0D1C2E;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.job-title-section h1 {
+    font-size: 28px;
+    color: #0F172A;
+    margin-bottom: 4px;
+}
+
+.job-meta {
+    display: flex;
+    gap: 12px;
+    color: #64748B;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.pill-container {
+    display: flex;
+    gap: 8px;
+}
+
+.pill {
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pill-red { background: #FEE2E2; color: #991B1B; }
+.pill-orange { background: #FFEDD5; color: #9A3412; }
+.pill-blue { background: #DBEAFE; color: #1E40AF; }
+
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.requirement-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+}
+
+.check-icon {
+    color: #10B981;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: #2563EB;
+    color: white;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.btn-secondary {
+    background: white;
+    color: #2563EB;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.match-badge {
+    float: right;
+    text-align: center;
+}
+
+.percentage {
+    font-size: 24px;
+    font-weight: 800;
+    color: #10B981;
+    display: block;
+}
+
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+        <!-- Sidebar izquierda -->
+                 <div class="sidebar">
+            <div class="sidebar-nav">
+                <a href="Cdashboard.html" class="nav-item">
+                    <div class="icon-dashboard"></div>
+                    <span class="nav-text">Inicio</span>
+                </a>
+                <a href="Cexplorar.html" class="nav-item active">
+                    <div class="icon-oportunidades"></div>
+                    <span class="nav-text">Oportunidades</span>
+                </a>
+                <a href="Cpostulaciones.html" class="nav-item">
+                    <div class="icon-postulaciones"></div>
+                    <span class="nav-text">Mis Postulaciones</span>
+                </a>
+                <a href="Chabilidades.html" class="nav-item">
+                    <div class="icon-pruebas"></div>
+                    <span class="nav-text">Pruebas</span>
+                </a>
+                <a href="Cperfil.html" class="nav-item">
+                    <div class="icon-perfil"></div>
+                    <span class="nav-text">Mi perfil</span>
+                </a>
+                <a href="Calertas.html" class="nav-item">
+                    <div class="icon-alertas"></div>
+                    <span class="nav-text">Alertas</span>
+                </a>
+                <a href="Centrevistas.html" class="nav-item">
+                    <div class="icon-entrevistas"></div>
+                    <span class="nav-text">Simulador</span>
+                </a>
+            </div>
+            <div class="sidebar-nav" style="border-top: 1px solid #E2E8F0; padding-top: 16px;">
+                <a href="login.html" class="nav-item">
+                    <div class="icon-logout"></div>
+                    <span class="nav-text">Cerrar sesión</span>
+                </a>
+            </div>
         </div>
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 4.32px; height: 7px; background: #737686"></div>
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <div class="logo-area">
+            <div class="logo-text">ChapatuChamba</div>
+            <div class="panel-text">Panel de Control</div>
         </div>
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 65.30px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #737686; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Tecnología</div>
+        <div class="search-wrapper">
+            <input type="text" class="search-input" placeholder="Buscar candidatos, vacantes...">
+            <div class="search-icon"></div>
         </div>
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 4.32px; height: 7px; background: #737686"></div>
+        <div class="header-actions">
+            <div class="icon-btn" style="position: relative;">
+                <div class="bell-icon"></div>
+                <div class="dot-notify"></div>
+            </div>
+            <div class="icon-btn">
+                <div style="width:20px;height:20px;background:#64748B;mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E'); background-size:contain;"></div>
+            </div>
+            <div>
+                <img class="avatar-img" src="https://placehold.co/32x32" alt="avatar">
+            </div>
         </div>
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 178.52px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Desarrollador Frontend Junior</div>
-        </div>
-      </div>
-      <div style="align-self: stretch; padding: 32px; position: relative; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); overflow: hidden; border-radius: 24px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-        <div style="width: 256px; height: 256px; left: 720px; top: 0px; position: absolute; opacity: 0.05; background: #2563EB; border-bottom-left-radius: 9999px"></div>
-        <div style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex">
-          <div style="justify-content: flex-start; align-items: flex-start; gap: 24px; display: flex">
-            <div style="width: 80px; height: 80px; background: #EFF4FF; overflow: hidden; border-radius: 12px; outline: 1px #C3C6D7 solid; outline-offset: -1px; justify-content: center; align-items: center; display: flex">
-              <img style="flex: 1 1 0; align-self: stretch; position: relative" src="https://placehold.co/78x78" />
-            </div>
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-              <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="width: 505.73px; height: 44px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 36px; font-family: Inter; font-weight: 700; line-height: 44px; word-wrap: break-word">Desarrollador Frontend Junior</div>
-              </div>
-              <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 192.83px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #004AC6; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 28px; word-wrap: break-word">TechNova Solutions</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 9px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #737686; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">•</div>
-                </div>
-                <div style="justify-content: flex-start; align-items: center; gap: 3.99px; display: flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 9.33px; height: 11.67px; background: #434655"></div>
-                  </div>
-                  <div style="width: 150.98px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Lima, Perú (Híbrido)</div>
-                </div>
-              </div>
-              <div style="align-self: stretch; padding-top: 8px; justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-                <div style="align-self: stretch; padding-top: 3.50px; padding-bottom: 4.50px; padding-left: 12px; padding-right: 12px; background: #FFDAD6; border-radius: 9999px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 12.83px; height: 12.25px; background: #93000A"></div>
-                  </div>
-                  <div style="width: 66.72px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #93000A; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Junior Real</div>
-                </div>
-                <div style="align-self: stretch; padding-top: 3.50px; padding-bottom: 4.50px; padding-left: 12px; padding-right: 12px; background: #F9BD22; border-radius: 9999px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 11.67px; height: 11.67px; background: #5C4300"></div>
-                  </div>
-                  <div style="width: 83.45px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #5C4300; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Talento Joven</div>
-                </div>
-                <div style="align-self: stretch; padding-top: 3.50px; padding-bottom: 4.50px; padding-left: 12px; padding-right: 12px; background: #DCE9FF; border-radius: 9999px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 11.67px; height: 11.67px; background: #0D1C2E"></div>
-                  </div>
-                  <div style="width: 105.45px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Tiempo Completo</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div style="min-width: 120px; padding-top: 16px; padding-bottom: 16px; padding-left: 21.06px; padding-right: 21.08px; background: #EFF4FF; border-radius: 16px; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-            <div style="width: 64px; height: 72px; padding-bottom: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="width: 64px; height: 64px; position: relative; justify-content: center; align-items: center; display: inline-flex">
-                <div style="width: 116.04px; height: 64px; position: relative; transform: rotate(-90deg); transform-origin: top left; overflow: hidden">
-                  <div style="width: 56.59px; height: 56.59px; left: 3.71px; top: 3.71px; position: absolute; outline: 5.33px #C3C6D7 solid; outline-offset: -2.67px"></div>
-                  <div style="width: 56.59px; height: 56.59px; left: 3.71px; top: 3.71px; position: absolute; outline: 5.33px #3CDDC7 solid; outline-offset: -2.67px"></div>
-                </div>
-                <div style="width: 45.14px; height: 28px; left: 9.42px; top: 18px; position: absolute; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 28px; word-wrap: break-word">85%</div>
-              </div>
-            </div>
-            <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-              <div style="width: 77.86px; height: 30px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 15px; letter-spacing: 0.24px; word-wrap: break-word">Match con tu<br/>perfil</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-          <div style="align-self: stretch; padding: 32px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 24px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 24px; font-family: Inter; font-weight: 600; line-height: 32px; word-wrap: break-word">Acerca del rol</div>
-            </div>
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
-              <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">En TechNova Solutions estamos buscando un Desarrollador Frontend Junior<br/>apasionado por crear interfaces de usuario increíbles y accesibles. Si te<br/>encanta transformar diseños en código limpio y eficiente, y estás buscando<br/>un lugar donde dar tus primeros grandes pasos profesionales con apoyo y<br/>mentoría, este es tu lugar.</div>
-              </div>
-              <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Trabajarás junto a un equipo multidisciplinario (UX/UI, Backend, Product<br/>Managers) para construir la nueva versión de nuestra plataforma principal<br/>de gestión empresarial, utilizada por más de 10,000 usuarios diariamente.</div>
-              </div>
-            </div>
-          </div>
-          <div style="align-self: stretch; padding: 32px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 24px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: flex">
-            <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-              <div style="width: 40px; height: 40px; background: #2563EB; border-radius: 9999px; justify-content: center; align-items: center; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 20px; height: 15.07px; background: #EEEFFF"></div>
-                </div>
-              </div>
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 121px; height: 32px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 24px; font-family: Inter; font-weight: 600; line-height: 32px; word-wrap: break-word">Requisitos</div>
-              </div>
-            </div>
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
-              <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 12px; display: inline-flex">
-                <div style="padding-top: 4px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 20px; height: 20px; background: #006B5F"></div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="width: 146.83px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Fundamentos sólidos</div>
-                  </div>
-                  <div style="width: 428.06px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Dominio de HTML5, CSS3 y JavaScript moderno (ES6+).</div>
-                </div>
-              </div>
-              <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 12px; display: inline-flex">
-                <div style="padding-top: 4px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 20px; height: 20px; background: #006B5F"></div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="width: 84.97px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Frameworks</div>
-                  </div>
-                  <div style="width: 526.55px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Experiencia básica o proyectos académicos usando React.js o Vue.js.</div>
-                </div>
-              </div>
-              <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 12px; display: inline-flex">
-                <div style="padding-top: 4px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 20px; height: 20px; background: #006B5F"></div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="width: 142.88px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Control de versiones</div>
-                  </div>
-                  <div style="width: 495.97px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Conocimiento de Git y flujos de trabajo básicos en GitHub/GitLab.</div>
-                </div>
-              </div>
-              <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 12px; display: inline-flex">
-                <div style="padding-top: 4px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 20px; height: 20px; background: #006B5F"></div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="width: 68.31px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Soft Skills</div>
-                  </div>
-                  <div style="width: 539.75px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Actitud proactiva, ganas de aprender y buena comunicación en equipo.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="align-self: stretch; padding-bottom: 165px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-          <div style="align-self: stretch; padding: 24px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 24px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
-            <div style="align-self: stretch; padding-left: 24px; padding-right: 24px; padding-top: 16px; padding-bottom: 16px; background: #2563EB; box-shadow: 0px 4px 14px rgba(37, 99, 235, 0.20); border-radius: 12px; justify-content: center; align-items: center; gap: 7.99px; display: inline-flex">
-              <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                <div style="width: 19px; height: 16px; background: white"></div>
-              </div>
-              <div style="width: 173.17px; height: 28px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 28px; word-wrap: break-word">Postularme Ahora</div>
-            </div>
-            <div style="align-self: stretch; padding-left: 24px; padding-right: 24px; padding-top: 12px; padding-bottom: 12px; background: #F8F9FF; border-radius: 12px; outline: 1px #C3C6D7 solid; outline-offset: -1px; justify-content: center; align-items: center; gap: 8px; display: inline-flex">
-              <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                <div style="width: 14px; height: 18px; background: #004AC6"></div>
-              </div>
-              <div style="width: 114.44px; height: 20px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #004AC6; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Guardar vacante</div>
-            </div>
-            <div style="align-self: stretch; padding-top: 32px; border-top: 1px #C3C6D7 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-              <div style="align-self: stretch; justify-content: space-between; align-items: center; display: inline-flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 99.22px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Salario estimado</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 132.72px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">S/ 2,000 - S/ 2,500</div>
-                </div>
-              </div>
-              <div style="align-self: stretch; padding-right: 0.01px; justify-content: space-between; align-items: center; display: inline-flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 62.30px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Modalidad</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 127.98px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Híbrido (3 días ofi)</div>
-                </div>
-              </div>
-              <div style="align-self: stretch; justify-content: space-between; align-items: center; display: inline-flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 59.08px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Publicado</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 80.36px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Hace 2 días</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div style="align-self: stretch; padding: 24px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 24px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 15.50px; display: flex">
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 28px; word-wrap: break-word">Conoce a TechNova</div>
-            </div>
-            <div style="align-self: stretch; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Somos una startup tecnológica<br/>enfocada en revolucionar la<br/>gestión financiera para pequeñas</div>
-            </div>
-            <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
-              <div style="width: 163.97px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #004AC6; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Ver perfil de la empresa</div>
-              <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 9.33px; height: 9.33px; background: #004AC6"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-    <div style="width: 256px; height: 1024px; padding-top: 80px; padding-bottom: 16px; padding-left: 16px; padding-right: 16px; left: 0px; top: 0px; position: absolute; background: #F8FAFC; border-right: 1px #E2E8F0 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-      <div style="align-self: stretch; height: 839px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 16px; height: 18px; background: #475569"></div>
-          </div>
-          <div style="width: 36.58px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Inicio</div>
+
+    <div class="main-content">
+    <div class="job-detail-container">
+        <div class="left-col">
+            <div class="card">
+                <div class="match-badge">
+                    <span class="percentage">(85%)</span>
+                    <small style="color: #64748B; font-size: 10px;">Match con tu perfil</small>
+                </div>
+                <div class="job-header">
+                    <div class="company-logo">
+                        <img src="https://placehold.co/40x40/0D1C2E/white?text=TECH" alt="TechNova">
+                    </div>
+                    <div class="job-title-section">
+                        <h1>Desarrollador Frontend Junior</h1>
+                        <div class="job-meta">
+                            <span style="color:#2563EB; font-weight:600;">TechNova Solutions</span> 
+                            <span>• Lima, Perú (Híbrido)</span>
+                        </div>
+                        <div class="pill-container">
+                            <span class="pill pill-red">Junior Real</span>
+                            <span class="pill pill-orange">Talento Joven</span>
+                            <span class="pill pill-blue">Tiempo Completo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Acerca del rol</h2>
+                <p style="color: #475569; line-height: 1.6; margin-bottom: 16px;">
+                    En TechNova Solutions estamos buscando un Desarrollador Frontend Junior apasionado por crear interfaces de usuario increíbles y accesibles. Si te encanta transformar diseños en código limpio y eficiente, y estás buscando un lugar donde dar tus primeros grandes pasos profesionales con apoyo y mentoría, este es tu lugar.
+                </p>
+                <p style="color: #475569; line-height: 1.6;">
+                    Trabajarás junto a un equipo multidisciplinario (UX/UI, Backend, Product Managers) para construir la nueva versión de nuestra plataforma principal de gestión empresarial, utilizada por más de 10,000 usuarios diariamente.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">
+                    <span style="background:#2563EB; color:white; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:12px;">✓</span>
+                    Requisitos
+                </h2>
+                <div class="requirement-item">
+                    <span class="check-icon">✓</span>
+                    <div>
+                        <strong>Fundamentos sólidos</strong><br>
+                        <small style="color: #64748B;">Dominio de HTML5, CSS3 y JavaScript moderno (ES6+).</small>
+                    </div>
+                </div>
+                <div class="requirement-item">
+                    <span class="check-icon">✓</span>
+                    <div>
+                        <strong>Frameworks</strong><br>
+                        <small style="color: #64748B;">Experiencia básica o proyectos académicos usando React.js o Vue.js.</small>
+                    </div>
+                </div>
+                <div class="requirement-item">
+                    <span class="check-icon">✓</span>
+                    <div>
+                        <strong>Control de versiones</strong><br>
+                        <small style="color: #64748B;">Conocimiento de Git y flujos de trabajo básicos en GitHub/GitLab.</small>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; background: #EFF6FF; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 20px; height: 19px; background: #2563EB"></div>
-          </div>
-          <div style="width: 99.94px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #2563EB; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Oportunidades</div>
+
+        <div class="right-col">
+            <div class="card">
+                <button class="btn-primary"><span>▶</span> Postularme Ahora</button>
+                <button class="btn-secondary">口 Guardar vacante</button>
+                <hr style="border: 0; border-top: 1px solid #E2E8F0; margin: 20px 0;">
+                <div style="font-size: 14px; display: grid; gap: 12px;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:#64748B;">Salario estimado</span>
+                        <strong style="color:#0F172A;">S/ 2,000 - S/ 2,500</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:#64748B;">Modalidad</span>
+                        <strong style="color:#0F172A;">Híbrido (3 días ofi)</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:#64748B;">Publicado</span>
+                        <strong style="color:#0F172A;">Hace 2 días</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="font-size:16px; margin-bottom:12px;">Conoce a TechNova</h3>
+                <p style="font-size:14px; color:#64748B; margin-bottom:12px;">Somos una startup tecnológica enfocada en revolucionar la gestión financiera para pequeñas empresas.</p>
+                <a href="#" style="color:#2563EB; font-size:14px; text-decoration:none; font-weight:600;">Ver perfil de la empresa →</a>
+            </div>
         </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 18px; height: 20px; background: #475569"></div>
-          </div>
-          <div style="width: 121.39px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Mis postulaciones</div>
-        </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 20px; height: 20px; background: #475569"></div>
-          </div>
-          <div style="width: 55.30px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Pruebas</div>
-        </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 16px; height: 16px; background: #475569"></div>
-          </div>
-          <div style="width: 53.69px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Mi perfil</div>
-        </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 20px; height: 20.05px; background: #475569"></div>
-          </div>
-          <div style="width: 47.80px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Alertas</div>
-        </div>
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 19.01px; height: 20px; background: #475569"></div>
-          </div>
-          <div style="width: 68.50px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Simulador</div>
-        </div>
-      </div>
-      <div style="align-self: stretch; padding-top: 16px; border-top: 1px #E2E8F0 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div style="width: 18px; height: 18px; background: #475569"></div>
-          </div>
-          <div style="width: 90.47px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Cerrar sesión</div>
-        </div>
-      </div>
     </div>
-  </div>
-  <div style="width: 1280px; height: 64px; padding-left: 24px; padding-right: 24px; left: 0px; top: 0px; position: absolute; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-bottom: 1px #E2E8F0 solid; justify-content: space-between; align-items: center; display: inline-flex">
-    <div style="justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-      <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="width: 158.08px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #2563EB; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 28px; word-wrap: break-word">ChapatuChamba</div>
-      </div>
-      <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="width: 103.66px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #64748B; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">Panel de Control</div>
-      </div>
-    </div>
-    <div style="justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-      <div style="width: 256px; height: 38px"></div>
-      <div style="width: 32px; height: 36px; padding: 8px; border-radius: 9999px"></div>
-      <div style="width: 40px; height: 32px; padding-left: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <img style="width: 32px; height: 32px; position: relative; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; border: 1px #E2E8F0 solid" src="https://placehold.co/32x32" />
-      </div>
-    </div>
-  </div>
 </div>
+
+</div>
+</body>
+</html>

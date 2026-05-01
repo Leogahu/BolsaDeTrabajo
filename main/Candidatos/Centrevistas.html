@@ -1,276 +1,668 @@
-<div style="width: 1280px; height: 1024px; background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-  <div style="width: 256px; height: 1024px; padding: 16px; background: #F8FAFC; border-right: 1px #E2E8F0 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-    <div style="align-self: stretch; padding-top: 16px; border-top: 1px #E2E8F0 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 18px; height: 18px; background: #475569"></div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Simulador de Entrevistas</title>
+    <!-- Google Fonts: Inter y Nimbus Sans (fallback a sistema) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F1F5F9; /* fondo exterior suave para contraste, pero el diseño original tiene el wrapper blanco/gris */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* contenedor principal: igual ancho 1280px, centrado, relativo para sidebar absolute */
+        .dashboard-container {
+            width: 1280px;
+            min-height: 1241px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        /* SIDEBAR izquierda fija estilo imagen */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #F8FAFC;
+            border-right: 1px solid #E2E8F0;
+            padding: 80px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #EFF6FF;
+        }
+
+        .nav-item:hover .nav-text {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+        }
+
+        .nav-item.active .nav-text {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-text {
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 21px;
+            color: #475569;
+        }
+
+        /* iconos de reemplazo mediante pseudo o background simplificado */
+        .icon-dashboard { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-oportunidades { width: 20px; height: 19px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3Crect width='20' height='14' x='2' y='6' rx='2'/%3E%3C/svg%3E") no-repeat center; background-size: contain; background-color: #475569; }
+        .icon-postulaciones { width: 20px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-pruebas { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z'/%3E%3Cpath d='M12 17h.01'/%3E%3Cpath d='M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-perfil { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-alertas { width: 20px; height: 20px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.268 21a2 2 0 0 0 3.464 0'/%3E%3Cpath d='M22 8c0-2.3-.8-4.3-2-6'/%3E%3Cpath d='M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326'/%3E%3Cpath d='M4 2C2.8 3.7 2 5.7 2 8'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-entrevistas { width: 20px; height: 20px; background: #2563EB; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='10' r='8'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3Cpath d='M7 22h10'/%3E%3Cpath d='M12 22v-4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-logout { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        
+        /* Main content */
+        .main-content {
+            margin-left: 256px;
+            padding: 96px 48px 72px 48px;
+            width: calc(100% - 256px);
+        }
+
+        /* Header (navbar) duplicado pero fijo en la parte superior, siguiendo el diseño */
+        .top-navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: white;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: #2563EB;
+            line-height: 28px;
+        }
+
+        .panel-text {
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748B;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 464px;
+            max-width: 464px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: #EFF4FF;
+            border-radius: 9999px;
+            border: 1px solid #C3C6D7;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #6B7280;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            background: #C3C6D7;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C3C6D7'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            padding: 8px;
+            border-radius: 9999px;
+            cursor: default;
+            position: relative;
+        }
+
+        .bell-icon {
+            width: 16px;
+            height: 20px;
+            background: #64748B;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .dot-notify {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: #BA1A1A;
+            border-radius: 9999px;
+        }
+
+        .avatar-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            border: 1px solid #E2E8F0;
+            background: #E6EEFF;
+        }
+
+        /* grillas y tarjetas */
+        .stats-grid {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+            outline: 1px solid rgba(195, 198, 215, 0.30);
+            outline-offset: -1px;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .icon-bg {
+            width: 40px;
+            height: 40px;
+            background: #E6EEFF;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .badge-positive {
+            background: #DCE9FF;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #004AC6;
+            line-height: 16px;
+        }
+
+        .stat-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #434655;
+            letter-spacing: 0.14px;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0D1C2E;
+            line-height: 44px;
+        }
+
+        .warning-card {
+            background: #FFDAD6;
+            outline: 1px solid rgba(186, 26, 26, 0.20);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .warning-blur {
+            position: absolute;
+            width: 96px;
+            height: 96px;
+            right: 0;
+            top: -15px;
+            background: rgba(186,26,26,0.10);
+            filter: blur(12px);
+            border-radius: 9999px;
+        }
+
+        .vacancy-row {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            outline: 1px solid rgba(195,198,215,0.30);
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .tag-dev { background: #62FAE3; color: #005047; }
+        .tag-design { background: #FFDF9F; color: #261A00; }
+
+        .applicant-count {
+            background: #EFF4FF;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .funnel-step {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .progress-bar {
+            height: 32px;
+            background: #E6EEFF;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: rgba(0, 74, 198, 0.5);
+            border-radius: 9999px;
+        }
+
+        /* Ajustes tipográficos */
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0D1C2E;
+        }
+
+        .text-muted {
+            color: #434655;
+            font-size: 16px;
+        }
+
+        hr {
+            margin: 16px 0;
+        }
+
+        .mt-24 { margin-top: 24px; }
+
+        /* Estilos para el Simulador de Entrevista */
+.simulator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.sim-badge {
+    background: #D1FAE5;
+    color: #065F46;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.btn-finish {
+    background: #BA1A1A;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.simulator-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+}
+
+/* Área de Video */
+.video-container {
+    background: #E2E8F0;
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    aspect-ratio: 16 / 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-overlay-top {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.v-badge {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.webcam-mock {
+    width: 60%;
+    max-width: 400px;
+}
+
+.interviewer-mini {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 120px;
+    height: 80px;
+    border-radius: 8px;
+    border: 2px solid #2563EB;
+    overflow: hidden;
+}
+
+/* Panel Lateral Derecho */
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.question-card, .ai-tip, .stat-mini-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+}
+
+.ai-tip {
+    background: #E6EEFF;
+    border: none;
+}
+
+.stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.stat-mini-card {
+    text-align: center;
+}
+
+.btn-primary-sim {
+    background: #2563EB;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-hint {
+    background: #EFF6FF;
+    color: #1E40AF;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #BFDBFE;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+/* Controles de cámara/mic */
+.video-controls {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.control-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+        <!-- Sidebar izquierda -->
+                 <div class="sidebar">
+            <div class="sidebar-nav">
+                <a href="Cdashboard.html" class="nav-item">
+                    <div class="icon-dashboard"></div>
+                    <span class="nav-text">Inicio</span>
+                </a>
+                <a href="Cexplorar.html" class="nav-item">
+                    <div class="icon-oportunidades"></div>
+                    <span class="nav-text">Oportunidades</span>
+                </a>
+                <a href="Cpostulaciones.html" class="nav-item">
+                    <div class="icon-postulaciones"></div>
+                    <span class="nav-text">Mis Postulaciones</span>
+                </a>
+                <a href="Chabilidades.html" class="nav-item">
+                    <div class="icon-pruebas"></div>
+                    <span class="nav-text">Pruebas</span>
+                </a>
+                <a href="Cperfil.html" class="nav-item">
+                    <div class="icon-perfil"></div>
+                    <span class="nav-text">Mi perfil</span>
+                </a>
+                <a href="Calertas.html" class="nav-item">
+                    <div class="icon-alertas"></div>
+                    <span class="nav-text">Alertas</span>
+                </a>
+                <a href="Centrevistas.html" class="nav-item active">
+                    <div class="icon-entrevistas"></div>
+                    <span class="nav-text">Simulador</span>
+                </a>
+            </div>
+            <div class="sidebar-nav" style="border-top: 1px solid #E2E8F0; padding-top: 16px;">
+                <a href="login.html" class="nav-item">
+                    <div class="icon-logout"></div>
+                    <span class="nav-text">Cerrar sesión</span>
+                </a>
+            </div>
         </div>
-        <div style="width: 90.47px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Cerrar sesión</div>
-      </div>
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <div class="logo-area">
+            <div class="logo-text">ChapatuChamba</div>
+            <div class="panel-text">Panel de Control</div>
+        </div>
+        <div class="search-wrapper">
+            <input type="text" class="search-input" placeholder="Buscar candidatos, vacantes...">
+            <div class="search-icon"></div>
+        </div>
+        <div class="header-actions">
+            <div class="icon-btn" style="position: relative;">
+                <div class="bell-icon"></div>
+                <div class="dot-notify"></div>
+            </div>
+            <div class="icon-btn">
+                <div style="width:20px;height:20px;background:#64748B;mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E'); background-size:contain;"></div>
+            </div>
+            <div>
+                <img class="avatar-img" src="https://placehold.co/32x32" alt="avatar">
+            </div>
+        </div>
     </div>
-    <div style="align-self: stretch; height: 859px; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 16px; height: 18px; background: #475569"></div>
+
+    <div class="main-content">
+    <div class="simulator-header">
+        <div>
+            <span class="sim-badge">● Simulación Activa</span>
+            <h2>Entrevista: Analista de Datos Junior</h2>
+            <p class="text-muted">Empresa TechCorp • Modalidad Virtual</p>
         </div>
-        <div style="width: 36.58px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Inicio</div>
-      </div>
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 20px; height: 19px; background: #475569"></div>
-        </div>
-        <div style="width: 99.94px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Oportunidades</div>
-      </div>
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 18px; height: 20px; background: #475569"></div>
-        </div>
-        <div style="width: 121.39px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Mis postulaciones</div>
-      </div>
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 20px; height: 20px; background: #475569"></div>
-        </div>
-        <div style="width: 55.30px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Pruebas</div>
-      </div>
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 16px; height: 16px; background: #475569"></div>
-        </div>
-        <div style="width: 53.69px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Mi perfil</div>
-      </div>
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 20px; height: 20.05px; background: #475569"></div>
-        </div>
-        <div style="width: 47.80px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Alertas</div>
-      </div>
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; background: #EFF6FF; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 19.01px; height: 20px; background: #2563EB"></div>
-        </div>
-        <div style="width: 68.50px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #2563EB; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Simulador</div>
-      </div>
+        <a href="#" class="btn-finish">
+            <span>📞</span> Finalizar Sesión
+        </a>
     </div>
-    <div style="align-self: stretch; padding-top: 16px; border-top: 1px #E2E8F0 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-      <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 12px; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 18px; height: 18px; background: #475569"></div>
-        </div>
-        <div style="width: 90.47px; height: 21px; justify-content: center; display: flex; flex-direction: column; color: #475569; font-size: 14px; font-family: Nimbus Sans; font-weight: 600; line-height: 21px; word-wrap: break-word">Cerrar sesión</div>
-      </div>
-    </div>
-  </div>
-  <div style="flex: 1 1 0; align-self: stretch; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-    <div style="width: 1280px; height: 64px; padding-left: 24px; padding-right: 24.02px; left: -256px; top: 1px; position: absolute; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-bottom: 1px #E2E8F0 solid; justify-content: space-between; align-items: center; display: inline-flex">
-      <div style="justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 158.08px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #2563EB; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 28px; word-wrap: break-word">ChapatuChamba</div>
-        </div>
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 103.66px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #64748B; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">Panel de Control</div>
-        </div>
-      </div>
-      <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-        <div style="width: 36.10px; height: 36px; padding: 8px; border-radius: 9999px"></div>
-        <div style="width: 40px; height: 32px; padding-left: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <img style="width: 32px; height: 32px; position: relative; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; border: 1px #E2E8F0 solid" src="https://placehold.co/32x32" />
-        </div>
-      </div>
-    </div>
-    <div style="align-self: stretch; height: 64px; padding-left: 24px; padding-right: 24px; background: white; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-bottom: 1px #E2E8F0 solid; justify-content: space-between; align-items: center; display: inline-flex">
-      <div style="justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 158.08px; height: 28px; justify-content: center; display: flex; flex-direction: column; color: #2563EB; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 28px; word-wrap: break-word">ChapatuChamba</div>
-        </div>
-        <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="width: 103.66px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #64748B; font-size: 14px; font-family: Nimbus Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">Panel de Control</div>
-        </div>
-      </div>
-      <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-        <div style="width: 40px; height: 32px; padding-left: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <img style="width: 32px; height: 32px; position: relative; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; border: 1px #E2E8F0 solid" src="https://placehold.co/32x32" />
-        </div>
-      </div>
-    </div>
-    <div style="align-self: stretch; flex: 1 1 0; padding: 24px; background: #F8F9FF; overflow: hidden; flex-direction: column; justify-content: center; align-items: flex-start; display: flex">
-      <div style="width: 100%; flex: 1 1 0; max-width: 1280px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: flex">
-        <div style="align-self: stretch; padding-bottom: 4px; justify-content: space-between; align-items: center; display: inline-flex">
-          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
-            <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
-              <div style="padding-left: 8px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; background: #62FAE3; border-radius: 9999px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 8.17px; height: 8.17px; background: #007165"></div>
+
+    <div class="simulator-layout">
+        <div class="video-area">
+            <div class="video-container">
+                <div class="video-overlay-top">
+                    <div class="v-badge">👁️ Contacto Visual: 92%</div>
+                    <div class="v-badge">🗣️ Tono: Seguro y Claro</div>
                 </div>
-                <div style="width: 106.28px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #007165; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Simulación Activa</div>
-              </div>
+                
+                <div style="position:absolute; top:16px; right:16px; background:rgba(186,26,26,0.8); color:white; padding:4px 8px; border-radius:4px; font-family:monospace;">
+                    04:12
+                </div>
+
+                <img src="https://img.icons8.com/fluency/240/webcam.png" class="webcam-mock" alt="Webcam">
+
+                <div class="interviewer-mini">
+                    <img src="https://placehold.co/120x80/0D1C2E/FFFFFF?text=IA+Reclutador" alt="Interviewer">
+                </div>
             </div>
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="width: 515.34px; height: 38px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 30px; font-family: Inter; font-weight: 600; line-height: 38px; word-wrap: break-word">Entrevista: Analista de Datos Junior</div>
+
+            <div class="video-controls">
+                <button class="control-btn">🎤</button>
+                <button class="control-btn">📹</button>
+                <button class="control-btn">📤</button>
+                <button class="control-btn">⚙️</button>
             </div>
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-              <div style="width: 295.20px; height: 24px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 24px; word-wrap: break-word">Empresa TechCorp • Modalidad Virtual</div>
-            </div>
-          </div>
-          <div style="padding-left: 24px; padding-right: 24px; padding-top: 8px; padding-bottom: 8px; background: #BA1A1A; border-radius: 12px; justify-content: center; align-items: center; gap: 8px; display: flex">
-            <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-              <div style="width: 18.67px; height: 7.25px; background: white"></div>
-            </div>
-            <div style="width: 108.95px; height: 20px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Finalizar Sesión</div>
-          </div>
         </div>
-        <div style="align-self: stretch; flex: 1 1 0; min-height: 600px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-          <div style="align-self: stretch; align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
-            <div style="align-self: stretch; flex: 1 1 0; position: relative; background: #233144; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); overflow: hidden; border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.30) solid; outline-offset: -1px">
-              <img style="width: 640.66px; height: 706px; left: 1px; top: 1px; position: absolute; opacity: 0.90" src="https://placehold.co/641x706" />
-              <div style="left: 17px; top: 17px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-                <div style="align-self: stretch; padding-left: 12px; padding-right: 12px; padding-top: 6px; padding-bottom: 6px; background: rgba(255, 255, 255, 0.85); box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; outline: 1px rgba(255, 255, 255, 0.20) solid; outline-offset: -1px; backdrop-filter: blur(6px); justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 16.50px; height: 11.25px; background: #004AC6"></div>
-                  </div>
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 129.13px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Contacto Visual: 92%</div>
-                  </div>
+
+        <div class="right-panel">
+            <div class="question-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                    <span style="font-size:12px; font-weight:700; color:#64748B;">PREGUNTA 3 DE 10</span>
+                    <span style="font-size:12px; background:#F1F5F9; padding:2px 8px; border-radius:4px;">Técnica</span>
                 </div>
-                <div style="align-self: stretch; padding-left: 12px; padding-right: 12px; padding-top: 6px; padding-bottom: 6px; background: rgba(255, 255, 255, 0.85); box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; outline: 1px rgba(255, 255, 255, 0.20) solid; outline-offset: -1px; backdrop-filter: blur(6px); justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 16.50px; height: 14.21px; background: #006B5F"></div>
-                  </div>
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 124.97px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Tono: Seguro y Claro</div>
-                  </div>
-                </div>
-              </div>
-              <div style="padding-left: 12px; padding-right: 12px; padding-top: 6px; padding-bottom: 6px; left: 547.48px; top: 17px; position: absolute; background: rgba(186, 26, 26, 0.90); box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 9999px; backdrop-filter: blur(2px); justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 13.33px; height: 13.33px; background: white"></div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 32.84px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">04:12</div>
-                </div>
-              </div>
-              <div style="width: 128px; left: 497.66px; top: 619px; position: absolute; background: #D5E3FC; box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.10), 0px 10px 15px -3px rgba(0, 0, 0, 0.10); overflow: hidden; border-radius: 8px; outline: 2px #2563EB solid; outline-offset: -2px; flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
-                <img style="align-self: stretch; height: 68px; position: relative" src="https://placehold.co/124x68" />
-                <div style="padding-top: 1px; padding-bottom: 2px; left: 10px; top: 51px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                  <div style="width: 76.23px; height: 12px; position: relative; background: rgba(0, 0, 0, 0.50); border-radius: 4px">
-                    <div style="width: 64.23px; height: 15px; left: 6px; top: -1.50px; position: absolute; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 10px; font-family: Inter; font-weight: 500; line-height: 15px; word-wrap: break-word">IA Reclutador</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div style="align-self: stretch; padding: 8px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.50) solid; outline-offset: -1px; justify-content: center; align-items: center; gap: 24px; display: inline-flex">
-              <div style="width: 48px; height: 48px; background: #DCE9FF; border-radius: 9999px; justify-content: center; align-items: center; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 14px; height: 19px; background: #0D1C2E"></div>
-                </div>
-              </div>
-              <div style="width: 48px; height: 48px; background: #DCE9FF; border-radius: 9999px; justify-content: center; align-items: center; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 20px; height: 16px; background: #0D1C2E"></div>
-                </div>
-              </div>
-              <div style="width: 48px; height: 48px; background: #DCE9FF; border-radius: 9999px; justify-content: center; align-items: center; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 20px; height: 16px; background: #0D1C2E"></div>
-                </div>
-              </div>
-              <div style="width: 17px; height: 32px; padding-left: 8px; padding-right: 8px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="width: 1px; height: 32px; background: rgba(195, 198, 215, 0.50)"></div>
-              </div>
-              <div style="width: 48px; height: 48px; background: #DCE9FF; border-radius: 9999px; justify-content: center; align-items: center; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 20.10px; height: 20px; background: #0D1C2E"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div style="align-self: stretch; align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
-            <div style="align-self: stretch; padding: 16px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.50) solid; outline-offset: -1px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-              <div style="align-self: stretch; justify-content: space-between; align-items: center; display: inline-flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 120.59px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #004AC6; font-size: 12px; font-family: Inter; font-weight: 600; text-transform: uppercase; line-height: 16px; letter-spacing: 0.60px; word-wrap: break-word">PREGUNTA 3 DE 10</div>
-                </div>
-                <div style="padding-left: 8px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; background: #DCE9FF; border-radius: 4px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                  <div style="width: 46.66px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Técnica</div>
-                </div>
-              </div>
-              <div style="align-self: stretch; padding-top: 7.25px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; padding-bottom: 0.75px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                  <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 27.50px; word-wrap: break-word">"¿Podrías explicarme la<br/>diferencia entre un JOIN y<br/>un UNION en SQL y cuándo<br/>usarías cada uno?"</div>
-                </div>
-              </div>
-              <div style="align-self: stretch; padding-top: 16px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                      <div style="width: 100.63px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Tiempo sugerido</div>
+                <p style="font-weight:700; font-size:18px; line-height:1.4;">"¿Podrías explicarme la diferencia entre un JOIN y un UNION en SQL y cuándo usarías cada uno?"</p>
+                <div style="margin-top:16px;">
+                    <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+                        <span>Tiempo sugerido</span>
+                        <span>01:30 / 02:00</span>
                     </div>
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                      <div style="width: 79.88px; height: 16px; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">01:30 / 02:00</div>
+                    <div style="height:6px; background:#E2E8F0; border-radius:10px; overflow:hidden;">
+                        <div style="width:75%; height:100%; background:#62FAE3;"></div>
                     </div>
-                  </div>
-                  <div style="align-self: stretch; height: 8px; position: relative; background: #DCE9FF; overflow: hidden; border-radius: 9999px">
-                    <div style="width: 206.48px; height: 8px; left: 0px; top: 0px; position: absolute; background: #3CDDC7; border-radius: 9999px"></div>
-                  </div>
                 </div>
-              </div>
             </div>
-            <div style="align-self: stretch; flex: 1 1 0; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-              <div style="align-self: stretch; align-self: stretch; padding: 16px; background: rgba(37, 99, 235, 0.20); box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(37, 99, 235, 0.50) solid; outline-offset: -1px; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
-                <div style="width: 40px; height: 40px; background: #2563EB; border-radius: 9999px; justify-content: center; align-items: center; display: flex">
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 15px; height: 20px; background: #EEEFFF"></div>
-                  </div>
+
+            <div class="ai-tip">
+                <div style="display:flex; gap:8px; margin-bottom:8px;">
+                    <span>💡</span>
+                    <strong style="color:#1E40AF; font-size:14px;">Tip de la IA en tiempo real</strong>
                 </div>
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
-                  <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="width: 179.38px; height: 20px; justify-content: center; display: flex; flex-direction: column; color: #B4C5FF; font-size: 14px; font-family: Inter; font-weight: 700; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Tip de la IA en tiempo real</div>
-                  </div>
-                  <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="width: 217.43px; height: 100px; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 20px; word-wrap: break-word">Vas muy bien. Recuerda<br/>estructurar tu respuesta dando<br/>un ejemplo breve de un proyecto<br/>pasado donde usaste un JOIN<br/>complejo.</div>
-                  </div>
-                </div>
-              </div>
-              <div style="align-self: stretch; align-self: stretch; padding: 16px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.50) solid; outline-offset: -1px; flex-direction: column; justify-content: center; align-items: center; gap: 4px; display: inline-flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-                  <div style="width: 20px; height: 16px; background: #006B5F"></div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-                  <div style="width: 70.34px; height: 28px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 28px; word-wrap: break-word">Óptimo</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-                  <div style="width: 88.56px; height: 16px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Ritmo al hablar</div>
-                </div>
-              </div>
-              <div style="align-self: stretch; align-self: stretch; padding: 16px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); border-radius: 12px; outline: 1px rgba(195, 198, 215, 0.50) solid; outline-offset: -1px; flex-direction: column; justify-content: center; align-items: center; gap: 4px; display: inline-flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-                  <div style="width: 18.15px; height: 19px; background: #6D5000"></div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-                  <div style="width: 38.73px; height: 28px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 28px; word-wrap: break-word">Alta</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-                  <div style="width: 100.06px; height: 16px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #434655; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px; letter-spacing: 0.24px; word-wrap: break-word">Claridad Técnica</div>
-                </div>
-              </div>
+                <p style="font-size:13px; color:#1E40AF; line-height:1.5;">Vas muy bien. Recuerda estructurar tu respuesta dando un ejemplo breve de un proyecto pasado donde usaste un JOIN complejo.</p>
             </div>
-            <div style="align-self: stretch; padding-top: 16px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-              <div style="align-self: stretch; padding-top: 12px; padding-bottom: 12px; background: #2563EB; border-radius: 12px; justify-content: center; align-items: center; gap: 8.01px; display: inline-flex">
-                <div style="width: 148.17px; height: 20px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #EEEFFF; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Completar Respuesta</div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 15px; height: 15px; background: #EEEFFF"></div>
+
+            <div class="stat-row">
+                <div class="stat-mini-card">
+                    <div style="color:#059669; font-size:20px;">📈</div>
+                    <div style="font-weight:700;">Óptimo</div>
+                    <div style="font-size:11px; color:#64748B;">Ritmo al hablar</div>
                 </div>
-              </div>
-              <div style="align-self: stretch; padding-top: 12px; padding-bottom: 12px; background: #DCE9FF; border-radius: 12px; justify-content: center; align-items: center; gap: 8px; display: inline-flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 13.50px; height: 13.50px; background: #0D1C2E"></div>
+                <div class="stat-mini-card">
+                    <div style="color:#CA8A04; font-size:20px;">A<sub>A</sub></div>
+                    <div style="font-weight:700;">Alta</div>
+                    <div style="font-size:11px; color:#64748B;">Claridad Técnica</div>
                 </div>
-                <div style="width: 123.42px; height: 20px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #0D1C2E; font-size: 14px; font-family: Inter; font-weight: 600; line-height: 20px; letter-spacing: 0.14px; word-wrap: break-word">Solicitar una pista</div>
-              </div>
             </div>
-          </div>
+
+            <div>
+                <button class="btn-primary-sim">Completar Respuesta ✓</button>
+                <button class="btn-hint">❓ Solicitar una pista</button>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
+
+</div>
+</body>
+</html>
