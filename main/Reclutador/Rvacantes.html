@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Vacantes</title>
+    <!-- Google Fonts: Inter y Nimbus Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F1F5F9;
+            font-family: 'Inter', 'Nimbus Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .dashboard {
+            width: 1280px;
+            min-height: 1024px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 64px;
+            background: white;
+            border-right: 1px solid #E2E8F0;
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 5;
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #475569;
+            cursor: default;
+        }
+
+        .nav-link.active {
+            background: #EFF6FF;
+            border-right: 4px solid #2563EB;
+            color: #2563EB;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            background: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+        }
+
+        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); width:18px; height:18px; }
+        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); width:20px; height:19px; }
+        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); width:24px; height:12px; }
+        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); width:18px; height:18px; }
+        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); width:16px; height:16px; }
+        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); width:20px; height:20px; }
+        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); width:18px; height:18px; }
+
+        /* TOP NAVBAR */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(248,249,255,0.80);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid #C3C6D7;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+        }
+
+        .search-container {
+            width: 448px;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: #EFF4FF;
+            border: none;
+            border-radius: 9999px;
+            font-size: 16px;
+            color: #737686;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 9px;
+            width: 15px;
+            height: 15px;
+            background: #737686;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 8px 4px 4px;
+            border-radius: 9999px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #3B82F6, #2DD4BF);
+            border: 2px solid #F8F9FF;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 256px;
+            padding: 32px;
+            background: #F8F9FF;
+            min-height: 100vh;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0D1C2E;
+            margin-bottom: 8px;
+        }
+
+        .page-sub {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748B;
+            margin-bottom: 24px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            background: white;
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 24px;
+            width: fit-content;
+        }
+
+        .filter-tab {
+            padding: 8px 24px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #64748B;
+            cursor: default;
+        }
+
+        .filter-tab.active {
+            background: #EFF6FF;
+            color: #2563EB;
+        }
+
+        /* Tarjetas de vacantes */
+        .jobs-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .job-card-border {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+        }
+
+        .job-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .job-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0D1C2E;
+        }
+
+        .badge-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-junior-real {
+            background: #F43F5E;
+            color: white;
+        }
+
+        .badge-sin-exp {
+            background: #2DD4BF;
+            color: #0F172A;
+        }
+
+        .badge-talento-joven {
+            background: #FBBF24;
+            color: #0F172A;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .status-paused {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-closed {
+            background: #F1F5F9;
+            color: #64748B;
+        }
+
+        .metrics-row {
+            display: flex;
+            gap: 32px;
+            padding-top: 16px;
+            border-top: 1px solid #F1F5F9;
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #94A3B8;
+        }
+
+        .metric-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0D1C2E;
+        }
+
+        .metric-highlight {
+            color: #004AC6;
+            font-weight: 700;
+        }
+
+        .action-icons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-left: 24px;
+            border-left: 1px solid #F1F5F9;
+        }
+
+        .promo-card {
+            background: #2563EB;
+            border-radius: 24px;
+            padding: 24px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .promo-card-bg {
+            position: absolute;
+            right: -40px;
+            top: -40px;
+            width: 160px;
+            height: 160px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            filter: blur(32px);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .page-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            color: #475569;
+            cursor: default;
+        }
+
+        .page-item.active {
+            background: #2563EB;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="nav-items">
+            <a href="Rdashboard.html" class="nav-link"><span class="icon icon-dashboard"></span> Dashboard</a>
+            <a href="Rvacantes.html" class="nav-link active"><span class="icon icon-vacantes"></span> Vacantes</a>
+            <a href="Rgestion.html" class="nav-link"><span class="icon icon-postulantes"></span> Postulantes</a>
+            <a href="RpubOferta.html" class="nav-link"><span class="icon icon-publicar"></span> Publicar Empleo</a>
+            <a href="Rreportes.html" class="nav-link"><span class="icon icon-reportes"></span> Reportes</a>
+            <a href="Rportal.html" class="nav-link"><span class="icon icon-config"></span> Configuración</a>
+        </div>
+        <div class="nav-items" style="border-top:1px solid #E2E8F0; margin-top:auto; padding-top:16px;">
+            <a href="login.html" class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</a>
+        </div>
+    </div>
+
+    <!-- Top Navbar -->
+    <div class="top-nav">
+        <div class="search-container">
+            <input type="text" placeholder="Buscar candidatos, vacantes...">
+            <div class="search-icon"></div>
+        </div>
+        <div class="user-profile">
+            <div class="avatar"></div>
+            <div><div style="font-size:12px; font-weight:500;">Carlos M.</div><div style="font-size:10px; color:#434655;">Admin</div></div>
+            <div>▼</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-title">Vacantes</div>
+        <div class="page-sub">Gestiona tus procesos de reclutamiento activos</div>
+
+        <div class="filter-tabs">
+            <div class="filter-tab active">Todas</div>
+            <div class="filter-tab">Activas</div>
+            <div class="filter-tab">Pausadas</div>
+            <div class="filter-tab">Cerradas</div>
+        </div>
+
+        <div class="jobs-grid">
+            <!-- Promo Card -->
+            <div class="promo-card">
+                <div class="promo-card-bg"></div>
+                <div style="position:relative; z-index:2;">
+                    <div style="font-size:14px; font-weight:600; opacity:0.8;">Rendimiento Total</div>
+                    <div style="font-size:36px; font-weight:700;">158</div>
+                    <div style="font-size:14px; opacity:0.9;">Nuevos postulantes hoy</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+                        <div style="display:flex;">
+                            <div style="width:32px; height:32px; background:#E2E8F0; border-radius:50%; border:2px solid #2563EB;"></div>
+                            <div style="width:32px; height:32px; background:#E2E8F0; border-radius:50%; border:2px solid #2563EB; margin-left:-8px;"></div>
+                            <div style="width:32px; height:32px; background:#E2E8F0; border-radius:50%; border:2px solid #2563EB; margin-left:-8px;"></div>
+                            <div style="width:32px; height:32px; background:#60A5FA; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white; margin-left:-8px; border:2px solid #2563EB;">+12</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.2); padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700;">Ver Detalles</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vacante 1 -->
+            <div class="job-card">
+                <div class="job-card-border" style="background:#2563EB;"></div>
+                <div class="job-card-header">
+                    <div>
+                        <div class="job-title">Frontend Developer Jr. (React)</div>
+                        <div class="badge-group">
+                            <span class="badge badge-junior-real">JUNIOR REAL</span>
+                            <span class="badge badge-sin-exp">SIN EXPERIENCIA</span>
+                        </div>
+                    </div>
+                    <div class="status-badge status-active"><span style="width:6px; height:6px; background:#22C55E; border-radius:50%;"></span> Activa</div>
+                </div>
+                <div class="metrics-row">
+                    <div class="metric"><span class="metric-label">PUBLICADO</span><span class="metric-value">12 de Oct, 2023</span></div>
+                    <div class="metric"><span class="metric-label">POSTULANTES</span><span class="metric-value metric-highlight">24 perfiles →</span></div>
+                    <div class="metric"><span class="metric-label">VISTAS</span><span class="metric-value">1,240</span></div>
+                </div>
+                <div style="position:absolute; right:24px; top:24px; display:flex; gap:8px;">
+                    <div style="padding:8px; border-radius:8px; border:1px solid #F1F5F9;">⋮</div>
+                    <div style="padding:8px; border-radius:8px; border:1px solid #F1F5F9;">✎</div>
+                </div>
+            </div>
+
+            <!-- Vacante 2 -->
+            <div class="job-card">
+                <div class="job-card-border" style="background:#F9BD22;"></div>
+                <div class="job-card-header">
+                    <div>
+                        <div class="job-title">UX/UI Designer Trainee</div>
+                        <div class="badge-group">
+                            <span class="badge badge-talento-joven">TALENTO JOVEN</span>
+                            <span class="badge badge-sin-exp">SIN EXPERIENCIA</span>
+                        </div>
+                    </div>
+                    <div class="status-badge status-paused"><span style="width:6px; height:6px; background:#F59E0B; border-radius:50%;"></span> Pausada</div>
+                </div>
+                <div class="metrics-row">
+                    <div class="metric"><span class="metric-label">PUBLICADO</span><span class="metric-value">05 de Oct, 2023</span></div>
+                    <div class="metric"><span class="metric-label">POSTULANTES</span><span class="metric-value metric-highlight">48 perfiles →</span></div>
+                    <div class="metric"><span class="metric-label">VISTAS</span><span class="metric-value">3,892</span></div>
+                </div>
+                <div style="position:absolute; right:24px; top:24px; display:flex; gap:8px;">
+                    <div style="padding:8px; border-radius:8px; border:1px solid #F1F5F9;">⋮</div>
+                    <div style="padding:8px; border-radius:8px; border:1px solid #F1F5F9;">✎</div>
+                </div>
+            </div>
+
+            <!-- Card especial: ¿Necesitas contratar rápido? -->
+            <div style="background:white; border-radius:24px; padding:24px; text-align:center; box-shadow:0px 4px 20px rgba(0,0,0,0.05);">
+                <div style="width:48px; height:48px; background:#DBEAFE; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">⚡</div>
+                <div style="font-size:16px; font-weight:700; color:#0D1C2E;">¿Necesitas contratar rápido?</div>
+                <div style="font-size:12px; color:#64748B; margin:8px 0 16px;">Destaca tu vacante para llegar a un<br>300% más de estudiantes talentosos.</div>
+                <div style="border:2px solid #2563EB; border-radius:12px; padding:10px; width:fit-content; margin:0 auto; font-weight:700; color:#2563EB;">Impulsar Vacante</div>
+            </div>
+
+            <!-- Vacante 3 - Backend Dev -->
+            <div style="background:white; border-radius:24px; padding:24px; display:flex; align-items:center; gap:24px; box-shadow:0px 4px 20px rgba(0,0,0,0.05);">
+                <div style="width:48px; height:48px; background:#F1F5F9; border-radius:12px; display:flex; align-items:center; justify-content:center;">📁</div>
+                <div style="flex:1;">
+                    <div style="font-size:16px; font-weight:700;">Backend Dev (Node.js)</div>
+                    <div style="font-size:10px; font-weight:700; color:#94A3B8;">Ref: NOD-2023</div>
+                    <div class="badge badge-junior-real" style="display:inline-block; margin-top:8px;">JUNIOR REAL</div>
+                    <div style="font-size:12px; color:#94A3B8; margin-top:8px;">Publicado: Sep 28</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                        <div class="status-badge status-closed"><span style="width:6px; height:6px; background:#CBD5E1; border-radius:50%;"></span> Cerrada</div>
+                        <div style="color:#004AC6; font-weight:700;">12 postulantes</div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <div style="padding:8px;">⋮</div>
+                    <div style="padding:8px;">⋯</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paginación -->
+        <div class="pagination">
+            <div class="page-item">‹</div>
+            <div class="page-item active">1</div>
+            <div class="page-item">2</div>
+            <div class="page-item">3</div>
+            <div style="padding:0 8px; display:flex; align-items:center;">...</div>
+            <div class="page-item">8</div>
+            <div class="page-item">›</div>
+        </div>
+    </div>
+</div>
+    
+    <script>
+        // Active state handling for sidebar navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+            
+            // Find all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Remove active class from all
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Add active class to matching link
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Special case for dashboard (when on root or no file specified)
+            if (fileName === '' || fileName === 'Rdashboard.html') {
+                document.querySelector('.nav-link[href="Rdashboard.html"]').classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

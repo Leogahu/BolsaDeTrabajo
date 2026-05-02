@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Perfil</title>
+    <!-- Google Fonts: Inter y Nimbus Sans (fallback a sistema) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F1F5F9; /* fondo exterior suave para contraste, pero el diseño original tiene el wrapper blanco/gris */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* contenedor principal: igual ancho 1280px, centrado, relativo para sidebar absolute */
+        .dashboard-container {
+            width: 1280px;
+            min-height: 1241px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        /* SIDEBAR izquierda fija estilo imagen */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #F8FAFC;
+            border-right: 1px solid #E2E8F0;
+            padding: 80px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #EFF6FF;
+        }
+
+        .nav-item:hover .nav-text {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+        }
+
+        .nav-item.active .nav-text {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-text {
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 21px;
+            color: #475569;
+        }
+ 
+        /* iconos de reemplazo mediante pseudo o background simplificado */
+        .icon-dashboard { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-oportunidades { width: 20px; height: 19px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3Crect width='20' height='14' x='2' y='6' rx='2'/%3E%3C/svg%3E") no-repeat center; background-size: contain; background-color: #475569; }
+        .icon-postulaciones { width: 20px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-pruebas { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z'/%3E%3Cpath d='M12 17h.01'/%3E%3Cpath d='M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-perfil { width: 18px; height: 18px; background: #2563EB; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-alertas { width: 20px; height: 20px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.268 21a2 2 0 0 0 3.464 0'/%3E%3Cpath d='M22 8c0-2.3-.8-4.3-2-6'/%3E%3Cpath d='M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326'/%3E%3Cpath d='M4 2C2.8 3.7 2 5.7 2 8'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-entrevistas { width: 20px; height: 20px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='10' r='8'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3Cpath d='M7 22h10'/%3E%3Cpath d='M12 22v-4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-logout { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+
+        /* Main content */
+        .main-content {
+            margin-left: 256px;
+            padding: 96px 48px 72px 48px;
+            width: calc(100% - 256px);
+        }
+
+        /* Header (navbar) duplicado pero fijo en la parte superior, siguiendo el diseño */
+        .top-navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: white;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: #2563EB;
+            line-height: 28px;
+        }
+
+        .panel-text {
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748B;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 464px;
+            max-width: 464px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: #EFF4FF;
+            border-radius: 9999px;
+            border: 1px solid #C3C6D7;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #6B7280;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            background: #C3C6D7;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C3C6D7'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            padding: 8px;
+            border-radius: 9999px;
+            cursor: default;
+            position: relative;
+        }
+
+        .bell-icon {
+            width: 16px;
+            height: 20px;
+            background: #64748B;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .dot-notify {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: #BA1A1A;
+            border-radius: 9999px;
+        }
+
+        .avatar-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            border: 1px solid #E2E8F0;
+            background: #E6EEFF;
+        }
+
+        /* grillas y tarjetas */
+        .stats-grid {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+            outline: 1px solid rgba(195, 198, 215, 0.30);
+            outline-offset: -1px;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .icon-bg {
+            width: 40px;
+            height: 40px;
+            background: #E6EEFF;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .badge-positive {
+            background: #DCE9FF;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #004AC6;
+            line-height: 16px;
+        }
+
+        .stat-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #434655;
+            letter-spacing: 0.14px;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0D1C2E;
+            line-height: 44px;
+        }
+
+        .warning-card {
+            background: #FFDAD6;
+            outline: 1px solid rgba(186, 26, 26, 0.20);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .warning-blur {
+            position: absolute;
+            width: 96px;
+            height: 96px;
+            right: 0;
+            top: -15px;
+            background: rgba(186,26,26,0.10);
+            filter: blur(12px);
+            border-radius: 9999px;
+        }
+
+        .vacancy-row {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            outline: 1px solid rgba(195,198,215,0.30);
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .tag-dev { background: #62FAE3; color: #005047; }
+        .tag-design { background: #FFDF9F; color: #261A00; }
+
+        .applicant-count {
+            background: #EFF4FF;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .funnel-step {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .progress-bar {
+            height: 32px;
+            background: #E6EEFF;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: rgba(0, 74, 198, 0.5);
+            border-radius: 9999px;
+        }
+
+        /* Candidatos destacados en flex */
+        .candidates-flex {
+            display: flex;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .candidate-card {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            outline: 1px solid rgba(195,198,215,0.30);
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .top-badge {
+            height: 4px;
+            width: calc(100% - 2px);
+            background: #62FAE3;
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .top-badge-gold {
+            background: #F9BD22;
+        }
+
+        .skill-chip {
+            display: inline-block;
+            background: #DCE9FF;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #434655;
+            margin: 4px;
+        }
+
+        .skill-green {
+            background: #62FAE3;
+            color: #007165;
+        }
+
+        .explore-card {
+            background: #E6EEFF;
+            border-radius: 12px;
+            padding: 54px 24px;
+            text-align: center;
+            outline: 1px solid #C3C6D7;
+            flex: 1;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .link-ver {
+            color: #004AC6;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Ajustes tipográficos */
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0D1C2E;
+        }
+
+        .text-muted {
+            color: #434655;
+            font-size: 16px;
+        }
+
+        hr {
+            margin: 16px 0;
+        }
+
+        .mt-24 { margin-top: 24px; }
+
+        /* hacer responsive básico manteniendo imagen */
+        @media (max-width: 1280px) {
+            .dashboard-container {
+                width: 100%;
+                transform: scale(1);
+            }
+        }
+
+        /* --- ESTILOS NUEVOS PARA EL PERFIL --- */
+
+        .profile-header-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+        }
+
+        .profile-info-main {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 20px;
+            background: #F8FAFC;
+            border: 1px dashed #CBD5E1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748B;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        .profile-photo span {
+            pointer-events: none;
+        }
+
+        .profile-photo.size-20 { width: 20px; height: 20px; font-size: 8px; }
+        .profile-photo.size-40 { width: 40px; height: 40px; font-size: 10px; }
+        .profile-photo.size-80 { width: 80px; height: 80px; font-size: 12px; }
+        .profile-photo.size-120 { width: 120px; height: 120px; font-size: 14px; }
+
+        .profile-details h1 {
+            font-size: 32px;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+
+        .profile-tagline {
+            color: #2563EB;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .profile-meta {
+            color: #64748B;
+            display: flex;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .btn-edit {
+            background: #2563EB;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* Grid Layout */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .card-title h3 {
+            font-size: 18px;
+            color: #1E293B;
+        }
+
+        .icon-small {
+            background: #EFF6FF;
+            padding: 6px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .card-text {
+            color: #475569;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Proyectos */
+        .card-title-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .projects-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .project-item {
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .project-desc {
+            font-size: 13px;
+            color: #64748B;
+            margin-bottom: 12px;
+        }
+
+        .project-tags span {
+            background: #F1F5F9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-right: 4px;
+            color: #475569;
+        }
+
+        /* Skills Meters */
+        .skill-meter {
+            margin-bottom: 16px;
+        }
+
+        .meter-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .meter-bar {
+            height: 8px;
+            background: #E2E8F0;
+            border-radius: 10px;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: #2DD4BF;
+            border-radius: 10px;
+        }
+
+        /* Soft Skills Tags */
+        .soft-skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .soft-skill-tag {
+            background: #FFFBEB;
+            color: #92400E;
+            border: 1px solid #FEF3C7;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+        }
+
+        /* Educación */
+        .education-item {
+            display: flex;
+            gap: 16px;
+            position: relative;
+        }
+
+        .edu-dot {
+            width: 12px;
+            height: 12px;
+            background: #2563EB;
+            border-radius: 50%;
+            margin-top: 6px;
+        }
+
+        .edu-info h4 { font-size: 15px; }
+        .edu-info p { font-size: 14px; color: #64748B; }
+        .edu-date { font-size: 12px; color: #94A3B8; }
+
+        .prefs-list {
+            list-style: none;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .prefs-list li { margin-bottom: 10px; }
+
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+        <!-- Sidebar izquierda -->
+                 <div class="sidebar">
+            <div class="sidebar-nav">
+                <a href="Cdashboard.html" class="nav-item">
+                    <div class="icon-dashboard"></div>
+                    <span class="nav-text">Inicio</span>
+                </a>
+                <a href="Cexplorar.html" class="nav-item">
+                    <div class="icon-oportunidades"></div>
+                    <span class="nav-text">Oportunidades</span>
+                </a>
+                <a href="Cpostulaciones.html" class="nav-item">
+                    <div class="icon-postulaciones"></div>
+                    <span class="nav-text">Mis Postulaciones</span>
+                </a>
+                <a href="Chabilidades.html" class="nav-item">
+                    <div class="icon-pruebas"></div>
+                    <span class="nav-text">Pruebas</span>
+                </a>
+                <a href="Cperfil.html" class="nav-item active">
+                    <div class="icon-perfil"></div>
+                    <span class="nav-text">Mi perfil</span>
+                </a>
+                <a href="Calertas.html" class="nav-item">
+                    <div class="icon-alertas"></div>
+                    <span class="nav-text">Alertas</span>
+                </a>
+                <a href="Centrevistas.html" class="nav-item">
+                    <div class="icon-entrevistas"></div>
+                    <span class="nav-text">Simulador</span>
+                </a>
+            </div>
+            <div class="sidebar-nav" style="border-top: 1px solid #E2E8F0; padding-top: 16px;">
+                <a href="login.html" class="nav-item">
+                    <div class="icon-logout"></div>
+                    <span class="nav-text">Cerrar sesión</span>
+                </a>
+            </div>
+        </div>
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <div class="logo-area">
+            <div class="logo-text">ChapatuChamba</div>
+            <div class="panel-text">Panel de Control</div>
+        </div>
+        <div class="search-wrapper">
+            <input type="text" class="search-input" placeholder="Buscar candidatos, vacantes...">
+            <div class="search-icon"></div>
+        </div>
+        <div class="header-actions">
+            <div class="icon-btn" style="position: relative;">
+                <div class="bell-icon"></div>
+                <div class="dot-notify"></div>
+            </div>
+            <div class="icon-btn">
+                <div style="width:20px;height:20px;background:#64748B;mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E'); background-size:contain;"></div>
+            </div>
+            <div>
+                <img class="avatar-img" src="https://placehold.co/32x32" alt="avatar">
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="profile-header-card">
+            <div class="profile-info-main">
+                <div class="profile-photo size-120"><span>120x120</span></div>
+                <div class="profile-details">
+                    <h1>Alex Rivera</h1>
+                    <p class="profile-tagline">Desarrollador Full Stack Jr. | Apasionado por UX/UI</p>
+                    <div class="profile-meta">
+                        <span>📍 Lima, Perú</span>
+                        <span class="status-dot">•</span>
+                        <span>💼 Buscando oportunidades</span>
+                    </div>
+                </div>
+            </div>
+            <a href="CeditarPerfil.html" class="btn-edit">✎ Editar Perfil</a>
+        </div>
+
+        <div class="profile-grid">
+            <div class="grid-left">
+                <section class="info-card">
+                    <div class="card-title">
+                        <span class="icon-small">📄</span>
+                        <h3>Resumen Profesional</h3>
+                    </div>
+                    <p class="card-text">
+                        Recién graduado en Ingeniería de Software con un enfoque en el desarrollo web moderno. Experiencia práctica construyendo aplicaciones SPA con React y Node.js durante proyectos académicos y prácticas pre-profesionales. Me motiva crear interfaces accesibles y eficientes. Busco un entorno colaborativo donde pueda aportar valor mientras continúo creciendo técnicamente.
+                    </p>
+                </section>
+
+                <section class="info-card">
+                    <div class="card-title-header">
+                        <div class="card-title">
+                            <span class="icon-small">🚀</span>
+                            <h3>Proyectos Destacados</h3>
+                        </div>
+                        <button class="btn-add">+</button>
+                    </div>
+                    <div class="projects-container">
+                        <div class="project-item">
+                            <div class="project-header">
+                                <h4>EcoTrack Dashboard</h4>
+                                <span class="icon-link">🔗</span>
+                            </div>
+                            <p class="project-desc">Dashboard analítico para monitorear el consumo de energía en oficinas, construido con React y Recharts.</p>
+                            <div class="project-tags">
+                                <span>React</span>
+                                <span>Tailwind</span>
+                                <span>Node.js</span>
+                            </div>
+                        </div>
+                        <div class="project-item">
+                            <div class="project-header">
+                                <h4>API de Gestión de Tareas</h4>
+                                <span class="icon-link">🔗</span>
+                            </div>
+                            <p class="project-desc">API RESTful completa con autenticación JWT, tests unitarios y documentación en Swagger.</p>
+                            <div class="project-tags">
+                                <span>Express</span>
+                                <span>MongoDB</span>
+                                <span>Jest</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="info-card">
+                    <div class="card-title">
+                        <span class="icon-small">🎓</span>
+                        <h3>Educación</h3>
+                    </div>
+                    <div class="education-item">
+                        <div class="edu-dot"></div>
+                        <div class="edu-info">
+                            <h4>Ingeniería de Software</h4>
+                            <p>Universidad Nacional de Ingeniería</p>
+                            <span class="edu-date">Mar 2019 - Dic 2023</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="grid-right">
+                <section class="info-card">
+                    <div class="card-title">
+                        <span class="icon-small">⟨/⟩</span>
+                        <h3>Skills Técnicos</h3>
+                    </div>
+                    <div class="skill-meter">
+                        <div class="meter-header"><span>JavaScript / TypeScript</span> <span>⚙️</span></div>
+                        <div class="meter-bar"><div class="meter-fill" style="width: 90%;"></div></div>
+                    </div>
+                    <div class="skill-meter">
+                        <div class="meter-header"><span>React.js</span> <span>⚙️</span></div>
+                        <div class="meter-bar"><div class="meter-fill" style="width: 85%;"></div></div>
+                    </div>
+                    <div class="skill-meter">
+                        <div class="meter-header"><span>Node.js</span></div>
+                        <div class="meter-bar"><div class="meter-fill" style="width: 65%;"></div></div>
+                    </div>
+                    <div class="skill-meter">
+                        <div class="meter-header"><span>Git & GitHub</span></div>
+                        <div class="meter-bar"><div class="meter-fill" style="width: 80%;"></div></div>
+                    </div>
+                </section>
+
+                <section class="info-card">
+                    <div class="card-title">
+                        <span class="icon-small">💡</span>
+                        <h3>Habilidades Blandas</h3>
+                    </div>
+                    <div class="soft-skills-container">
+                        <span class="soft-skill-tag">Resolución de problemas</span>
+                        <span class="soft-skill-tag">Trabajo en equipo</span>
+                        <span class="soft-skill-tag">Comunicación efectiva</span>
+                        <span class="soft-skill-tag">Adaptabilidad</span>
+                    </div>
+                </section>
+
+                <section class="info-card">
+                    <div class="card-title">
+                        <span class="icon-small">📊</span>
+                        <h3>Preferencias</h3>
+                    </div>
+                    <ul class="prefs-list">
+                        <li>✅ Modalidad: Remoto o Híbrido</li>
+                        <li>✅ Disponibilidad: Tiempo Completo</li>
+                        <li>✅ Nivel: Junior / Trainee</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </main>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Configuración</title>
+    <!-- Google Fonts: Inter y Nimbus Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F1F5F9;
+            font-family: 'Inter', 'Nimbus Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* contenedor principal */
+        .dashboard {
+            width: 1280px;
+            min-height: 1466px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+        }
+
+        /* SIDEBAR izquierda */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 64px;
+            background: #F8F9FF;
+            border-right: 1px solid #C3C6D7;
+            padding: 32px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 5;
+            box-shadow: 4px 0px 20px rgba(0,0,0,0.05);
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #434655;
+            transition: all 0.1s;
+            cursor: default;
+        }
+
+        .nav-link.active {
+            background: #2563EB;
+            color: #EEEFFF;
+            border-right: 4px solid #004AC6;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            background: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+        }
+
+        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:19px; }
+        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:24px; height:12px; }
+        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); background-color: currentColor; width:16px; height:16px; }
+        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:20px; }
+        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+
+        /* TOP NAVBAR */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(248,249,255,0.80);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid #C3C6D7;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .search-container {
+            width: 448px;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: #EFF4FF;
+            border: none;
+            border-radius: 9999px;
+            font-size: 16px;
+            color: #737686;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 9px;
+            width: 15px;
+            height: 15px;
+            background: #737686;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 8px 4px 4px;
+            border-radius: 9999px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #3B82F6, #2DD4BF);
+            border: 2px solid #F8F9FF;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 256px;
+            padding: 48px;
+            background: #F8F9FF;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            margin-bottom: 48px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0D1C2E;
+        }
+
+        .page-sub {
+            font-size: 16px;
+            color: #434655;
+            margin-top: 8px;
+        }
+
+        /* Tarjetas */
+        .settings-card {
+            background: white;
+            border-radius: 12px;
+            outline: 1px solid #C3C6D7;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        .card-header {
+            padding: 24px;
+            background: #F8F9FF;
+            border-bottom: 1px solid #C3C6D7;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0D1C2E;
+        }
+
+        .card-header-sub {
+            font-size: 12px;
+            color: #434655;
+            font-weight: 500;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Formularios */
+        .form-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #434655;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #C3C6D7;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #0D1C2E;
+            outline: none;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 16px;
+            background: #737686;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'/%3E%3C/svg%3E");
+            background-size: contain;
+            cursor: default;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .btn-cancel {
+            padding: 10px 24px;
+            background: #E6EEFF;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #004AC6;
+            border: none;
+            cursor: default;
+        }
+
+        .btn-primary {
+            padding: 10px 24px;
+            background: #004AC6;
+            border-radius: 8px;
+            font-weight: 600;
+            color: white;
+            border: none;
+            cursor: default;
+        }
+
+        .upload-area {
+            padding: 24px;
+            background: #EFF4FF;
+            border-radius: 8px;
+            border: 2px solid #C3C6D7;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .logo-preview {
+            width: 96px;
+            height: 96px;
+            background: #E6EEFF;
+            border-radius: 12px;
+            border: 1px solid #C3C6D7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Notificaciones */
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .toggle-switch {
+            width: 48px;
+            height: 24px;
+            background: #2563EB;
+            border-radius: 9999px;
+            position: relative;
+        }
+
+        .toggle-switch-off {
+            background: #D5E3FC;
+        }
+
+        .toggle-knob {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        /* Team */
+        .team-member {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #FFDF9F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #261A00;
+        }
+
+        .member-badge {
+            background: #E6EEFF;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #434655;
+        }
+
+        .invite-btn {
+            padding: 10px 20px;
+            border: 1px solid #004AC6;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #004AC6;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+     <!-- Sidebar -->
+     <div class="sidebar">
+         <div class="nav-items">
+             <a href="Rdashboard.html" class="nav-link"><span class="icon icon-dashboard"></span> Dashboard</a>
+             <a href="Rvacantes.html" class="nav-link"><span class="icon icon-vacantes"></span> Vacantes</a>
+             <a href="Rgestion.html" class="nav-link"><span class="icon icon-postulantes"></span> Postulantes</a>
+             <a href="RpubOferta.html" class="nav-link"><span class="icon icon-publicar"></span> Publicar Empleo</a>
+             <a href="Rreportes.html" class="nav-link"><span class="icon icon-reportes"></span> Reportes</a>
+             <a href="Rportal.html" class="nav-link active"><span class="icon icon-config"></span> Configuración</a>
+         </div>
+         <div class="nav-items" style="border-top:1px solid #E2E8F0; padding-top:16px;">
+             <a href="login.html" class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</a>
+         </div>
+     </div>
+
+    <!-- Top Navbar -->
+    <div class="top-nav">
+        <div class="search-container">
+            <input type="text" placeholder="Buscar candidatos, vacantes...">
+            <div class="search-icon"></div>
+        </div>
+        <div class="header-actions">
+            <div style="padding:8px; position:relative;">🔔<div style="width:8px; height:8px; background:#BA1A1A; border-radius:50%; position:absolute; top:4px; right:4px;"></div></div>
+            <div style="padding:8px;">✉️</div>
+            <div style="width:1px; height:32px; background:#C3C6D7;"></div>
+            <div class="user-profile">
+                <div class="avatar"></div>
+                <div><div style="font-size:12px; font-weight:500;">Carlos M.</div><div style="font-size:10px; color:#434655;">Admin</div></div>
+                <div>▼</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <div class="page-title">Panel de Control</div>
+            <div class="page-sub">Gestiona la configuración de tu cuenta y preferencias de la empresa.</div>
+        </div>
+
+        <!-- Ajustes de Perfil -->
+        <div class="settings-card">
+            <div class="card-header">
+                <div class="card-header-icon" style="background:#E6EEFF;"><span style="color:#004AC6;">👤</span></div>
+                <div>
+                    <div class="card-header-title">Ajustes de Perfil</div>
+                    <div class="card-header-sub">Información personal y seguridad de la cuenta.</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-label">Nombre Completo</div>
+                        <input class="form-input" type="text" value="Carlos Mendoza">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">Cargo / Rol</div>
+                        <input class="form-input" type="text" value="Director de Adquisición de Talento">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:16px;">
+                    <div class="form-label">Correo Electrónico</div>
+                    <input class="form-input" type="email" value="carlos.m@tecnosoluciones.com">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Contraseña</div>
+                    <div class="password-wrapper">
+                        <input class="form-input" type="password" value="password123" style="padding-right:40px;">
+                        <div class="eye-icon"></div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-cancel">Cancelar</button>
+                    <button class="btn-primary">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información de la Empresa -->
+        <div class="settings-card">
+            <div class="card-header">
+                <div class="card-header-icon" style="background:#FFDF9F;"><span>🏢</span></div>
+                <div>
+                    <div class="card-header-title">Información de la Empresa</div>
+                    <div class="card-header-sub">Detalles visibles para los candidatos.</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-row" style="align-items:flex-start;">
+                    <div class="logo-preview">📷</div>
+                    <div style="flex:1;">
+                        <div class="form-label">Logo de la Empresa</div>
+                        <div class="upload-area">
+                            <div>📂 Arrastra un archivo o <strong style="color:#004AC6;">explora</strong></div>
+                            <div style="font-size:12px; color:#434655; margin-top:8px;">PNG, JPG, GIF hasta 5MB</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top:24px;">
+                    <div class="form-group">
+                        <div class="form-label">Nombre de la Empresa</div>
+                        <input class="form-input" type="text" value="TecnoSoluciones S.A.">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">Sitio Web</div>
+                        <input class="form-input" type="text" value="https://tecnosoluciones.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Descripción Breve</div>
+                    <textarea class="form-input" rows="3" style="resize:none;">Somos una empresa líder en desarrollo de software, enfocada en crear soluciones innovadoras para el sector financiero. Buscamos talento joven con ganas de aprender y crecer.</textarea>
+                </div>
+                <div class="button-group">
+                    <button class="btn-primary">Actualizar Empresa</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notificaciones y Equipo en dos columnas -->
+        <div class="form-row">
+            <!-- Notificaciones -->
+            <div class="form-group">
+                <div class="settings-card">
+                    <div class="card-header">
+                        <div class="card-header-icon" style="background:#62FAE3;">🔔</div>
+                        <div class="card-header-title">Notificaciones</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="notification-item">
+                            <div><div style="font-weight:600;">Nuevos Candidatos</div><div style="font-size:12px; color:#434655;">Al recibir una postulación</div></div>
+                            <div class="toggle-switch"><div class="toggle-knob"></div></div>
+                        </div>
+                        <div class="notification-item">
+                            <div><div style="font-weight:600;">Mensajes Directos</div><div style="font-size:12px; color:#434655;">Candidatos o equipo</div></div>
+                            <div class="toggle-switch"><div class="toggle-knob"></div></div>
+                        </div>
+                        <div class="notification-item">
+                            <div><div style="font-weight:600;">Alertas del Sistema</div><div style="font-size:12px; color:#434655;">Mantenimiento y pagos</div></div>
+                            <div class="toggle-switch toggle-switch-off"><div class="toggle-knob" style="left:0;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equipo -->
+            <div class="form-group">
+                <div class="settings-card">
+                    <div class="card-header">
+                        <div class="card-header-icon" style="background:#DCE9FF;">👥</div>
+                        <div class="card-header-title">Equipo</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="team-member">
+                            <div class="member-info"><div class="avatar" style="background:#E2E8F0;"></div><div><div style="font-weight:600;">Carlos Mendoza</div><div style="font-size:12px; color:#434655;">Propietario</div></div></div>
+                            <div class="member-badge">Tú</div>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-info"><div class="member-avatar">LM</div><div><div style="font-weight:600;">Laura Martínez</div><div style="font-size:12px; color:#434655;">Reclutador IT</div></div></div>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-info"><div class="member-avatar" style="background:#2563EB; color:white;">JS</div><div><div style="font-weight:600;">Javier Silva</div><div style="font-size:12px; color:#434655;">Asistente</div></div></div>
+                        </div>
+                        <div class="invite-btn">+ Invitar Nuevo Miembro</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

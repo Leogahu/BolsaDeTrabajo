@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Gestión de Postulantes</title>
+    <!-- Google Fonts: Inter y Nimbus Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F8;
+            font-family: 'Inter', 'Liberation Serif', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* contenedor principal exacto 1253px */
+        .dashboard {
+            width: 1253px;
+            min-height: 1003px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        /* SIDEBAR izquierda */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #F8FAFC;
+            border-right: 1px solid #E2E8F0;
+            padding: 80px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 5;
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 24px;
+            color: #475569;
+            cursor: pointer;
+        }
+
+        .nav-link.active {
+            background: #EFF6FF;
+            color: #2563EB;
+        }
+
+        .nav-link .icon {
+            width: 24px;
+            height: 24px;
+            background: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+        }
+
+        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:20px; }
+        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:20px; }
+        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:24px; height:12px; }
+        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:20px; }
+        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+
+
+        /* TOP NAVBAR */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 20px;
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+            color: #2563EB;
+        }
+
+        .search-wrapper {
+            width: 256px;
+            background: #F1F5F9;
+            border-radius: 9999px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-wrapper input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 500;
+            color: #94A3B8;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding-left: 24px;
+            border-left: 1px solid #E2E8F0;
+        }
+
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #3B82F6, #2DD4BF);
+            border: 2px solid white;
+        }
+
+        /* MAIN KANBAN */
+        .kanban-container {
+            margin-left: 256px;
+            padding: 24px;
+            background: #F8F9FF;
+            min-height: 1003px;
+        }
+
+        .vacancy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 24px;
+        }
+
+        .vacancy-title {
+            font-size: 30px;
+            font-weight: 600;
+            color: #0D1C2E;
+            font-family: 'Liberation Serif', 'Inter', serif;
+        }
+
+        .vacancy-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #434655;
+            font-size: 16px;
+            margin-top: 4px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-filter {
+            background: #DCE9FF;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #0D1C2E;
+        }
+
+        .btn-new {
+            background: #2563EB;
+            padding: 8px 16px;
+            border-radius: 12px;
+            color: #EEEFFF;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* scroll horizontal de columnas */
+        .kanban-board {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            padding-bottom: 16px;
+        }
+
+        .kanban-column {
+            width: 320px;
+            background: #EFF4FF;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .column-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #0D1C2E;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+        }
+
+        .dot-gray { background: #C3C6D7; }
+        .dot-blue { background: #004AC6; }
+        .dot-yellow { background: #F9BD22; }
+        .dot-teal { background: #006B5F; }
+        .dot-green { background: #10B981; }
+        .dot-red { background: #BA1A1A; }
+
+        .badge-count {
+            background: #D5E3FC;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #434655;
+        }
+
+        /* tarjeta de candidato */
+        .candidate-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            outline: 1px solid rgba(195,198,215,0.30);
+            transition: all 0.1s;
+        }
+
+        .candidate-card.highlight {
+            outline: 1px solid rgba(0,74,198,0.20);
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .candidate-info {
+            display: flex;
+            gap: 12px;
+        }
+
+        .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #E6EEFF;
+            object-fit: cover;
+        }
+
+        .avatar-letter {
+            width: 40px;
+            height: 40px;
+            background: #DBE1FF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 20px;
+            color: #003EA8;
+        }
+
+        .avatar-yellow {
+            background: #FFDF9F;
+            color: #261A00;
+        }
+
+        .candidate-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0D1C2E;
+        }
+
+        .candidate-role {
+            font-size: 12px;
+            color: #434655;
+        }
+
+        .match-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: #D5E3FC;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 6px;
+            background: #006B5F;
+            border-radius: 999px;
+        }
+
+        .skills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .skill-tag {
+            background: #D5E3FC;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            color: #434655;
+            font-weight: 400;
+        }
+
+        .skill-green {
+            background: #62FAE3;
+            color: #007165;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .skill-red {
+            background: #F43F5E;
+            color: white;
+            font-weight: 700;
+        }
+
+        .skill-yellow {
+            background: #FBBF24;
+            color: #0F172A;
+            font-weight: 700;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid rgba(195,198,215,0.30);
+            padding-top: 12px;
+            margin-top: 4px;
+        }
+
+        .action-link {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px;
+            color: #434655;
+        }
+
+        .action-primary {
+            background: rgba(0,74,198,0.10);
+            border-radius: 8px;
+            color: #004AC6;
+        }
+
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+            border: 2px dashed rgba(195,198,215,0.50);
+            border-radius: 12px;
+            min-height: 200px;
+        }
+
+        .special-border-card {
+            position: relative;
+        }
+
+        .blue-left-border {
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            width: 4px;
+            height: calc(100% - 2px);
+            background: #004AC6;
+            border-radius: 12px 0 0 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <!-- Sidebar idéntica -->
+    <div class="sidebar">
+        <div class="nav-items">
+            <a href="Rdashboard.html" class="nav-link"><span class="icon icon-dashboard"></span> Dashboard</a>
+            <a href="Rvacantes.html" class="nav-link"><span class="icon icon-vacantes"></span> Vacantes</a>
+            <a href="Rgestion.html" class="nav-link active"><span class="icon icon-postulantes" style="width:24px; height:12px;"></span> Postulantes</a>
+            <a href="RpubOferta.html" class="nav-link"><span class="icon icon-publicar"></span> Publicar Empleo</a>
+            <a href="Rreportes.html" class="nav-link"><span class="icon icon-reportes"></span> Reportes</a>
+            <a href="Rportal.html" class="nav-link"><span class="icon icon-config"></span> Configuración</a>
+        </div>
+        <div class="nav-items" style="border-top:1px solid #E2E8F0; padding-top:16px;">
+            <a href="login.html" class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</a>
+        </div>
+    </div>
+
+    <!-- Top Navbar -->
+    <div class="top-nav">
+        <div class="logo-area">
+            <div class="logo-text">ChapatuChamba</div>
+            <div class="search-wrapper">
+                <span>🔍</span>
+                <input type="text" placeholder="Buscar postulante...">
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="icon-circle"><span>🔔</span></div>
+            <div class="icon-circle"><span>✉️</span></div>
+            <div class="avatar-icon"></div>
+        </div>
+    </div>
+
+    <!-- Contenido Kanban -->
+    <div class="kanban-container">
+        <div class="vacancy-header">
+            <div>
+                <div class="vacancy-title">Frontend Developer Sr.</div>
+                <div class="vacancy-location">
+                    <span>📍</span> Lima, Perú (Híbrido) • 24 Postulantes Activos
+                </div>
+            </div>
+            <div class="action-buttons">
+                <div class="btn-filter">Filtrar</div>
+                <div class="btn-new">+ Nuevo Candidato</div>
+            </div>
+        </div>
+
+        <div class="kanban-board">
+            <!-- Columna Recibido -->
+            <div class="kanban-column">
+                <div class="column-header">
+                    <div class="column-title"><span class="dot dot-gray"></span> Recibido</div>
+                    <div class="badge-count">12</div>
+                </div>
+                <div style="flex:1; display:flex; flex-direction:column; gap:16px; overflow-y:auto;">
+                    <!-- Valeria Torres -->
+                    <div class="candidate-card">
+                        <div class="card-header">
+                            <div class="candidate-info">
+                                <img class="avatar-img" src="https://placehold.co/40x40" alt="avatar">
+                                <div>
+                                    <div class="candidate-name">Valeria Torres</div>
+                                    <div class="candidate-role">Ingeniería de Software</div>
+                                </div>
+                            </div>
+                            <span>⁝</span>
+                        </div>
+                        <div class="match-row"><span>Match de Perfil</span><span style="color:#004AC6; font-weight:700;">85%</span></div>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width:85%"></div></div>
+                        <div class="skills">
+                            <span class="skill-tag skill-green">⚡ React.js</span>
+                            <span class="skill-tag">TypeScript</span>
+                        </div>
+                        <div class="card-actions">
+                            <div class="action-link">Ver Perfil</div>
+                            <div class="action-link action-primary">Avanzar</div>
+                        </div>
+                    </div>
+                    <!-- Luis Mendoza -->
+                    <div class="candidate-card">
+                        <div class="card-header">
+                            <div class="candidate-info">
+                                <div class="avatar-letter">LM</div>
+                                <div>
+                                    <div class="candidate-name">Luis Mendoza</div>
+                                    <div class="candidate-role">Desarrollo Web</div>
+                                </div>
+                            </div>
+                            <span>⁝</span>
+                        </div>
+                        <div class="match-row"><span>Match de Perfil</span><span style="color:#004AC6; font-weight:700;">72%</span></div>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width:72%"></div></div>
+                        <div class="skills">
+                            <span class="skill-tag skill-red">JUNIOR REAL</span>
+                            <span class="skill-tag">Vue.js</span>
+                        </div>
+                        <div class="card-actions">
+                            <div class="action-link">Ver Perfil</div>
+                            <div class="action-link action-primary">Avanzar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna En Revisión -->
+            <div class="kanban-column">
+                <div class="column-header">
+                    <div class="column-title"><span class="dot dot-blue"></span> En Revisión</div>
+                    <div class="badge-count">5</div>
+                </div>
+                <div style="flex:1;">
+                    <div class="candidate-card highlight" style="position:relative;">
+                        <div class="blue-left-border"></div>
+                        <div class="card-header">
+                            <div class="candidate-info">
+                                <img class="avatar-img" src="https://placehold.co/40x40" alt="avatar">
+                                <div>
+                                    <div class="candidate-name">Diego Castro</div>
+                                    <div class="candidate-role">Ciencias de la Computación</div>
+                                </div>
+                            </div>
+                            <span>⁝</span>
+                        </div>
+                        <div class="match-row"><span>Match de Perfil</span><span style="color:#004AC6; font-weight:700;">94%</span></div>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width:94%"></div></div>
+                        <div class="skills">
+                            <span class="skill-tag skill-yellow">TALENTO JOVEN</span>
+                            <span class="skill-tag skill-green">⚡ Angular</span>
+                        </div>
+                        <div class="card-actions">
+                            <div class="action-link">Ver Perfil</div>
+                            <div class="action-link action-primary">Avanzar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Entrevista -->
+            <div class="kanban-column">
+                <div class="column-header">
+                    <div class="column-title"><span class="dot dot-yellow"></span> Entrevista</div>
+                    <div class="badge-count">3</div>
+                </div>
+                <div class="empty-state">
+                    <div style="width:40px; height:40px; background:#C3C6D7; border-radius:50%; margin-bottom:16px;"></div>
+                    <div style="font-weight:600; color:#434655;">Sin entrevistas</div>
+                    <div style="font-size:12px; color:#737686; margin-top:4px;">Mueve candidatos aquí para agendar.</div>
+                </div>
+            </div>
+
+            <!-- Columna Prueba -->
+            <div class="kanban-column">
+                <div class="column-header">
+                    <div class="column-title"><span class="dot dot-teal"></span> Prueba</div>
+                    <div class="badge-count">1</div>
+                </div>
+                <div>
+                    <div class="candidate-card">
+                        <div class="card-header">
+                            <div class="candidate-info">
+                                <div class="avatar-letter avatar-yellow">SP</div>
+                                <div>
+                                    <div class="candidate-name">Sofía Paredes</div>
+                                    <div class="candidate-role">Diseño y Desarrollo</div>
+                                </div>
+                            </div>
+                            <span>⁝</span>
+                        </div>
+                        <div style="background:rgba(0,74,198,0.05); border-radius:8px; padding:8px; margin:12px 0; display:flex; align-items:center; gap:8px; outline:1px solid rgba(0,74,198,0.20);">
+                            <span>📄</span><span style="font-size:12px;">Prueba Técnica enviada</span>
+                        </div>
+                        <div class="card-actions">
+                            <div class="action-link">Evaluar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Finalistas -->
+            <div class="kanban-column">
+                <div class="column-header">
+                    <div class="column-title"><span class="dot dot-green"></span> Finalistas</div>
+                    <div class="badge-count">2</div>
+                </div>
+                <div class="empty-state" style="border:2px dashed rgba(195,198,215,0.3); background: transparent;">
+                    <div style="font-size:14px; color:#737686;">Aún no hay finalistas</div>
+                </div>
+            </div>
+
+            <!-- Columna Rechazados -->
+            <div class="kanban-column">
+                <div class="column-header">
+                    <div class="column-title"><span class="dot dot-red"></span> Rechazados</div>
+                    <div class="badge-count">15</div>
+                </div>
+                <div class="empty-state" style="border:2px dashed rgba(195,198,215,0.3); background: transparent;">
+                    <div style="font-size:14px; color:#737686;">Lista vacía</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    <script>
+        // Active state handling for sidebar navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+            
+            // Find all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Remove active class from all
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Add active class to matching link
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Special case for dashboard (when on root or no file specified)
+            if (fileName === '' || fileName === 'Rdashboard.html') {
+                document.querySelector('.nav-link[href="Rdashboard.html"]').classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

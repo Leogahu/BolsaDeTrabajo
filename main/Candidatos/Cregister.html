@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - ChapatuChamba</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+      :root {
+    --primary-blue: #0052EA;
+    --dark-blue: #003CAB;
+    --text-main: #1E293B;
+    --text-light: #64748B;
+    --bg-light: #F8FAFC;
+    --border-color: #E2E8F0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #fff;
+    height: 100vh;
+}
+
+.signup-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* SECCIÓN AZUL */
+.hero-side {
+    flex: 1;
+    background: linear-gradient(180deg, rgba(0, 82, 234, 1), rgba(0, 61, 187, 1));
+    color: white;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 18px;
+    opacity: 0.9;
+    max-width: 400px;
+}
+
+.social-proof {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatars {
+    display: flex;
+    align-items: center;
+}
+
+.avatars img,
+.avatars .avatar-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-blue);
+    margin-left: -12px;
+}
+
+.avatars img:first-child,
+.avatars .avatar-box:first-child { margin-left: 0; }
+
+.avatars .avatar-box {
+    background: rgba(255,255,255,0.15);
+}
+
+.more-count {
+    width: 40px;
+    height: 40px;
+    background-color: var(--dark-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-left: -12px;
+    border: 2px solid var(--primary-blue);
+}
+
+/* SECCIÓN FORMULARIO */
+.form-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-light);
+    overflow-y: auto;
+}
+
+.form-wrapper {
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+}
+
+h2 {
+    font-size: 32px;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+/* User Selector */
+.user-selector {
+    display: flex;
+    background: #E2E8F0;
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.selector-btn {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-light);
+    background: transparent;
+    transition: 0.3s;
+}
+
+.selector-btn.active {
+    background: white;
+    color: var(--primary-blue);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Input Styles */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-main);
+}
+
+input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+small {
+    color: #CBD5E1;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Buttons */
+.btn-submit {
+    width: 100%;
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.divider {
+    text-align: center;
+    margin: 30px 0;
+    position: relative;
+}
+
+.divider::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.divider span {
+    background: var(--bg-light);
+    padding: 0 15px;
+    color: var(--text-light);
+    font-size: 13px;
+    position: relative;
+}
+
+.social-auth {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.btn-social {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.btn-social.linkedin {
+    background-color: #0077B5;
+    color: white;
+    border: none;
+}
+
+.btn-social img { width: 18px; }
+
+.login-link {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.login-link a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+.input-group-password {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-group-password input {
+    width: 100%;
+    padding-right: 45px !important; 
+}
+
+#togglePassword {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    color: #666;
+    user-select: none;
+    transition: color 0.2s ease;
+    font-size: 20px;
+}
+
+#togglePassword:hover {
+    color: #0D1C2E;
+}
+@media (max-width: 900px) {
+    .hero-side { display: none; }
+}
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <section class="hero-side">
+            <div class="logo">
+                <span class="icon-briefcase">💼</span> 
+                ChapatuChamba
+            </div>
+            <div class="hero-content">
+                <h1>Tu carrera empieza aquí.</h1>
+                <p>Únete a miles de talentos jóvenes descubriendo oportunidades reales en empresas que valoran tu potencial.</p>
+            </div>
+            <div class="social-proof">
+                <div class="avatars">
+                    <div class="avatar-box"></div>
+                    <div class="avatar-box"></div>
+                    <div class="avatar-box"></div>
+                    <div class="more-count">+2k</div>
+                </div>
+                <span class="proof-text">Candidatos registrados</span>
+            </div>
+        </section>
+
+        <section class="form-side">
+            <div class="form-wrapper">
+                <h2>Crea tu cuenta</h2>
+                <p class="subtitle">Regístrate para encontrar tu primer empleo ideal.</p>
+                <div class="user-selector">
+                    <button class="selector-btn active" id="toggle-cpost">Postulante</button>
+                    <button class="selector-btn" id="toggle-cemp">Empresa</button>
+                </div>
+                <form id="cregistro-form">
+                    <div class="input-group">
+                        <label>Nombre completo</label>
+                        <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" id="email" placeholder="tu@correo.com" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Contraseña</label>
+                        <div class="input-group-password">
+                            <input type="password" id="contrasena" name="contrasena" placeholder="Crea una contraseña" required>
+                            <span class="material-symbols-outlined" id="togglePassword">visibility</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Registrarme &rarr;</button>
+                </form>
+
+                <div class="divider">
+                    <span>O regístrate con</span>
+                </div>
+
+                <div class="social-auth">
+                    <button class="btn-social google">
+                        <img src="https://cdn-icons-png.flaticon.com/128/300/300221.png" alt="Google"> Google
+                    </button>
+                    <button class="btn-social linkedin">
+                        <img src="https://cdn-icons-png.flaticon.com/128/145/145807.png" alt="LinkedIn"> LinkedIn
+                    </button>
+                </div>
+
+                <p class="login-link">¿Ya tienes una cuenta? <a href="#">Inicia sesión</a></p>
+            </div>
+        </section>
+    </div>
+    <script src="../../js/main.js"></script>
+</body>
+</html>

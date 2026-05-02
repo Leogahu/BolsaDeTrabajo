@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Crear Nueva Vacante</title>
+    <!-- Google Fonts: Inter y Nimbus Sans respaldo -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F8; /* fondo exterior para contrastar, pero wrapper define gradiente */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* contenedor principal que replica el ancho fijo 1280px y sidebar izquierda */
+        .dashboard {
+            width: 1280px;
+            min-height: 1024px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        /* SIDEBAR izquierda (exactamente como en la imagen) */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: white;
+            border-right: 1px solid #E2E8F0;
+            padding: 24px 16px 24px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 5;
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.1s ease;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: #475569;
+        }
+
+        .nav-link.active {
+            background: #EFF6FF;
+            border-left: 4px solid #2563EB;
+            color: #2563EB;
+            padding-left: 12px; /* compensa el borde */
+        }
+
+        .nav-link .icon {
+            width: 20px;
+            height: 20px;
+            background: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            background-color: currentColor;
+        }
+
+        /* iconos placeholder con mascaras SVG simplificadas para coincidir */
+        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:24px; height:12px; }
+        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); background-color: currentColor; }
+        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); background-color: currentColor; }
+
+        /* top navbar principal */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 256px;
+            right: 0;
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 18px;
+            color: #1E293B;
+        }
+
+        .search-mini {
+            position: relative;
+            width: 256px;
+        }
+
+        .search-mini input {
+            width: 100%;
+            padding: 9px 16px 9px 36px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .search-icon-mini {
+            position: absolute;
+            left: 12px;
+            top: 9px;
+            width: 14px;
+            height: 14px;
+            background: #94A3B8;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: linear-gradient(45deg, #3B82F6, #2DD4BF);
+            border: 2px solid white;
+        }
+
+        /* MAIN CONTENT (formulario) */
+        .form-container {
+            margin-left: 256px;
+            padding: 48px 64px 64px 64px;
+            background: #F8F9FF;
+            width: calc(100% - 256px);
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 48px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            outline: 1px solid rgba(195,198,215,0.30);
+            margin-top: 24px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            max-width: 768px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .step {
+            text-align: center;
+            width: 175px;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            background: #D5E3FC;
+            border-radius: 999px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 400;
+            font-size: 16px;
+            color: #434655;
+        }
+        .step.active .step-circle {
+            background: #2563EB;
+            box-shadow: 0px 0px 0px 4px rgba(37,99,235,0.2);
+            color: white;
+        }
+        .step.completed .step-circle {
+            background: #62FAE3;
+            color: #005047;
+        }
+        .step-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #434655;
+        }
+        .step.active .step-label {
+            color: #004AC6;
+            font-weight: 600;
+        }
+
+        /* form elements */
+        .field-group {
+            margin-bottom: 32px;
+        }
+        .field-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0D1C2E;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .required-star {
+            color: #BA1A1A;
+            margin-left: 2px;
+        }
+        .input-text {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #C3C6D7;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+        }
+        .helper-text {
+            font-size: 14px;
+            color: #434655;
+            margin-top: 4px;
+        }
+        /* opciones de nivel */
+        .level-options {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .level-card {
+            flex: 1;
+            border: 1px solid #C3C6D7;
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            background: white;
+            transition: all 0.1s;
+        }
+        .level-card.highlight {
+            background: #EFF4FF;
+            border-color: #C3C6D7;
+            outline: 2px solid #FFDAD6;
+        }
+        .level-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #0D1C2E;
+            display: flex;
+            justify-content: space-between;
+        }
+        .level-desc {
+            font-size: 14px;
+            color: #434655;
+            margin-top: 8px;
+            margin-bottom: 16px;
+        }
+        .insignia {
+            display: inline-block;
+            background: rgba(98,250,227,0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #005047;
+        }
+        .insignia-warning {
+            background: #FFDAD6;
+            color: #93000A;
+        }
+        .warning-box {
+            background: #FFDAD6;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+            display: flex;
+            gap: 16px;
+            outline: 1px solid rgba(186,26,26,0.2);
+        }
+        .warning-title {
+            font-weight: 600;
+            color: #93000A;
+            margin-bottom: 4px;
+        }
+        .btn-outline-warning {
+            border: 1px solid rgba(186,26,26,0.3);
+            background: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            color: #BA1A1A;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+            border-top: 1px solid rgba(195,198,215,0.3);
+            padding-top: 32px;
+        }
+        .btn-back {
+            font-weight: 600;
+            color: #004AC6;
+            cursor: pointer;
+        }
+        .btn-save {
+            padding: 12px 24px;
+            font-weight: 600;
+            color: #434655;
+            background: transparent;
+        }
+        .btn-continue {
+            background: #2563EB;
+            padding: 12px 32px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0px 4px 20px rgba(37,99,235,0.2);
+            cursor: pointer;
+        }
+        textarea.input-text {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .requisitos-box {
+            border: 2px solid #FFDAD6;
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <!-- SIDEBAR izquierda exacta -->
+     <div class="sidebar">
+         <div class="nav-items">
+             <a href="Rdashboard.html" class="nav-link"><span class="icon icon-dashboard" style="width:18px; height:18px;"></span> Dashboard</a>
+             <a href="Rvacantes.html" class="nav-link"><span class="icon icon-vacantes"></span> Vacantes</a>
+             <a href="Rgestion.html" class="nav-link"><span class="icon icon-postulantes" style="width:24px; height:12px;"></span> Postulantes</a>
+             <a href="RpubOferta.html" class="nav-link active"><span class="icon icon-publicar" style="width:18px; height:18px;"></span> Publicar Empleo</a>
+             <a href="Rreportes.html" class="nav-link"><span class="icon icon-reportes"></span> Reportes</a>
+             <a href="Rportal.html" class="nav-link"><span class="icon icon-config"></span> Configuración</a>
+         </div>
+         <div class="nav-items" style="border-top:1px solid #E2E8F0; padding-top:16px;">
+             <a href="login.html" class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</a>
+         </div>
+     </div>
+
+    <!-- TOP NAVBAR (dentro del área de contenido) -->
+    <div class="top-nav">
+        <div class="logo-area">
+            <div class="logo-text">Panel de Control</div>
+            <div class="search-mini">
+                <input type="text" placeholder="Buscar...">
+                <div class="search-icon-mini"></div>
+            </div>
+        </div>
+        <div class="header-icons">
+            <div style="width:40px; height:40px; display:flex; justify-content:center; align-items:center;">
+                <div style="width:20px; height:20px; background:#64748B; mask:url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20fill=%22none%22%20viewBox=%220%200%2024%2024%22%20stroke=%22%2364748B%22%3E%3Cpath%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%20stroke-width=%222%22%20d=%22M15%2017h5l-1.405-1.405A2.032%202.032%200%200118%2014.158V11a6.002%206.002%200%2000-4-5.659V5a2%202%2010-4%200v.341C7.67%206.165%206%208.388%206%2011v3.159c0%20.538-.214%201.055-.595%201.436L4%2017h5m6%200v1a3%203%200%2011-6%200v-1m6%200H9%22/%3E%3C/svg%3E) no-repeat center; mask-size:contain; -webkit-mask:url(...) no-repeat center; -webkit-mask-size:contain;"></div>
+            </div>
+            <div style="width:40px; height:40px; display:flex; justify-content:center; align-items:center;">
+                <div style="width:20px; height:20px; background:#64748B; mask:url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20fill=%22none%22%20viewBox=%220%200%2024%2024%22%20stroke=%22%2364748B%22%3E%3Cpath%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%20stroke-width=%222%22%20d=%22M3%208l7.89%205.26a2%202%200%20002.22%200L21%208M5%2019h14a2%202%200%20002-2V7a2%202%200%2000-2-2H5a2%202%200%2000-2%202v10a2%202%200%20002%202z%22/%3E%3C/svg%3E) no-repeat center; mask-size:contain; -webkit-mask:url(...) no-repeat center; -webkit-mask-size:contain;"></div>
+            </div>
+            <div class="avatar-sm" id="user-avatar-display"></div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL formulario -->
+    <div class="form-container">
+        <div>
+            <h1 style="font-size:36px; font-weight:700; color:#0D1C2E;">Crear Nueva Vacante</h1>
+            <p style="font-size:18px; color:#434655; margin-top:8px;">Diseña una oferta atractiva para conectar con el mejor talento joven.</p>
+        </div>
+
+        <!-- indicador de pasos -->
+        <div class="step-indicator" style="margin-top: 32px;">
+            <div class="step completed">
+                <div class="step-circle">✓</div>
+                <div class="step-label">Básicos</div>
+            </div>
+            <div class="step active">
+                <div class="step-circle">2</div>
+                <div class="step-label">Rol y Detalles</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <div class="step-label">Beneficios</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">4</div>
+                <div class="step-label">Revisión</div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <!-- Título del puesto -->
+            <div class="field-group">
+                <div class="field-label">Título del Puesto <span class="required-star">*</span></div>
+                <input class="input-text" type="text" value="Desarrollador Frontend Junior">
+            </div>
+
+            <!-- Nivel de Experiencia -->
+            <div class="field-group">
+                <div class="field-label">Nivel de Experiencia / Tipo de Rol <span class="required-star">*</span></div>
+                <div class="helper-text">Selecciona la categoría que mejor se ajuste. Esto activará nuestras insignias de confianza para los candidatos.</div>
+                <div class="level-options" style="margin-top: 16px;">
+                    <div class="level-card">
+                        <div class="level-title">Prácticas <span style="width:22px;height:18px;background:#C3C6D7;"></span></div>
+                        <div class="level-desc">Enfoque 100% en aprendizaje.<br>Ideal para estudiantes.</div>
+                        <div class="insignia">Sin Experiencia</div>
+                    </div>
+                    <div class="level-card">
+                        <div class="level-title">Trainee <span style="width:20px;height:12px;background:#C3C6D7;"></span></div>
+                        <div class="level-desc">Programa formativo para<br>recién egresados de alto potencial.</div>
+                        <div class="insignia" style="background:rgba(249,189,34,0.2); color:#8B6700;">Talento Joven</div>
+                    </div>
+                    <div class="level-card highlight">
+                        <div class="level-title">Junior <span style="width:22px;height:21px;background:#BA1A1A;"></span></div>
+                        <div class="level-desc">Rol de entrada oficial.<br>Requiere bases sólidas pero mentoría.</div>
+                        <div class="insignia insignia-warning">Junior Real</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Descripción General -->
+            <div class="field-group">
+                <div class="field-label">Descripción General <span class="required-star">*</span></div>
+                <textarea class="input-text" rows="2" placeholder="Describe el propósito principal del rol en tu equipo..."></textarea>
+            </div>
+
+            <!-- Requisitos y Experiencia -->
+            <div class="field-group">
+                <div class="field-label">Requisitos y Experiencia <span class="required-star">*</span></div>
+                <div class="helper-text">Enumera las habilidades clave. Sé realista con lo que es absolutamente necesario.</div>
+                <div class="requisitos-box" style="margin-top: 8px;">
+                    <div style="color:#0D1C2E; font-size:16px; line-height:24px;">
+                        - Dominio de HTML, CSS y JavaScript moderno.<br>
+                        - Experiencia con frameworks como React o Vue.<br>
+                        - 2+ años de experiencia comprobable en agencias.<br>
+                        - Portafolio demostrable de proyectos web.
+                    </div>
+                </div>
+            </div>
+
+            <!-- ALERTA INCONSISTENCIA -->
+            <div class="warning-box">
+                <div style="width:22px; height:19px; background:#BA1A1A; flex-shrink:0;"></div>
+                <div>
+                    <div class="warning-title">Inconsistencia de Nivel Detectada</div>
+                    <div style="color:rgba(147,0,10,0.9); font-size:14px; line-height:20px;">
+                        Has marcado este rol con la insignia <strong>'Junior Real'</strong>, pero en los requisitos solicitas <strong>'2+ años de experiencia'</strong>.<br>
+                        En ChapatuChamba, consideramos que un rol Junior debe requerir máximo 1 año de experiencia profesional.
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 12px;">
+                        <div class="btn-outline-warning">Modificar requisitos</div>
+                        <div style="font-weight:600; color:#93000A; padding:6px 0; cursor:default;">Cambiar a nivel Semi-Senior</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="action-buttons">
+                <div class="btn-back">← Atrás</div>
+                <div style="display:flex; gap:16px;">
+                    <div class="btn-save">Guardar Borrador</div>
+                    <div class="btn-continue">Continuar <span style="font-size:16px;">→</span></div>
+                </div>
+            </div>
+         </div>
+     </div>
+ </div>
+     
+     <script>
+         // Active state handling for sidebar navigation
+         document.addEventListener('DOMContentLoaded', function() {
+             const currentPath = window.location.pathname;
+             const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+             
+             // Find all nav links
+             const navLinks = document.querySelectorAll('.nav-link');
+             
+             // Remove active class from all
+             navLinks.forEach(link => {
+                 link.classList.remove('active');
+             });
+             
+             // Add active class to matching link
+             navLinks.forEach(link => {
+                 const href = link.getAttribute('href');
+                 if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
+                     link.classList.add('active');
+                 }
+             });
+             
+             // Special case for dashboard (when on root or no file specified)
+             if (fileName === '' || fileName === 'Rdashboard.html') {
+                 document.querySelector('.nav-link[href="Rdashboard.html"]').classList.add('active');
+             }
+         });
+     </script>
+ </body>
+</html>
