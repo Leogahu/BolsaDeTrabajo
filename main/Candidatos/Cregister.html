@@ -1,382 +1,222 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - ChapatuChamba</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-      :root {
-    --primary-blue: #0052EA;
-    --dark-blue: #003CAB;
-    --text-main: #1E293B;
-    --text-light: #64748B;
-    --bg-light: #F8FAFC;
-    --border-color: #E2E8F0;
-}
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', sans-serif;
-}
-
-body {
-    background-color: #fff;
-    height: 100vh;
-}
-
-.signup-container {
-    display: flex;
-    height: 100vh;
-}
-
-/* SECCIÓN AZUL */
-.hero-side {
-    flex: 1;
-    background: linear-gradient(180deg, rgba(0, 82, 234, 1), rgba(0, 61, 187, 1));
-    color: white;
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.logo {
-    font-weight: 700;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.hero-content h1 {
-    font-size: 48px;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 20px;
-}
-
-.hero-content p {
-    font-size: 18px;
-    opacity: 0.9;
-    max-width: 400px;
-}
-
-.social-proof {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.avatars {
-    display: flex;
-    align-items: center;
-}
-
-.avatars img,
-.avatars .avatar-box {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid var(--primary-blue);
-    margin-left: -12px;
-}
-
-.avatars img:first-child,
-.avatars .avatar-box:first-child { margin-left: 0; }
-
-.avatars .avatar-box {
-    background: rgba(255,255,255,0.15);
-}
-
-.more-count {
-    width: 40px;
-    height: 40px;
-    background-color: var(--dark-blue);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    margin-left: -12px;
-    border: 2px solid var(--primary-blue);
-}
-
-/* SECCIÓN FORMULARIO */
-.form-side {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--bg-light);
-    overflow-y: auto;
-}
-
-.form-wrapper {
-    width: 100%;
-    max-width: 450px;
-    padding: 40px;
-}
-
-h2 {
-    font-size: 32px;
-    color: var(--text-main);
-    margin-bottom: 8px;
-}
-
-.subtitle {
-    color: var(--text-light);
-    margin-bottom: 30px;
-}
-
-/* User Selector */
-.user-selector {
-    display: flex;
-    background: #E2E8F0;
-    padding: 4px;
-    border-radius: 8px;
-    margin-bottom: 30px;
-}
-
-.selector-btn {
-    flex: 1;
-    border: none;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--text-light);
-    background: transparent;
-    transition: 0.3s;
-}
-
-.selector-btn.active {
-    background: white;
-    color: var(--primary-blue);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-/* Input Styles */
-.input-group {
-    margin-bottom: 20px;
-}
-
-.input-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--text-main);
-}
-
-input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 15px;
-}
-
-.password-wrapper {
-    position: relative;
-}
-
-.toggle-password {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: var(--text-light);
-}
-
-small {
-    color: #CBD5E1;
-    font-size: 12px;
-    margin-top: 5px;
-    display: block;
-}
-
-/* Buttons */
-.btn-submit {
-    width: 100%;
-    background-color: var(--primary-blue);
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.divider {
-    text-align: center;
-    margin: 30px 0;
-    position: relative;
-}
-
-.divider::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    height: 1px;
-    background: var(--border-color);
-}
-
-.divider span {
-    background: var(--bg-light);
-    padding: 0 15px;
-    color: var(--text-light);
-    font-size: 13px;
-    position: relative;
-}
-
-.social-auth {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.btn-social {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    background: white;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.btn-social.linkedin {
-    background-color: #0077B5;
-    color: white;
-    border: none;
-}
-
-.btn-social img { width: 18px; }
-
-.login-link {
-    text-align: center;
-    font-size: 14px;
-    color: var(--text-main);
-}
-
-.login-link a {
-    color: var(--primary-blue);
-    text-decoration: none;
-    font-weight: 600;
-}
-.input-group-password {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.input-group-password input {
-    width: 100%;
-    padding-right: 45px !important; 
-}
-
-#togglePassword {
-    position: absolute;
-    right: 15px;
-    cursor: pointer;
-    color: #666;
-    user-select: none;
-    transition: color 0.2s ease;
-    font-size: 20px;
-}
-
-#togglePassword:hover {
-    color: #0D1C2E;
-}
-@media (max-width: 900px) {
-    .hero-side { display: none; }
-}
-    </style>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crear Cuenta - ChapatuChamba</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#233144",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-fixed-variant": "#005047",
+                        "outline-variant": "#c3c6d7",
+                        "surface-container-low": "#eff4ff",
+                        "surface": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#f9bd22",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#d5e3fc",
+                        "surface-dim": "#ccdbf3",
+                        "on-secondary-fixed": "#00201c",
+                        "surface-container-high": "#dce9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#2563eb",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "secondary-fixed-dim": "#3cddc7",
+                        "on-tertiary-fixed": "#261a00",
+                        "primary": "#004ac6",
+                        "tertiary": "#6d5000",
+                        "surface-container-highest": "#d5e3fc",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-secondary-container": "#007165",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9ff",
+                        "tertiary-container": "#8b6700",
+                        "on-background": "#0d1c2e",
+                        "on-surface": "#0d1c2e",
+                        "on-primary-fixed": "#00174b",
+                        "secondary-container": "#62fae3",
+                        "secondary-fixed": "#62fae3",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdf9f",
+                        "secondary": "#006b5f",
+                        "on-surface-variant": "#434655",
+                        "inverse-primary": "#b4c5ff",
+                        "outline": "#737686",
+                        "surface-tint": "#0053db",
+                        "surface-container": "#e6eeff",
+                        "on-tertiary-container": "#ffeed3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "container-max": "1280px",
+                        "3xl": "64px",
+                        "gutter": "24px",
+                        "2xl": "48px",
+                        "sm": "8px",
+                        "base-unit": "4px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "display-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["30px", {"lineHeight": "38px", "fontWeight": "600"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <div class="signup-container">
-        <section class="hero-side">
-            <div class="logo">
-                <span class="icon-briefcase">💼</span> 
-                ChapatuChamba
-            </div>
-            <div class="hero-content">
-                <h1>Tu carrera empieza aquí.</h1>
-                <p>Únete a miles de talentos jóvenes descubriendo oportunidades reales en empresas que valoran tu potencial.</p>
-            </div>
-            <div class="social-proof">
-                <div class="avatars">
-                    <div class="avatar-box"></div>
-                    <div class="avatar-box"></div>
-                    <div class="avatar-box"></div>
-                    <div class="more-count">+2k</div>
-                </div>
-                <span class="proof-text">Candidatos registrados</span>
-            </div>
-        </section>
-
-        <section class="form-side">
-            <div class="form-wrapper">
-                <h2>Crea tu cuenta</h2>
-                <p class="subtitle">Regístrate para encontrar tu primer empleo ideal.</p>
-                <div class="user-selector">
-                    <button class="selector-btn active" id="toggle-cpost">Postulante</button>
-                    <button class="selector-btn" id="toggle-cemp">Empresa</button>
-                </div>
-                <form id="cregistro-form">
-                    <div class="input-group">
-                        <label>Nombre completo</label>
-                        <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Correo electrónico</label>
-                        <input type="email" id="email" placeholder="tu@correo.com" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Contraseña</label>
-                        <div class="input-group-password">
-                            <input type="password" id="contrasena" name="contrasena" placeholder="Crea una contraseña" required>
-                            <span class="material-symbols-outlined" id="togglePassword">visibility</span>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit">Registrarme &rarr;</button>
-                </form>
-
-                <div class="divider">
-                    <span>O regístrate con</span>
-                </div>
-
-                <div class="social-auth">
-                    <button class="btn-social google">
-                        <img src="https://cdn-icons-png.flaticon.com/128/300/300221.png" alt="Google"> Google
-                    </button>
-                    <button class="btn-social linkedin">
-                        <img src="https://cdn-icons-png.flaticon.com/128/145/145807.png" alt="LinkedIn"> LinkedIn
-                    </button>
-                </div>
-
-                <p class="login-link">¿Ya tienes una cuenta? <a href="#">Inicia sesión</a></p>
-            </div>
-        </section>
+<body class="bg-background min-h-screen flex text-on-background font-body-md">
+<!-- Split Layout Container -->
+<main class="flex w-full min-h-screen">
+<!-- Left Side: Image & Inspiration (Hidden on Mobile) -->
+<div class="hidden lg:flex lg:w-1/2 relative flex-col justify-between overflow-hidden bg-primary-container">
+<!-- Background Image -->
+<img alt="Estudiantes colaborando" class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay" data-alt="Group of diverse young university students collaborating on laptops in a modern brightly lit library or coworking space, cheerful and engaged, warm lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5tROKnJ8RXKa0ePGW82ngcNvFliEqzp_18Br6IgGPvhHK7jjHWm6SXz2aGTx_uUd2ixQFea2iMQLbwhJWtxS8org4idtj2C2f8BVO8BJSKf3hNUpXBvjJ3teyEhVI3wo_R0EhNgMF4SJqigdIBVPuWUYO5N6SecLOb8AEQtwjDVbVuiMoNSOxldp-bfxjqBGb93jzk47zFFebz_jKhBKmmyTFP4vtU7WqTKohSQfFkL5rdje5GBZzJIn5QqphgLHoZAXKHwDBSIfu"/>
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container via-primary-container/80 to-transparent"></div>
+<!-- Content Overlay -->
+<div class="relative z-10 p-12 flex flex-col h-full justify-between">
+<!-- Logo Space -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-primary text-3xl" data-icon="work" data-weight="fill" style="font-variation-settings: 'FILL' 1;">work</span>
+<span class="text-on-primary font-title-lg text-title-lg tracking-tight">ChapatuChamba</span>
+</div>
+<!-- Inspirational Text -->
+<div class="max-w-md">
+<h1 class="text-on-primary font-display-md text-display-md mb-6 leading-tight">Tu carrera<br/>empieza aquí.</h1>
+<p class="text-on-primary-container font-body-lg text-body-lg opacity-90">
+                        Únete a miles de talentos jóvenes descubriendo oportunidades reales en empresas que valoran tu potencial.
+                    </p>
+<div class="mt-12 flex items-center gap-4">
+<div class="flex -space-x-4">
+<img alt="User avatar" class="w-12 h-12 rounded-full border-2 border-primary-container object-cover" data-alt="Portrait of a smiling young woman, professional headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa4MfSA3JSZmF87tjGEna-ZxEhAuALe7CfYgS3SVa5Aw3siofUl5lrhQTRvuOYbwL_L790jMvq7zzAi-7fPULR3qzIF1R5wD536MjLoet88tHyxy2mfNThtl0K1CuXtrD9ZBSXEHgP7CLy3pz_IO20gFhfZ9PL8GO1ZhLTfdtgO-ddMrCWVUeaT-BAoKl4Jlt743B9PW3K7vvXs6uLfzlUSPlmzlLsTUiXuxjytxduWN5yCHtnYdOZXH222tQmj993IsNiMav4rfIO"/>
+<img alt="User avatar" class="w-12 h-12 rounded-full border-2 border-primary-container object-cover" data-alt="Portrait of a young man smiling, natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDewkpBbFVrS-YQMA0tbDseqH7HPQ2Yt2XYyzgDwCyBcYpIVJPG6myupQIscM3QIIET4dgAbzFG8WGzqiwxY1shoZ0Xoenmd04saZkYhK90QpeDhb4g2sIRRndKEmUWxMA0TJiJvI4F9IqhasD7RhOOK1Wded7nz2gUFShBdGczj7wIu_1MYDe5SwNU8P_lL6NS_QEtN_GFoQKfWSxGtOunRhS6tGgF6dIlf4u6wI6HU93JwbXT6H-soyV0ZXmwNEV__Oj2PsYLXGyF"/>
+<img alt="User avatar" class="w-12 h-12 rounded-full border-2 border-primary-container object-cover" data-alt="Portrait of a young woman with glasses smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8Q9mGYC-jas-IJqAFPcjRhVulGvhAXK7BQrOOAtQ5nKIJ8HJmy2pbmvMuTl2XKXLMg9UoJBqDvKxKms293H4ShiAHv9qbsvHnbfbu5zylg624W09Uy6xP1_D-HoN1hqRFguJCJVwOTuUUn938cVOGyzmJ1YcukO3aXt2dvcjh8spj83AuiBoWQOgar0abP5Fnar5MuwAEFxvd4LUegdVv7WK55P-HDZUwwClt4PiDDh3AldNEeCpT4yk-LBUHNG-74diLELULu3Ww"/>
+<div class="w-12 h-12 rounded-full border-2 border-primary-container bg-surface-tint flex items-center justify-center text-on-primary font-label-md text-label-md">
+                                +2k
+                            </div>
+</div>
+<span class="text-on-primary-container font-label-md text-label-md">Candidatos<br/>registrados</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Registration Form -->
+<div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-surface">
+<div class="w-full max-w-md flex flex-col gap-8">
+<!-- Mobile Logo (Hidden on Desktop) -->
+<div class="flex items-center gap-2 lg:hidden mb-4">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="work" data-weight="fill" style="font-variation-settings: 'FILL' 1;">work</span>
+<span class="text-primary font-title-lg text-title-lg tracking-tight">ChapatuChamba</span>
+</div>
+<!-- Header -->
+<div class="flex flex-col gap-2">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Crea tu cuenta</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Regístrate para encontrar tu primer empleo ideal.</p>
+</div>
+<!-- User Type Selector -->
+<div class="flex flex-wrap sm:flex-nowrap bg-surface-container-low p-base-unit rounded-xl mb-xl w-full sm:w-auto shadow-sm self-start">
+<div class="flex-1 sm:flex-none flex items-center justify-center gap-xs px-lg py-sm rounded-lg bg-primary shadow-sm font-label-lg text-label-lg text-on-primary whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">person</span>
+        Soy Candidato
     </div>
-    <script src="../../js/main.js"></script>
-</body>
-</html>
+<a class="flex-1 sm:flex-none flex items-center justify-center gap-xs px-lg py-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-variant/50 transition-colors whitespace-nowrap" href="../Reclutador/Rregistro.html">
+<span class="material-symbols-outlined text-[18px]">domain</span>
+        Soy Empresa
+    </a>
+</div>
+<!-- Form -->
+<form action="#" class="flex flex-col gap-5" method="POST">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface" for="fullName">Nombre completo</label>
+<input class="px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-body-md text-body-md placeholder:text-outline" id="fullName" name="fullName" placeholder="Ej. Juan Pérez" required="" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface" for="email">Correo electrónico</label>
+<input class="px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-body-md text-body-md placeholder:text-outline" id="email" name="email" placeholder="tu@correo.com" required="" type="email"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface" for="password">Contraseña</label>
+<div class="relative">
+<input class="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-body-md text-body-md placeholder:text-outline" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</div>
+<p class="font-label-md text-label-md text-outline-variant mt-1">Mínimo 8 caracteres.</p>
+</div>
+<a class="w-full mt-2 bg-primary hover:bg-surface-tint text-on-primary font-label-lg text-label-lg py-3 px-6 rounded-xl transition-all shadow-[0px_4px_20px_rgba(37,99,235,0.15)] hover:shadow-[0px_10px_25px_rgba(37,99,235,0.25)] flex items-center justify-center gap-2" href="Cdashboard.html">
+                        Registrarme
+                        <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</form>
+<!-- Divider -->
+<div class="flex items-center gap-4 my-2">
+<div class="h-px bg-outline-variant flex-1"></div>
+<span class="font-label-md text-label-md text-outline">O regístrate con</span>
+<div class="h-px bg-outline-variant flex-1"></div>
+</div>
+<!-- Social Logins -->
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-surface-container-lowest border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface shadow-sm">
+<svg class="w-5 h-5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path></svg>
+                        Google
+                    </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-[#0A66C2] text-white border border-[#0A66C2] rounded-lg hover:bg-[#004182] transition-colors font-label-md text-label-md shadow-sm">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></svg>
+                        LinkedIn
+                    </button>
+</div>
+<!-- Footer Link -->
+<div class="mt-4 text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        ¿Ya tienes una cuenta? 
+                        <a class="font-label-md text-label-md text-primary hover:text-surface-tint underline underline-offset-4 transition-colors" href="#">Inicia sesión</a>
+</p>
+</div>
+</div>
+</div>
+</main>
+</body></html>

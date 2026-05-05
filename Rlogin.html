@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acceso - ChapatuChamba</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "surface-container-highest": "#d5e3fc",
+                      "surface-container-high": "#dce9ff",
+                      "secondary-fixed-dim": "#3cddc7",
+                      "tertiary-container": "#8b6700",
+                      "surface-container-low": "#eff4ff",
+                      "outline-variant": "#c3c6d7",
+                      "surface-bright": "#f8f9ff",
+                      "inverse-primary": "#b4c5ff",
+                      "surface-dim": "#ccdbf3",
+                      "on-background": "#0d1c2e",
+                      "on-secondary-fixed-variant": "#005047",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "surface": "#f8f9ff",
+                      "tertiary": "#6d5000",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-tint": "#0053db",
+                      "secondary": "#006b5f",
+                      "tertiary-fixed-dim": "#f9bd22",
+                      "surface-variant": "#d5e3fc",
+                      "on-error": "#ffffff",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-primary-container": "#eeefff",
+                      "on-tertiary-container": "#ffeed3",
+                      "primary-fixed": "#dbe1ff",
+                      "on-primary-fixed": "#00174b",
+                      "on-primary": "#ffffff",
+                      "background": "#f8f9ff",
+                      "outline": "#737686",
+                      "on-secondary-fixed": "#00201c",
+                      "on-secondary-container": "#007165",
+                      "on-surface-variant": "#434655",
+                      "on-surface": "#0d1c2e",
+                      "surface-container": "#e6eeff",
+                      "error-container": "#ffdad6",
+                      "primary-container": "#2563eb",
+                      "tertiary-fixed": "#ffdf9f",
+                      "secondary-container": "#62fae3",
+                      "on-error-container": "#93000a",
+                      "inverse-surface": "#233144",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "on-tertiary-fixed": "#261a00",
+                      "primary": "#004ac6",
+                      "secondary-fixed": "#62fae3",
+                      "on-tertiary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-secondary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px",
+                      "2xl": "1.5rem"
+              },
+              "spacing": {
+                      "2xl": "48px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "gutter": "24px",
+                      "xs": "4px",
+                      "lg": "24px",
+                      "base-unit": "4px",
+                      "3xl": "64px",
+                      "xl": "32px",
+                      "container-max": "1280px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "label-md": ["Inter"],
+                      "display-md": ["Inter"],
+                      "title-lg": ["Inter"],
+                      "label-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "headline-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["30px", {"lineHeight": "38px", "fontWeight": "600"}]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex">
+<!-- Left Column: Branding / Visual (Hidden on Mobile) -->
+<div class="hidden lg:flex w-1/2 relative bg-surface-container items-center justify-center overflow-hidden">
+<!-- Background Image -->
+<img alt="" class="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-multiply" data-alt="Group of diverse young professionals collaborating in a modern bright office space with large windows and soft natural sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJsNN3dT-jUHljI5vUkbYE_gO7TIAtvaPYjdCeKcMbpg6AcCIFEUyqK9OHzkNG_KyhD6QAAhF__chSjgcf7uyxW5N61o3Ktbo9WvdfYOZpm24X1FDjwBrqe0ijXA8DymtbQyqDr5D9D1opfqrV_tL_DlDmAkinNVbzIkNvQWqxRmfA4GSmET2k6bgHqsIG7a5k6vuvyHtfs2REl9hn4gCqQxzSwB1AmwEXbLzP3-kYOWu1jbKQ1avr9CqDo4J6aOH4nhulC88fMMmG"/>
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 to-primary/20"></div>
+<!-- Glassmorphism Card -->
+<div class="relative z-10 max-w-md p-2xl bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-[0px_20px_50px_rgba(0,0,0,0.12)]">
+<span class="material-symbols-outlined text-white text-display-md mb-md fill">rocket_launch</span>
+<h2 class="font-display-md text-display-md text-white mb-md">Tu carrera, sin complicaciones.</h2>
+<p class="font-body-lg text-body-lg text-white/90">Conectamos el talento emergente con las mejores oportunidades del mercado. Da el primer paso hacia tu futuro profesional.</p>
+<div class="mt-xl flex items-center gap-md">
+<div class="flex -space-x-4">
+<img alt="" class="w-10 h-10 rounded-full border-2 border-primary" data-alt="Small avatar portrait of a smiling young woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGimWpouXO6wyCcGEQ_bIKe3VapOE74uaYX7XqAuOyl4CHs-g6ynI1OmKzwlwOE7HwCaDbKydc9AuHpnNst5cFIRGDYBQwfk0IChiHtSCEF_y5s2P7lbhc2KKReTkBd4YGoKh20au70gyqILXBK3iuffLVd6CJjhy9AkjAj-WrzS2a6eF5W3k5K9PCCwMxLTJaE2vISn1cIY_vzFkBLWNdvWe9HWgeomsZ0uYDwQ5Yf-ExLM1tLjGh-DiibOJ8LZVsr6VURef8jCVT"/>
+<img alt="" class="w-10 h-10 rounded-full border-2 border-primary" data-alt="Small avatar portrait of a young man with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD80kexKBTJ98ndQ6S99lFnZ_3mkxrG3VklsKhcOgATsDEjTUCXRl7JJ5CJ0Vw9AJs_ZWr0G5GkWySjoZIha1CIJBQAYT9GqUd_Yrk9kXxGykm9es44rcNmyTL-G_32k0pufxPZdJfXROFLhxghFpvB2n_DKIL-03shToBQtcNuBJdrC0nvnooHQBNF7kim24AcfZdxcDZx2ZY4wX-kwo3PKmUCCdHUEjhLulCWgFqN_-YLCpbqro3wU6_d-Zb2UGYvY1oQX5Za8QM_"/>
+<img alt="" class="w-10 h-10 rounded-full border-2 border-primary" data-alt="Small avatar portrait of a professional woman looking confident" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl0hU0sOW0UclPCW-0SZaxcjLh7geus3Apt4Whv-b4O2hAxhbz7tCG200jDBc-nQTQowHrbJKTAFHVXlCRtgdo5CXabMDU2bICIem7lVUFYIJMfb8ot1Uz2r3mAimzqui8mLV-e09QWpQvEX-cYBZUZAS06dMuv8ql90adSSrmcc6fxA79fOj7o8rGR3y-PzJKXSteZu3PRYr7zXqBzM70xm0MoJ90jHNLRq3N3X7tgWMLBzKHLwO8wyliqi9RPYVSUM7ouyoy7-su"/>
+</div>
+<p class="font-label-md text-label-md text-white/80">+10,000 postulantes ya encontraron su lugar</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Form Area -->
+<div class="w-full lg:w-1/2 flex flex-col p-gutter lg:p-2xl overflow-y-auto">
+<div class="flex-1 flex items-center justify-center">
+<div class="w-full max-w-[440px]">
+<!-- Logo Header -->
+<div class="mb-2xl text-center lg:text-left">
+<div class="inline-flex items-center gap-sm text-primary-container mb-lg">
+<span class="font-display-md text-[28px] font-bold tracking-tight">ChapatuChamba</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-background mb-sm">Bienvenido a tu portal de reclutamiento</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Accede para gestionar tus vacantes y encontrar el mejor talento.</p>
+</div>
+<!-- Role Selector (Segmented Control) -->
+<div class="bg-surface-container-high p-xs rounded-xl flex gap-xs mb-xl">
+<a class="flex-1 flex items-center justify-center gap-sm py-sm px-md rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-highest transition-all whitespace-nowrap" href="login.html">
+<span class="material-symbols-outlined text-[20px]">person</span>
+        Soy Postulante
+    </a>
+<button class="flex-1 flex items-center justify-center gap-sm py-sm px-md bg-surface-container-lowest rounded-lg shadow-sm font-label-lg text-label-lg text-on-background transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-[20px]">domain</span>
+        Soy Reclutador
+    </button>
+</div>
+<!-- Form -->
+<form class="space-y-md">
+<!-- Email Input -->
+<div class="space-y-xs">
+<label class="block font-label-md text-label-md text-on-surface" for="email">Correo electrónico</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px]">mail</span>
+</div>
+<input class="w-full pl-[44px] pr-md py-md bg-surface-container-lowest border border-outline-variant rounded-xl font-body-md text-body-md text-on-background placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all" id="email" placeholder="tu@correo.com" type="email"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-xs">
+<div class="flex items-center justify-between">
+<label class="block font-label-md text-label-md text-on-surface" for="password">Contraseña</label>
+<a class="font-label-md text-label-md text-primary-container hover:text-primary transition-colors" href="#">¿Olvidaste tu contraseña?</a>
+</div>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px]">lock</span>
+</div>
+<input class="w-full pl-[44px] pr-[44px] py-md bg-surface-container-lowest border border-outline-variant rounded-xl font-body-md text-body-md text-on-background placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all" id="password" placeholder="••••••••" type="password"/>
+<div class="absolute inset-y-0 right-0 pr-md flex items-center cursor-pointer">
+<span class="material-symbols-outlined text-outline hover:text-on-surface transition-colors text-[20px]">visibility_off</span>
+</div>
+</div>
+</div>
+<!-- Main CTA -->
+<a class="w-full mt-lg bg-primary-container text-white font-label-lg text-label-lg py-md rounded-xl shadow-[0px_10px_25px_rgba(37,99,235,0.15)] hover:shadow-[0px_15px_30px_rgba(37,99,235,0.25)] hover:-translate-y-0.5 transition-all duration-200 inline-block text-center" href="main/Reclutador/Rdashboard.html">
+                    Iniciar Sesión
+                </a>
+</form>
+<!-- Divider -->
+<div class="my-xl flex items-center gap-md">
+<div class="flex-1 h-px bg-outline-variant"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">O continúa con</span>
+<div class="flex-1 h-px bg-outline-variant"></div>
+</div>
+<!-- Social Logins -->
+<div class="flex gap-md mb-2xl">
+<button class="flex-1 flex items-center justify-center gap-sm py-md bg-surface-container-lowest border border-outline-variant rounded-xl font-label-lg text-label-lg text-on-background hover:bg-surface-container transition-colors">
+<img alt="" class="w-5 h-5" data-alt="Google logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBasHv1zYQKwj_957U7mwIuQYsw4Yv9JVmzlsVWUx2zGN1x0h6xz343f3EN5cp1e_QyfZ1rdgsxvd0mxilbqJIQjO5_2VONPNGnaQJFSFnN5sVEnSGHHxXifwua-WUHf3JsJWLl4ln3PkQU-99wjaHAcHdQ-kZSmloYfNsnuhvVqJQT02WQ_FGf_9OrEpoeLIzJlkxe2scDlodi-fGJ34Mj2FlBBt-bsjoVfkhM9GOTmnJft6hTqL2hl51coiG33UOdwmH7oXtU-_3B"/>
+                    Google
+                </button>
+<button class="flex-1 flex items-center justify-center gap-sm py-md bg-surface-container-lowest border border-outline-variant rounded-xl font-label-lg text-label-lg text-on-background hover:bg-surface-container transition-colors">
+<img alt="" class="w-5 h-5" data-alt="LinkedIn logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqeohFBkSI4i5ASSZvj5zjUZISdlObkVK29rBspajUD5PO5u29Gf-5Wgve4f108V-3BSC7_GP3Jl1FYNXOnMd_jNwIgOuEq2zjxtPFW9ryTpNgqptizsMD_OF5e-xgVwS3E9aJll_eHaM1TzqsxOKB6-HCEEmWXGhbE3KP80cjyLj2n9F0L8iMuzwowGK5Evn6UKywZJPdDeJJbGPHgW9Qi7Vr8m-dBY4wR19IhghpxQbJgHg2WKBkPFuG8DKPEW2v8jrhDxOhDVlT"/>
+                    LinkedIn
+                </button>
+</div>
+<!-- Signup Prompt -->
+<p class="text-center font-body-md text-body-md text-on-surface-variant">Accede para gestionar tus vacantes y encontrar el mejor talento.</p>
+</div>
+</div>
+<!-- Unified Footer -->
+<footer class="mt-auto w-full max-w-[440px] mx-auto pt-lg border-t border-outline-variant flex flex-col md:flex-row items-center justify-between gap-sm text-label-md text-on-surface-variant">
+<div class="flex gap-md">
+<a class="hover:text-primary-container transition-colors" href="#">Términos</a>
+<a class="hover:text-primary-container transition-colors" href="#">Privacidad</a>
+<a class="hover:text-primary-container transition-colors" href="#">Contacto</a>
+</div>
+<span>© 2024 ChapatuChamba.</span>
+</footer>
+</div>
+</body></html>

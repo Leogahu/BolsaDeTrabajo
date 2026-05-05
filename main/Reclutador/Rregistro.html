@@ -1,452 +1,262 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ChapatuChamba - Crear cuenta empresa</title>
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #F8F9FF;
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crear Cuenta Empresa - ChapatuChamba</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#ffeed3",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "secondary-fixed": "#62fae3",
+                        "surface-variant": "#d5e3fc",
+                        "on-secondary-fixed-variant": "#005047",
+                        "on-secondary-fixed": "#00201c",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-container": "#62fae3",
+                        "tertiary": "#6d5000",
+                        "secondary-fixed-dim": "#3cddc7",
+                        "surface-container-highest": "#d5e3fc",
+                        "tertiary-fixed-dim": "#f9bd22",
+                        "outline-variant": "#c3c6d7",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "tertiary-fixed": "#ffdf9f",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "tertiary-container": "#8b6700",
+                        "on-primary-fixed": "#00174b",
+                        "surface-dim": "#ccdbf3",
+                        "surface": "#f8f9ff",
+                        "on-secondary-container": "#007165",
+                        "error-container": "#ffdad6",
+                        "on-background": "#0d1c2e",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#233144",
+                        "primary-container": "#2563eb",
+                        "on-surface": "#0d1c2e",
+                        "secondary": "#006b5f",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#e6eeff",
+                        "on-surface-variant": "#434655",
+                        "primary": "#004ac6",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-primary-container": "#eeefff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "outline": "#737686",
+                        "inverse-primary": "#b4c5ff",
+                        "on-tertiary-fixed": "#261a00",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#0053db"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "sm": "8px",
+                        "container-max": "1280px",
+                        "base-unit": "4px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "gutter": "24px",
+                        "3xl": "64px",
+                        "2xl": "48px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-md": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                },
+            },
         }
-
-        /* Contenedor principal 1280px */
-        .register-container {
-            width: 1280px;
-            min-height: 1024px;
-            margin: 0 auto;
-            display: flex;
-            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
-        }
-
-        /* COLUMNA IZQUIERDA - AZUL */
-        .hero-section {
-            width: 533.33px;
-            background: #2563EB;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 64px;
-        }
-
-        .hero-bg-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.8;
-            mix-blend-mode: overlay;
-            background: url('https://placehold.co/533x1024') center/cover no-repeat;
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
-        }
-
-        .logo-white {
-            font-size: 36px;
-            font-weight: 700;
-            color: white;
-            line-height: 44px;
-            margin-bottom: 80px;
-        }
-
-        .hero-text h1 {
-            font-size: 36px;
-            font-weight: 700;
-            color: white;
-            line-height: 44px;
-            margin-bottom: 16px;
-        }
-
-        .hero-text p {
-            font-size: 18px;
-            font-weight: 400;
-            color: rgba(255,255,255,0.9);
-            line-height: 28px;
-        }
-
-        /* COLUMNA DERECHA - FORMULARIO */
-        .form-section {
-            flex: 1;
-            background: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 1024px;
-        }
-
-        .form-wrapper {
-            width: 100%;
-            max-width: 528px;
-            padding: 48px;
-        }
-
-        .form-header {
-            margin-bottom: 32px;
-        }
-
-        .form-header h2 {
-            font-size: 30px;
-            font-weight: 600;
-            color: #0D1C2E;
-            line-height: 38px;
-            margin-bottom: 8px;
-        }
-
-        .login-link {
-            font-size: 16px;
-            color: #434655;
-        }
-
-        .login-link a {
-            color: #004AC6;
-            text-decoration: none;
-            font-weight: 400;
-        }
-
-        /* Toggle candidato/empresa */
-        .role-toggle {
-            background: #EFF4FF;
-            padding: 4px;
-            border-radius: 12px;
-            display: inline-flex;
-            margin-bottom: 32px;
-            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .role-option {
-            padding: 8px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #434655;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .role-option.active {
-            background: white;
-            color: #004AC6;
-            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-            outline: 1px solid rgba(195,198,215,0.20);
-        }
-
-        /* Botón LinkedIn */
-        .linkedin-btn {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            padding: 16px 24px;
-            background: white;
-            border: 1px solid #C3C6D7;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #0D1C2E;
-            cursor: pointer;
-            margin-bottom: 32px;
-            transition: background 0.2s;
-        }
-
-        .linkedin-btn:hover {
-            background: #F8FAFC;
-        }
-
-        .linkedin-icon {
-            width: 20px;
-            height: 20px;
-            background: #0A66C2;
-            border-radius: 4px;
-        }
-
-        /* Separador */
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .divider-line {
-            flex: 1;
-            height: 1px;
-            background: rgba(195,198,215,0.5);
-        }
-
-        .divider-text {
-            font-size: 12px;
-            font-weight: 500;
-            color: #434655;
-            white-space: nowrap;
-        }
-
-        /* Campos de formulario */
-        .input-group {
-            margin-bottom: 16px;
-        }
-
-        .input-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: #0D1C2E;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        .input-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            padding: 16px 16px 16px 44px;
-            background: white;
-            border: 1px solid #C3C6D7;
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: 'Inter', sans-serif;
-            color: #0D1C2E;
-            outline: none;
-            transition: border 0.2s;
-        }
-
-        .input-wrapper input:focus {
-            border-color: #2563EB;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            background: #737686;
-            mask-size: contain;
-            mask-repeat: no-repeat;
-        }
-
-        .icon-building { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E"); background-color: #737686; }
-        .icon-document { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'/%3E%3C/svg%3E"); background-color: #737686; }
-        .icon-mail { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'/%3E%3C/svg%3E"); background-color: #737686; }
-        .icon-lock { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'/%3E%3C/svg%3E"); background-color: #737686; }
-        .icon-eye { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'/%3E%3C/svg%3E"); background-color: #737686; right: 16px; left: auto; cursor: pointer; }
-
-        /* Select personalizado */
-        .custom-select {
-            width: 100%;
-            padding: 16px 16px 16px 44px;
-            background: white;
-            border: 1px solid #C3C6D7;
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: 'Inter', sans-serif;
-            color: #0D1C2E;
-            appearance: none;
-            cursor: pointer;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 24px 0;
-        }
-
-        .checkbox-group input {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-
-        .checkbox-group label {
-            font-size: 14px;
-            color: #434655;
-            cursor: pointer;
-        }
-
-        .checkbox-group a {
-            color: #004AC6;
-            text-decoration: none;
-        }
-
-        .btn-create {
-            width: 100%;
-            padding: 16px 32px;
-            background: #2563EB;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-            transition: background 0.2s;
-        }
-
-        .btn-create:hover {
-            background: #1d4ed8;
-        }
-
-        select.custom-select option {
-            color: #0D1C2E;
-        }
-        .input-group-password {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-        }
-
-        .input-group-password input {
-            width: 100%;
-            padding-right: 45px !important; 
-        }
-
-        #togglePassword {
-            position: absolute;
-            right: 15px;
-            cursor: pointer;
-            color: #666;
-            user-select: none;
-            transition: color 0.2s ease;
-            font-size: 20px;
-        }
-
-        #togglePassword:hover {
-            color: #0D1C2E;
-        }
-    </style>
+    </script>
 </head>
-<body>
-<div class="register-container">
-    <div class="hero-section">
-        <div class="hero-bg-image"></div>
-        <div class="hero-content">
-            <div class="logo-white">ChapatuChamba</div>
-            <div class="hero-text">
-                <h1>Encuentra el talento<br>joven que impulsará tu<br>empresa.</h1>
-                <p>Conecta con estudiantes y recién graduados<br>listos para aportar valor desde el primer día.<br>Construye tu equipo del futuro hoy.</p>
-            </div>
-            <div></div>
-        </div>
-    </div>
-
-    <!-- Columna derecha - Formulario -->
-    <div class="form-section">
-        <div class="form-wrapper">
-            <div class="form-header">
-                <h2>Crear cuenta</h2>
-                <div class="login-link">¿Ya tienes una cuenta? <a href="#">Inicia sesión aquí</a></div>
-            </div>
-
-            <!-- Toggle Candidato / Empresa -->
-            <div class="role-toggle">
-                <div class="role-option" id="btn-soy-candidato">Soy Candidato</div>
-                <div class="role-option active" id="toggle-remp">Soy Empresa</div>
-            </div>
-
-            <!-- Botón LinkedIn -->
-            <div class="linkedin-btn">
-                <div class="linkedin-icon"></div>
-                <span>Registrarse con LinkedIn</span>
-            </div>
-
-            <!-- Separador -->
-            <div class="divider">
-                <div class="divider-line"></div>
-                <div class="divider-text">o regístrate con tu correo corporativo</div>
-                <div class="divider-line"></div>
-            </div>
-
-            <!-- Formulario de empresa -->
-            <div class="input-group">
-                <div class="input-label">Nombre de la Empresa</div>
-                <div class="input-wrapper">
-                    <div class="input-icon icon-building"></div>
-                    <input type="text" placeholder="Ej. TechCorp Perú" value="TechCorp Perú">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <div class="input-label">RUC o ID Fiscal</div>
-                <div class="input-wrapper">
-                    <div class="input-icon icon-document"></div>
-                    <input type="text" placeholder="11 dígitos" value="20541234567">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <div class="input-label">Sector</div>
-                <div class="input-wrapper">
-                    <div class="input-icon icon-building"></div>
-                    <select class="custom-select">
-                        <option value="" disabled selected>Selecciona un sector ▼</option>
-                        <option>Tecnología / Software</option>
-                        <option>Finanzas / Banca</option>
-                        <option>Consultoría</option>
-                        <option>Marketing / Publicidad</option>
-                        <option>Recursos Humanos</option>
-                        <option>Otro</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <div class="input-label">Correo Corporativo</div>
-                <div class="input-wrapper">
-                    <div class="input-icon icon-mail"></div>
-                    <input type="email" placeholder="tu@empresa.com" value="contacto@techcorp.pe">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <div class="input-label">Contraseña</div>
-                <div class="input-wrapper">
-                    <div class="input-icon icon-lock"></div>
-                    <input type="password" id="contrasena" placeholder="Contraseña de la empresa" style="padding-right: 45px;">
-                    <span class="material-symbols-outlined" id="togglePassword" 
-                        style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #737686; font-size: 20px;">
-                        visibility
-                    </span>
-                </div>
-            </div>
-            <!-- Términos y condiciones -->
-            <div class="checkbox-group">
-                <input type="checkbox" id="terms" checked>
-                <label for="terms">
-                    Al crear una cuenta, aceptas nuestros <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a>.
-                </label>
-            </div>
-
-            <!-- Botón crear cuenta -->
-            <button class="btn-create">Crear cuenta de empresa</button>
-        </div>
-    </div>
+<body class="bg-surface-container-lowest text-on-surface min-h-screen flex flex-col md:flex-row antialiased font-body-md">
+<!-- Left Side: Split-screen Image Panel -->
+<div class="hidden md:flex md:w-1/2 lg:w-5/12 bg-primary relative flex-col justify-between overflow-hidden p-3xl">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0">
+<img alt="Ambiente de oficina moderno" class="w-full h-full object-cover opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOFpB-ZCjvCuWfWp-XRBU1MoXTiG-QewBZy1z5QfSmXUVBOrKMqxzAhIo5CCVFMSennUOqVbeaEraXcMjV6X6jUdG3p0fZTOKWUW_rZjg-7xF2DJXi-ixhJrRs3rst-qZX5dn9VI-XqGquc_AXQwXEx5f1wKc3RMj4LPTFOtqUM-jj8kMC83Mg4BCHYBxylz5Dep-uHw7FDsSNgnxSYnEJuQqtXfOH4sD7HoHCgooNy-nsdnlJMA6CwhE1rhkn86YGUa4Q1qJ9Xd9n"/>
+<!-- Gradient for brand consistency -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent"></div>
 </div>
-<script src="../../js/main.js"></script>
-</body>
-</html>
+<!-- Logo -->
+<div class="relative z-10">
+<a class="inline-flex items-center text-on-primary font-display-md text-display-md tracking-tight" href="#">
+                ChapatuChamba
+            </a>
+</div>
+<!-- Hero Content -->
+<div class="relative z-10 max-w-lg mb-xl">
+<h1 class="font-display-md text-display-md text-on-primary mb-md leading-tight">
+                Encuentra el talento joven que impulsará tu empresa.
+            </h1>
+<p class="font-body-lg text-body-lg text-on-primary/80">
+                Conecta con estudiantes y recién graduados listos para aportar valor desde el primer día. Construye tu equipo del futuro hoy.
+            </p>
+</div>
+</div>
+<!-- Right Side: Form Panel -->
+<div class="w-full md:w-1/2 lg:w-7/12 bg-surface-container-lowest flex flex-col min-h-screen">
+<!-- Mobile Header (Visible only on small screens) -->
+<div class="md:hidden flex justify-between items-center px-lg py-md border-b border-outline-variant/30">
+<a class="inline-flex items-center text-primary font-bold text-title-lg tracking-tighter" href="#">
+                ChapatuChamba
+            </a>
+<a class="font-label-lg text-label-lg text-primary" href="#">Iniciar Sesión</a>
+</div>
+<!-- Main Form Container -->
+<div class="flex-1 flex flex-col justify-center px-lg py-2xl sm:px-3xl lg:px-3xl xl:px-[120px] max-w-3xl w-full mx-auto">
+<!-- Header Text -->
+<div class="mb-xl text-center md:text-left">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-sm">Crear cuenta</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    ¿Ya tienes una cuenta? <a class="text-primary font-label-lg hover:underline transition-colors" href="#">Inicia sesión aquí</a>
+</p>
+</div>
+<!-- User Type Selector -->
+<div class="flex bg-surface-container-low p-[4px] rounded-xl mb-xl w-full sm:w-fit self-start shrink-0">
+<a class="flex-1 flex items-center justify-center gap-sm px-md sm:px-lg py-sm text-center rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" href="../Candidatos/Cregister.html">
+<span class="material-symbols-outlined text-[20px]">person</span>
+    Soy Candidato
+</a>
+<div class="flex-1 flex items-center justify-center gap-sm px-md sm:px-lg py-sm text-center rounded-lg bg-primary shadow-sm font-label-lg text-label-lg text-on-primary whitespace-nowrap">
+<span class="material-symbols-outlined text-[20px]">business</span>
+    Soy Empresa
+</div>
+</div>
+<!-- Social Login -->
+<button class="w-full flex items-center justify-center gap-md px-lg py-[14px] mb-xl bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container-low transition-all duration-200" type="button">
+<svg aria-hidden="true" class="w-5 h-5 text-[#0A66C2]" fill="currentColor" viewbox="0 0 24 24">
+<path clip-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" fill-rule="evenodd"></path>
+</svg>
+<span class="font-label-lg text-label-lg text-on-surface">Registrarse con LinkedIn</span>
+</button>
+<!-- Divider -->
+<div class="relative flex items-center mb-xl">
+<div class="flex-grow border-t border-outline-variant/50"></div>
+<span class="flex-shrink-0 mx-md text-on-surface-variant font-label-md text-label-md bg-surface-container-lowest px-sm">o regístrate con tu correo corporativo</span>
+<div class="flex-grow border-t border-outline-variant/50"></div>
+</div>
+<!-- Registration Form -->
+<form action="#" class="space-y-lg" method="POST">
+<!-- Nombre de la Empresa -->
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="company-name">Nombre de la Empresa</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px]">domain</span>
+</div>
+<input class="block w-full pl-[44px] pr-md py-[14px] bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface font-body-md text-body-md placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" id="company-name" name="company-name" placeholder="Ej. TechCorp Perú" type="text"/>
+</div>
+</div>
+<!-- Grid for RUC and Sector -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-lg">
+<!-- RUC / ID Fiscal -->
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="ruc">RUC o ID Fiscal</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px]">badge</span>
+</div>
+<input class="block w-full pl-[44px] pr-md py-[14px] bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface font-body-md text-body-md placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" id="ruc" name="ruc" placeholder="11 dígitos" type="text"/>
+</div>
+</div>
+<!-- Sector -->
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="sector">Sector</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none z-10">
+<span class="material-symbols-outlined text-outline text-[20px]">category</span>
+</div>
+<select class="block w-full pl-[44px] pr-lg py-[14px] bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface font-body-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none appearance-none cursor-pointer" id="sector" name="sector">
+<option disabled="" selected="" value="">Selecciona un sector</option>
+<option value="tecnologia">Tecnología y Software</option>
+<option value="finanzas">Banca y Finanzas</option>
+<option value="retail">Retail y Consumo</option>
+<option value="manufactura">Manufactura</option>
+<option value="servicios">Servicios Profesionales</option>
+</select>
+<div class="absolute inset-y-0 right-0 pr-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px]">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Correo Corporativo -->
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="email">Correo Corporativo</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px]">mail</span>
+</div>
+<input class="block w-full pl-[44px] pr-md py-[14px] bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface font-body-md text-body-md placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" id="email" name="email" placeholder="tu@empresa.com" type="email"/>
+</div>
+</div>
+<!-- Contraseña -->
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="password">Contraseña</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px]">lock</span>
+</div>
+<input class="block w-full pl-[44px] pr-[44px] py-[14px] bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface font-body-md text-body-md placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" id="password" name="password" placeholder="Mínimo 8 caracteres" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-md flex items-center text-outline hover:text-on-surface transition-colors cursor-pointer" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Terms -->
+<div class="flex items-start gap-md pt-md">
+<div class="flex items-center h-5 mt-xs">
+<input class="w-4 h-4 text-primary bg-surface-container-lowest border-outline-variant rounded focus:ring-primary cursor-pointer" id="terms" name="terms" type="checkbox"/>
+</div>
+<label class="font-body-md text-[14px] text-on-surface-variant leading-relaxed cursor-pointer" for="terms">
+                        Al crear una cuenta, aceptas nuestros <a class="text-primary hover:underline font-medium" href="#">Términos y Condiciones</a> y la <a class="text-primary hover:underline font-medium" href="#">Política de Privacidad</a>.
+                    </label>
+</div>
+<!-- Submit Button -->
+<div class="pt-xl">
+<a class="w-full flex justify-center items-center py-[16px] px-xl border border-transparent rounded-xl font-label-lg text-label-lg text-on-primary bg-primary hover:bg-surface-tint shadow-lg hover:shadow-xl transition-all duration-300" href="Rdashboard.html">
+                        Crear cuenta de empresa
+                    </a>
+</div>
+</form>
+</div>
+</div>
+</body></html>
