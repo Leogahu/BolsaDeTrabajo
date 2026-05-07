@@ -47,7 +47,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("error", "Faltan credenciales"));
         }
 
-        var postante = postanteRepository.findByUsername(username);
+        var postante = postanteRepository.findByEmail(username);
         if (postante.isPresent() && postante.get().getPassword().equals(password)) {
             Postante p = postante.get();
             Map<String, Object> response = new HashMap<>();
@@ -59,8 +59,7 @@ public class AuthController {
             return ResponseEntity.ok(response);
         }
         
-        // Intento de login como Reclutador
-        var reclutador = reclutadorRepository.findByUsername(username);
+        var reclutador = reclutadorRepository.findByEmail(username);
         if (reclutador.isPresent() && reclutador.get().getPassword().equals(password)) {
             Reclutador r = reclutador.get();
             Map<String, Object> response = new HashMap<>();

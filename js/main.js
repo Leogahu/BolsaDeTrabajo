@@ -67,6 +67,7 @@ function logout() {
 document.addEventListener('DOMContentLoaded', function() {
     initNavegacion();
     initFormularios();
+    initToggleRegistroUnificado();
     cargarDatosUsuario();
 });
 
@@ -123,7 +124,7 @@ function initNavegacion() {
             if (passwordInput) {
                 const isPassword = passwordInput.getAttribute('type') === 'password';
                 passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-                this.textContent = isPassword ? 'visibility_off' : 'visibility';
+                this.textContent = isPassword ? 'visibility' : 'visibility_off';
                 this.style.cursor = 'pointer';
                 this.style.userSelect = 'none';
             }
@@ -189,16 +190,6 @@ function initFormularios() {
         cregForm.addEventListener('submit', (e) => handleRegisterPostante(e));
     }
     
-function initToggleCregister() {
-    const btnEmpresa = document.getElementById('toggle-cemp');   
-    if (btnEmpresa) {
-        btnEmpresa.addEventListener('click', function() {
-            window.location.href = ROUTES.rregistro; 
-        });
-    }
-}
-    
-    initToggleRregister();
 }
 
 function initToggleLogin() {
@@ -206,70 +197,37 @@ function initToggleLogin() {
     const btnReclutador = document.getElementById('toggle-reclutador');
     
     if (btnPostulante && btnReclutador) {
-        // Variable para rastrear el rol (puedes declararla fuera de la función)
         btnPostulante.addEventListener('click', () => {
-            tipoUsuarioSeleccionado = 'postante'; // <--- AGREGAR ESTO
+            tipoUsuarioSeleccionado = 'postante';
             setActive(btnPostulante, btnReclutador);
         });
 
         btnReclutador.addEventListener('click', () => {
-            tipoUsuarioSeleccionado = 'reclutador'; // <--- AGREGAR ESTO
+            tipoUsuarioSeleccionado = 'reclutador'; 
             setActive(btnReclutador, btnPostulante);
         });
     }
 }
 
-function initToggleCregister() {
-    const btnEmpresa = document.getElementById('toggle-cemp');
-    if (btnEmpresa) {
-        btnEmpresa.addEventListener('click', () => {
-            window.location.href = ROUTES.rregistro;
+function initToggleRegistroUnificado() {
+    const btnC_Postulante = document.getElementById('toggle-cpost'); 
+    const btnC_Empresa = document.getElementById('toggle-cemp');    
+    const btnR_Candidato = document.getElementById('toggle-rcand'); 
+    const btnR_Empresa = document.getElementById('toggle-remp');    
+
+    if (btnC_Empresa) {
+        btnC_Empresa.addEventListener('click', () => {
+            window.location.href = '../Reclutador/Rregistro.html'; 
+        });
+    }
+
+    if (btnR_Candidato) {
+        btnR_Candidato.addEventListener('click', () => {
+            window.location.href = '../Candidatos/Cregister.html'; 
         });
     }
 }
 
-function initToggleRregister() {
-    const btnCandidato = document.getElementById('toggle-rcand');
-    if (btnCandidato) {
-        btnCandidato.addEventListener('click', () => {
-            window.location.href = ROUTES.cregistro;
-        });
-    }
-}
-
-function initToggleCregister() {
-  const btnPostulante = document.getElementById('toggle-cpost');
-  const btnEmpresa = document.getElementById('toggle-cemp');
-  
-  if (btnPostulante && btnEmpresa) {
-    btnPostulante.addEventListener('click', function() {
-      btnPostulante.classList.add('active');
-      btnEmpresa.classList.remove('active');
-    });
-    
-    btnEmpresa.addEventListener('click', function() {
-      btnEmpresa.classList.add('active');
-      btnPostulante.classList.remove('active');
-    });
-  }
-}
-
-function initToggleRregister() {
-  const btnCandidato = document.getElementById('toggle-rcand');
-  const btnEmpresa = document.getElementById('toggle-remp');
-  
-  if (btnCandidato && btnEmpresa) {
-    btnCandidato.addEventListener('click', function() {
-      btnCandidato.classList.add('active');
-      btnEmpresa.classList.remove('active');
-    });
-    
-    btnEmpresa.addEventListener('click', function() {
-      btnEmpresa.classList.add('active');
-      btnCandidato.classList.remove('active');
-    });
-  }
-}
 
 // ============================================
 // HANDLERS
@@ -285,11 +243,19 @@ async function handleResponse(response) {
 
 async function handleLogin(event) {
     event.preventDefault();
+   
+    const errorDiv = document.getElementById('error-message');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('contrasena');
+
+    if (errorDiv) {
+        errorDiv.style.display = 'none';
+        errorDiv.textContent = '';
+    }
 
     const credentials = {
-        // Asegúrate de que los IDs coincidan con tu login.html ("email" y "password")[cite: 12]
-        username: document.getElementById('email').value, 
-        password: document.getElementById('password').value
+        username: emailInput.value, 
+        password: passwordInput.value
     };
 
     try {
@@ -301,21 +267,29 @@ async function handleLogin(event) {
 
         if (response.ok) {
             const user = await response.json();
-            // Usamos la función setSession que ya existe en tu main_6.js
             setSession(user); 
             
-            // Redirección dinámica según el tipo que devuelve el servidor[cite: 7]
             if (user.tipo === 'postante') {
-                window.location.href = ROUTES.cdashboard; // Usa el objeto ROUTES[cite: 13]
+                window.location.href = ROUTES.cdashboard;
             } else {
                 window.location.href = ROUTES.rdashboard;
             }
         } else {
             const errorData = await response.json();
-            alert(errorData.error || "Credenciales incorrectas");
+            if (errorDiv) {
+                errorDiv.textContent = errorData.error || "Usuario o contraseña incorrectos";
+                errorDiv.style.display = 'block';
+                
+                emailInput.style.outline = '2px solid #DC2626';
+                passwordInput.style.outline = '2px solid #DC2626';
+            }
         }
     } catch (error) {
         console.error("Error en la conexión:", error);
+        if (errorDiv) {
+            errorDiv.textContent = "Error de conexión con el servidor";
+            errorDiv.style.display = 'block';
+        }
     }
 }
 
@@ -323,16 +297,14 @@ async function handleRegisterPostante(event) {
     event.preventDefault();
 
     const postanteData = {
-        // El modelo Postante requiere username, email, nombre y password
-        username: document.getElementById('email').value, 
+        username: document.getElementById('username').value, 
         nombreCompleto: document.getElementById('nombre').value,
         email: document.getElementById('email').value,
         password: document.getElementById('contrasena').value,
-        // Agrega valores por defecto si no tienes estos campos en el HTML[cite: 8]
-        telefono: "No proporcionado",
-        carrera: "No proporcionada"
+        telefono: "NP",
+        carrera: "NP"
     };
-
+    console.log("Enviando datos de registro:", postanteData);
     try {
         const response = await fetch('http://localhost:8080/api/auth/postante/register', {
             method: 'POST',
@@ -343,8 +315,7 @@ async function handleRegisterPostante(event) {
         });
 
         if (response.ok) {
-            alert("¡Registro exitoso!");
-            window.location.href = 'login.html';
+            window.location.href = '../../login.html';
         } else {
             const error = await response.json();
             alert("Error: " + (error.error || "Datos inválidos"));
