@@ -25,7 +25,7 @@ public class Postulacion {
     private String requisitos;
     
     private String ubicacion;
-    
+
     @Column(nullable = true)
     private LocalDateTime fechaPublicacion;
     

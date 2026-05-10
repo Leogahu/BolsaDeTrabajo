@@ -116,7 +116,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 24px;
-            z-index: 10;
+            z-index: 100;
         }
 
         .logo-area {
@@ -177,14 +177,29 @@
         }
 
         .icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 8px;
             border-radius: 9999px;
-            cursor: default;
+            cursor: pointer;
             position: relative;
+            pointer-events: auto;
+        }
+
+        .icon-btn *, #profile-trigger *, #profile-trigger {
+            cursor: pointer;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s ease;
         }
 
         .bell-icon {
-            width: 16px;
+            width: 20px;
             height: 20px;
             background: #64748B;
             mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'/%3E%3C/svg%3E") no-repeat center;
@@ -207,6 +222,102 @@
             border-radius: 9999px;
             border: 1px solid #E2E8F0;
             background: #E6EEFF;
+        }
+
+        .dropdown-container {
+            position: relative;
+            z-index: 101;
+        }
+
+        .icon-btn:hover, #profile-trigger:hover {
+            background-color: #F1F5F9;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            z-index: 9999;
+            padding: 12px;
+        }
+
+        .dropdown-menu.show {
+            display: block !important;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dropdown-header {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            padding-bottom: 5px;
+        }
+
+        .chat-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .chat-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .chat-info p {
+            font-size: 11px;
+            color: #64748B;
+        }
+
+        .drop-item {
+            display: block;
+            padding: 8px;
+            text-decoration: none;
+            color: #1E293B;
+            font-size: 13px;
+        }
+
+        .drop-item:hover {
+            background: #F1F5F9;
+        }
+
+        #notif-list {
+            list-style: none;
+        }
+
+        #notif-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F8FAFC;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        #notif-list li button {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #94A3B8;
+            font-size: 16px;
+        }
+
+        .logout {
+            color: #DC2626 !important;
         }
 
         /* grillas y tarjetas */
@@ -564,15 +675,50 @@
             <div class="search-icon"></div>
         </div>
         <div class="header-actions">
-            <div class="icon-btn" style="position: relative;">
-                <div class="bell-icon"></div>
-                <div class="dot-notify"></div>
+            <div class="dropdown-container">
+                <div class="icon-btn" id="notif-trigger">
+                    <div class="bell-icon"></div>
+                </div>
+                <div id="notif-dropdown" class="dropdown-menu">
+                    <div class="dropdown-header">Notificaciones</div>
+                    <ul id="notif-list">
+                        <li>
+                            <span>Nueva vacante de Frontend</span>
+                            <button onclick="removeNotif(this)">×</button>
+                        </li>
+                        <li>
+                            <span>TechCorp revisó tu perfil</span>
+                            <button onclick="removeNotif(this)">×</button>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="icon-btn">
-                <div style="width:20px;height:20px;background:#64748B;mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E'); background-size:contain;"></div>
+
+            <div class="dropdown-container">
+                <div class="icon-btn" id="msg-trigger">
+                    <div style="width:20px;height:20px;background:#64748B;mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E'); background-size:contain;"></div>
+                </div>
+                <div id="msg-dropdown" class="dropdown-menu">
+                    <div class="dropdown-header">Mensajes Recientes</div>
+                    <div class="chat-item">
+                        <img src="https://ui-avatars.com/api/?name=Recruiter" alt="Avatar">
+                        <div class="chat-info">
+                            <strong>Ana de TechCorp</strong>
+                            <p>¿Tienes disponibilidad mañana?</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <img class="avatar-img" src="https://placehold.co/32x32" alt="avatar">
+
+            <div class="dropdown-container">
+                <div id="profile-trigger" style="cursor: pointer;">
+                    <img class="avatar-img" id="user-avatar" src="https://placehold.co/32x32" alt="avatar">
+                </div>
+                <div id="profile-dropdown" class="dropdown-menu small-dropdown">
+                    <a href="CeditarPerfil.html" class="drop-item">Configurar perfil</a>
+                    <hr>
+                    <a href="#" onclick="handleLogout()" class="drop-item logout">Cerrar sesión</a>
+                </div>
             </div>
         </div>
     </div>
@@ -663,6 +809,7 @@
     </div>
 </div>
 
+    <script src="../../js/main.js"></script>
 </div>
 </body>
 </html>

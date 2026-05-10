@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ChapatuChamba - Dashboard de Candidato</title>
-    <!-- Google Fonts: Inter y Nimbus Sans (fallback a sistema) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -14,11 +13,10 @@
         }
 
         body {
-            background: #F1F5F9; /* fondo exterior suave para contraste, pero el diseño original tiene el wrapper blanco/gris */
+            background: #F1F5F9; 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        /* contenedor principal: igual ancho 1280px, centrado, relativo para sidebar absolute */
         .dashboard-container {
             width: 1280px;
             min-height: 1241px;
@@ -35,6 +33,7 @@
             position: absolute;
             left: 0;
             top: 0;
+            z-index: 1;
             background: #F8FAFC;
             border-right: 1px solid #E2E8F0;
             padding: 80px 16px 16px 16px;
@@ -116,7 +115,24 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 24px;
-            z-index: 10;
+            z-index: 100;
+            pointer-events: auto;
+        }
+
+        .dropdown-container {
+            position: relative;
+            z-index: 101;
+        }
+
+        .icon-btn *, #profile-trigger *, #profile-trigger {
+            cursor: pointer;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s ease;
         }
 
         .logo-area {
@@ -177,28 +193,27 @@
         }
 
         .icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 8px;
             border-radius: 9999px;
-            cursor: default;
+            cursor: pointer;
             position: relative;
+            pointer-events: auto;
+        }
+
+        .icon-btn *, #profile-trigger *, #profile-trigger {
+            cursor: pointer;
+            pointer-events: auto;
         }
 
         .bell-icon {
-            width: 16px;
+            width: 20px;
             height: 20px;
             background: #64748B;
             mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'/%3E%3C/svg%3E") no-repeat center;
             background-size: contain;
-        }
-
-        .dot-notify {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 8px;
-            height: 8px;
-            background: #BA1A1A;
-            border-radius: 9999px;
         }
 
         .avatar-img {
@@ -458,6 +473,47 @@
             border-radius: 12px;
             padding: 12px;
         }
+        .icon-btn:hover, #profile-trigger:hover {
+            background-color: #F1F5F9;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            z-index: 9999;
+            padding: 12px;
+        }
+        .dropdown-menu.show {
+            display: block !important;
+            opacity: 1;
+            visibility: visible;
+        }
+        .small-dropdown { width: 180px; }
+
+        .dropdown-header { font-weight: 700; font-size: 14px; margin-bottom: 10px; color: #1E293B; border-bottom: 1px solid #F1F5F9; padding-bottom: 5px; }
+
+        #notif-list { list-style: none; }
+        #notif-list li {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #F8FAFC; padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 12px;
+        }
+        #notif-list li button { border: none; background: transparent; cursor: pointer; color: #94A3B8; font-size: 16px; }
+
+        .chat-item { display: flex; gap: 10px; align-items: center; padding: 8px; border-radius: 6px; }
+        .chat-item img { width: 32px; height: 32px; border-radius: 50%; }
+        .chat-info p { font-size: 11px; color: #64748B; }
+
+        .drop-item { display: block; padding: 8px; text-decoration: none; color: #1E293B; font-size: 13px; }
+        .drop-item:hover { background: #F1F5F9; }
+        .logout { color: #DC2626 !important; }
+
+        .show { display: block !important; }
     </style>
 </head>
 <body>
@@ -504,30 +560,65 @@
 
     <!-- Top Navbar -->
     <div class="top-navbar">
-        <div class="logo-area">
-            <div class="logo-text">ChapatuChamba</div>
-            <div class="panel-text">Panel de Control</div>
-        </div>
-        <div class="search-wrapper">
-            <input type="text" class="search-input" placeholder="Buscar candidatos, vacantes...">
-            <div class="search-icon"></div>
-        </div>
-        <div class="header-actions">
-            <div class="icon-btn" style="position: relative;">
+    <div class="logo-area">
+        <div class="logo-text">ChapatuChamba</div>
+        <div class="panel-text">Panel de Control</div>
+    </div>
+    <div class="search-wrapper">
+        <input type="text" class="search-input" placeholder="Buscar candidatos, vacantes...">
+        <div class="search-icon"></div>
+    </div>
+    <div class="header-actions">
+        <div class="dropdown-container">
+            <div class="icon-btn" id="notif-trigger">
                 <div class="bell-icon"></div>
-                <div class="dot-notify"></div>
             </div>
-            <div class="icon-btn">
+            <div id="notif-dropdown" class="dropdown-menu">
+                <div class="dropdown-header">Notificaciones</div>
+                <ul id="notif-list">
+                    <li>
+                        <span>Nueva vacante de Frontend</span>
+                        <button onclick="removeNotif(this)">×</button>
+                    </li>
+                    <li>
+                        <span>TechCorp revisó tu perfil</span>
+                        <button onclick="removeNotif(this)">×</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="dropdown-container">
+            <div class="icon-btn" id="msg-trigger">
                 <div style="width:20px;height:20px;background:#64748B;mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E'); background-size:contain;"></div>
             </div>
-            <div>
-                <img class="avatar-img" src="https://placehold.co/32x32" alt="avatar">
+            <div id="msg-dropdown" class="dropdown-menu">
+                <div class="dropdown-header">Mensajes Recientes</div>
+                <div class="chat-item">
+                    <img src="https://ui-avatars.com/api/?name=Recruiter" alt="Avatar">
+                    <div class="chat-info">
+                        <strong>Ana de TechCorp</strong>
+                        <p>¿Tienes disponibilidad mañana?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dropdown-container">
+            <div id="profile-trigger" style="cursor: pointer;">
+                <img class="avatar-img" id="user-avatar" src="https://placehold.co/32x32" alt="avatar">
+            </div>
+            <div id="profile-dropdown" class="dropdown-menu small-dropdown">
+                <a href="CeditarPerfil.html" class="drop-item">Configurar perfil</a>
+                <hr>
+                <a href="#" onclick="handleLogout()" class="drop-item logout">Cerrar sesión</a>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="main-content">
-        <h1 style="font-size: 32px; font-weight: 700; color: #0D1C2E; margin-bottom: 8px;">¡Hola, Carlos</h1>
+        <h1 id="welcome-title" style="font-size: 32px; font-weight: 700; color: #0D1C2E; margin-bottom: 8px;">¡Hola!</h1>
         <p style="color: #64748B; margin-bottom: 32px;">Estás a un paso de tu primera gran oportunidad.</p>
 
         <div class="dashboard-grid">
@@ -623,7 +714,7 @@
             </div>
         </div>
     </div>
-
   </div>
+  <script src="../../js/main.js"></script>
 </body>
 </html>

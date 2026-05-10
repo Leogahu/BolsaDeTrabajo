@@ -2,10 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ChapatuChamba - Panel de Control</title>
-    <!-- Google Fonts: Inter y Nimbus Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ChapaTuChamba - Panel de Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,239 +14,500 @@
 
         body {
             background: #F1F5F9;
-            font-family: 'Inter', 'Nimbus Sans', -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* contenedor principal exacto 1280px */
-        .dashboard {
-            width: 1280px;
-            min-height: 1024px;
-            margin: 0 auto;
-            position: relative;
-            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
-        }
-
-        /* SIDEBAR izquierda fija */
+        /* ========== SIDEBAR FIJA IZQUIERDA (mismo estilo que te gustó) ========== */
         .sidebar {
-            width: 256px;
-            height: 100%;
-            position: absolute;
+            width: 280px;
+            height: 100vh;
+            position: fixed;
             left: 0;
-            top: 64px;
+            top: 0;
             background: white;
-            border-right: 1px solid #E2E8F0;
-            padding: 32px 16px;
+            border-right: 1px solid #E9EFF5;
+            padding: 32px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            z-index: 5;
-            box-shadow: 4px 0px 20px rgba(0,0,0,0.05);
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+.icon-dashboard {
+            background-color: #2563EB;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") no-repeat center;
         }
 
-        .nav-items {
+        .icon-vacantes {
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 7a2 2 0 0 1 2-2h4V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7z'/%3E%3Cpath d='M8 7V4h8v3'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 7a2 2 0 0 1 2-2h4V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7z'/%3E%3Cpath d='M8 7V4h8v3'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .icon-postulantes {
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2a3 3 0 0 0-5.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2a3 3 0 0 1 5.356-1.857M15 7a3 3 0 1 0-6 0 3 3 0 0 0 6 0zM19 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0zM7 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0z'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2a3 3 0 0 0-5.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2a3 3 0 0 1 5.356-1.857M15 7a3 3 0 1 0-6 0 3 3 0 0 0 6 0zM19 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0zM7 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0z'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .icon-publicar {
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v16M4 12h16'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v16M4 12h16'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .icon-reportes {
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19h16M6 15V9a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v6M14 15V7a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v8'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19h16M6 15V9a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v6M14 15V7a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v8'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .icon-config {
+            width: 24px;
+            height: 24px;
+            background-color: currentColor; 
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12.22 2h-.44a2 2 0 0 0-2 2a2 2 0 0 1-2 2a2 2 0 0 0-2 2a2 2 0 0 1-2 2a2 2 0 0 0-2 2v.44a2 2 0 0 0 2 2a2 2 0 0 1 2 2a2 2 0 0 0 2 2a2 2 0 0 1 2 2a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2a2 2 0 0 1 2-2a2 2 0 0 0 2-2a2 2 0 0 1 2-2a2 2 0 0 0 2-2v-.44a2 2 0 0 0-2-2a2 2 0 0 1-2-2a2 2 0 0 0-2-2a2 2 0 0 1-2-2a2 2 0 0 0-2-2z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") no-repeat center;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12.22 2h-.44a2 2 0 0 0-2 2a2 2 0 0 1-2 2a2 2 0 0 0-2 2a2 2 0 0 1-2 2a2 2 0 0 0-2 2v.44a2 2 0 0 0 2 2a2 2 0 0 1 2 2a2 2 0 0 0 2 2a2 2 0 0 1 2 2a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2a2 2 0 0 1 2-2a2 2 0 0 0 2-2a2 2 0 0 1 2-2a2 2 0 0 0 2-2v-.44a2 2 0 0 0-2-2a2 2 0 0 1-2-2a2 2 0 0 0-2-2a2 2 0 0 1-2-2a2 2 0 0 0-2-2z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") no-repeat center;
+            
+            -webkit-mask-size: contain;
+            mask-size: contain;
+        }
+        /* Logo dentro del sidebar */
+        .sidebar-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #E9EFF5;
+        }
+
+        .sidebar-logo {
+            font-weight: 800;
+            font-size: 24px;
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            color: #94A3B8;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* Navegación */
+        .sidebar-nav {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 8px;
+            flex: 1;
         }
-
-        .nav-link {
+        .avatar-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            border: 1px solid #E2E8F0;
+            background: #E6EEFF;
+        }
+        .nav-item {
             display: flex;
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
             color: #475569;
-            transition: all 0.1s;
-            cursor: default;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .dashboard-container {
+            min-height: 100vh;
+            position: relative;
+            background: #F8F9FF;
+        }
+        .nav-item:hover {
+            background: #F1F5F9;
         }
 
-        .nav-link.active {
+        .nav-item.active {
             background: #EFF6FF;
-            border-right: 4px solid #2563EB;
-            color: #2563EB;
         }
 
-        .icon {
+        .nav-item.active .nav-text {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-icon {
             width: 20px;
             height: 20px;
-            background: currentColor;
-            mask-size: contain;
-            mask-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
-        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:19px; }
-        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:24px; height:12px; }
-        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
-        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); background-color: currentColor; width:16px; height:16px; }
-        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:20px; }
-        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+        .nav-icon[class*="icon-"] {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            background-color: #475569;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            -webkit-mask-size: contain;
+            color: transparent;
+        }
 
-        /* TOP NAVBAR */
-        .top-nav {
-            position: absolute;
+        .nav-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        /* Botón toggle para móvil */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            left: 16px;
+            top: 16px;
+            z-index: 101;
+            background: #2563EB;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* ========== TOP NAVBAR ========== */
+        .top-navbar {
+            position: fixed;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 64px;
+            left: 280px;
+            right: 0;
             background: white;
-            border-bottom: 1px solid #E2E8F0;
+            border-bottom: 1px solid #E9EFF5;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 24px;
-            z-index: 10;
-            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+            padding: 0 32px;
+            z-index: 99;
+            height: 70px;
         }
 
-        .search-container {
-            width: 384px;
-            background: #EFF4FF;
-            border-radius: 9999px;
-            padding: 8px 16px;
+        /* Buscador */
+        .search-wrapper {
+            position: relative;
+            width: 320px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 42px;
+            background: #F8FAFC;
+            border-radius: 40px;
+            border: 1px solid #E2E8F0;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #2563EB;
+            background: white;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #94A3B8;
+        }
+
+        /* Acciones header */
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
-            border: 1px solid #C3C6D7;
+            gap: 16px;
         }
 
-        .search-container span {
-            width: 15px;
-            height: 15px;
-            background: #737686;
-            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737686'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+        .icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 9999px;
+            cursor: pointer;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        .icon-btn *, #profile-trigger *, #profile-trigger {
+            cursor: pointer;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .bell-icon {
+            width: 20px;
+            height: 20px;
+            background: #64748B;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'/%3E%3C/svg%3E") no-repeat center;
             background-size: contain;
         }
 
-        .search-container input {
-            background: transparent;
-            border: none;
-            flex: 1;
-            font-size: 16px;
-            color: #6B7280;
-            outline: none;
+        .dropdown-container {
+            position: relative;
+            z-index: 101;
         }
 
-        .header-icons {
+        .icon-btn:hover, #profile-trigger:hover {
+            background-color: #F1F5F9;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            z-index: 9999;
+            padding: 12px;
+        }
+
+        .dropdown-menu.show {
+            display: block !important;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dropdown-header {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            padding-bottom: 5px;
+        }
+
+        .chat-item {
             display: flex;
-            gap: 16px;
+            gap: 10px;
             align-items: center;
+            padding: 8px;
+            border-radius: 6px;
         }
 
-        .avatar {
-            width: 40px;
-            height: 40px;
+        .chat-item img {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            border: 2px solid #D5E3FC;
-            background: #E2E8F0;
         }
 
-        /* MAIN CONTENT */
+        .chat-info p {
+            font-size: 11px;
+            color: #64748B;
+        }
+
+        .drop-item {
+            display: block;
+            padding: 8px;
+            text-decoration: none;
+            color: #1E293B;
+            font-size: 13px;
+        }
+
+        .drop-item:hover {
+            background: #F1F5F9;
+        }
+
+        #notif-list {
+            list-style: none;
+        }
+
+        #notif-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F8FAFC;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        #notif-list li button {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #94A3B8;
+            font-size: 16px;
+        }
+
+        .logout {
+            color: #DC2626 !important;
+        }
+
+        /* ========== MAIN CONTENT ========== */
         .main-content {
-            margin-left: 256px;
-            padding: 24px;
-            min-height: 100vh;
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 32px 40px 48px 40px;
+            min-height: calc(100vh - 70px);
             background: #F8F9FF;
         }
 
+        /* Page Header */
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         .page-title {
-            font-size: 36px;
+            font-size: 28px;
             font-weight: 700;
-            color: #0D1C2E;
+            color: #0F172A;
         }
 
-        .page-sub {
-            font-size: 18px;
-            color: #434655;
-            margin-top: 4px;
+        .page-subtitle {
+            font-size: 15px;
+            color: #64748B;
+            margin-top: 6px;
         }
 
         .date-filter {
             display: flex;
-            gap: 16px;
+            gap: 12px;
         }
 
         .filter-btn {
             background: white;
-            border: 1px solid #C3C6D7;
-            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
             padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 12px;
-            font-weight: 500;
+            transition: all 0.2s;
         }
 
-        /* cards row */
+        .filter-btn:hover {
+            border-color: #2563EB;
+            color: #2563EB;
+        }
+
+        /* Stats Cards */
         .stats-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
-            margin-top: 24px;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
         }
 
         .stat-card {
-            flex: 1;
             background: white;
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 24px;
-            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-            outline: 1px solid rgba(195,198,215,0.30);
+            border: 1px solid #E9EFF5;
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
         }
 
         .stat-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .icon-badge {
-            padding: 8px;
-            border-radius: 8px;
-            background: rgba(37,99,235,0.1);
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: #EFF6FF;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
         }
 
         .trend-badge {
-            padding: 4px 8px;
-            border-radius: 999px;
+            padding: 6px 12px;
+            border-radius: 30px;
             font-size: 12px;
-            font-weight: 500;
-            background: rgba(45,212,191,0.2);
-            color: #005047;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .trend-down {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .trend-stable {
+            background: #F1F5F9;
+            color: #475569;
         }
 
         .stat-label {
             font-size: 14px;
-            font-weight: 600;
-            color: #434655;
+            font-weight: 500;
+            color: #64748B;
+            margin-bottom: 8px;
         }
 
         .stat-value {
-            font-size: 30px;
-            font-weight: 600;
-            color: #0D1C2E;
-            margin-top: 4px;
+            font-size: 36px;
+            font-weight: 700;
+            color: #0F172A;
         }
 
-        /* funnel section */
+        /* Two Columns Layout */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        /* Funnel Section */
         .funnel-section {
             background: white;
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-            outline: 1px solid rgba(195,198,215,0.30);
+            border: 1px solid #E9EFF5;
         }
 
         .funnel-header {
@@ -258,337 +518,526 @@
         }
 
         .funnel-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #0D1C2E;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0F172A;
         }
 
         .funnel-link {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
-            color: #004AC6;
+            color: #2563EB;
+            cursor: pointer;
         }
 
         .funnel-item {
-            display: flex;
-            align-items: center;
-            height: 40px;
             margin-bottom: 16px;
-            position: relative;
         }
 
         .funnel-bar {
-            height: 40px;
-            background: rgba(37,99,235,0.1);
-            border-radius: 0 8px 8px 0;
             display: flex;
             align-items: center;
-            padding: 0 16px;
             justify-content: space-between;
+            height: 48px;
+            padding: 0 20px;
+            border-radius: 12px;
+            margin-bottom: 4px;
         }
 
         .funnel-label {
             font-weight: 600;
             font-size: 14px;
-            color: #0D1C2E;
         }
 
         .funnel-number {
             font-weight: 700;
             font-size: 14px;
-            color: #0D1C2E;
         }
 
         .conv-badge {
-            margin-left: 16px;
             font-size: 12px;
-            color: #434655;
+            color: #64748B;
+            margin-left: 16px;
             font-weight: 500;
         }
 
-        /* skills section */
+        /* Skills Section */
         .skills-section {
             background: white;
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 24px;
-            position: relative;
-            min-height: 502px;
-            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-            outline: 1px solid rgba(195,198,215,0.30);
+            border: 1px solid #E9EFF5;
         }
 
         .skills-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #0D1C2E;
-            margin-bottom: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 20px;
         }
 
         .donut-container {
             display: flex;
             justify-content: center;
-            margin: 24px 0;
+            margin: 20px 0;
         }
 
         .donut-center {
-            width: 128px;
-            height: 128px;
-            background: white;
+            width: 120px;
+            height: 120px;
+            background: #F8FAFC;
             border-radius: 50%;
-            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
+            border: 2px solid #E2E8F0;
         }
 
         .donut-number {
-            font-size: 36px;
-            font-weight: 700;
-            color: #0D1C2E;
+            font-size: 32px;
+            font-weight: 800;
+            color: #0F172A;
         }
 
         .donut-label {
-            font-size: 12px;
-            font-weight: 500;
-            color: #434655;
+            font-size: 11px;
+            color: #64748B;
         }
 
         .skill-list {
-            margin-top: 32px;
+            margin-top: 24px;
         }
 
         .skill-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #E9EFF5;
         }
 
         .skill-name {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 16px;
-            color: #0D1C2E;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0F172A;
         }
 
         .skill-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
         }
 
         .skill-percent {
             font-weight: 700;
-            font-size: 16px;
-            color: #0D1C2E;
+            font-size: 14px;
+            color: #2563EB;
         }
 
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .two-columns {
-            display: flex;
-            gap: 24px;
-        }
-
-        .funnel-col {
-            flex: 2;
-        }
-
-        .skills-col {
-            flex: 1;
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .two-columns {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
         }
 
         @media (max-width: 1024px) {
-            .two-columns {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            .top-navbar {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 90px 24px 40px 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-navbar {
+                justify-content: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                height: auto;
+                padding: 12px 16px;
+            }
+            
+            .search-wrapper {
+                width: 100%;
+                order: 1;
+            }
+            
+            .header-actions {
+                order: 2;
+            }
+            
+            .main-content {
+                padding: 110px 16px 32px 16px;
+            }
+            
+            .stats-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .page-header {
                 flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .stat-value {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 100px 16px 32px 16px;
+            }
+            
+            .funnel-bar {
+                padding: 0 12px;
+            }
+            
+            .funnel-label {
+                font-size: 12px;
+            }
+            
+            .conv-badge {
+                display: block;
+                margin-left: 0;
+                margin-top: 4px;
             }
         }
     </style>
 </head>
 <body>
-<div class="dashboard">
-     <!-- Sidebar -->
-     <div class="sidebar">
-         <div class="nav-items">
-             <a href="Rdashboard.html" class="nav-link"><span class="icon icon-dashboard"></span> Dashboard</a>
-             <a href="Rvacantes.html" class="nav-link"><span class="icon icon-vacantes"></span> Vacantes</a>
-             <a href="Rgestion.html" class="nav-link"><span class="icon icon-postulantes"></span> Postulantes</a>
-             <a href="RpubOferta.html" class="nav-link"><span class="icon icon-publicar"></span> Publicar Empleo</a>
-             <a href="Rreportes.html" class="nav-link active"><span class="icon icon-reportes"></span> Reportes</a>
-             <a href="Rportal.html" class="nav-link"><span class="icon icon-config"></span> Configuración</a>
-         </div>
-         <div class="nav-items" style="border-top:1px solid #E2E8F0; padding-top:16px;">
-             <a href="login.html" class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</a>
-         </div>
-     </div>
 
-    <!-- Top Navbar -->
-    <div class="top-nav">
-        <div class="search-container">
-            <span></span>
-            <input type="text" placeholder="Buscar candidatos, vacantes...">
-        </div>
-        <div class="header-icons">
-            <div style="width:32px; height:32px; display:flex; align-items:center; justify-content:center;">🔔</div>
-            <div style="width:32px; height:32px; display:flex; align-items:center; justify-content:center;">✉️</div>
-            <div class="avatar"></div>
+<button class="sidebar-toggle" id="sidebarToggle">☰</button>
+<div class="dashboard-container">
+    <div class="sidebar" id="sidebar">
+        <div>
+            <div class="sidebar-header">
+                <div class="sidebar-logo">ChapaTuChamba</div>
+                <div class="sidebar-subtitle">Panel de Control</div>
+            </div>
+            <div class="sidebar-nav">
+                <a href="Rdashboard.html" class="nav-item active">
+                    <span class="nav-icon icon-dashboard"></span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="Rvacantes.html" class="nav-item">
+                    <span class="nav-icon icon-vacantes"></span>
+                    <span class="nav-text">Vacantes</span>
+                </a>
+                <a href="Rgestion.html" class="nav-item">
+                    <span class="nav-icon icon-postulantes"></span>
+                    <span class="nav-text">Postulantes</span>
+                </a>
+                <a href="RpubOferta.html" class="nav-item">
+                    <span class="nav-icon icon-publicar"></span>
+                    <span class="nav-text">Publicar Empleo</span>
+                </a>
+                <a href="Rreportes.html" class="nav-item">
+                    <span class="nav-icon icon-reportes"></span>
+                    <span class="nav-text">Reportes</span>
+                </a>
+                <a href="Rportal.html" class="nav-item">
+                    <span class="nav-icon icon-config"></span>
+                    <span class="nav-text">Configuración</span>
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="page-header">
-            <div>
-                <div class="page-title">Panel de Control</div>
-                <div class="page-sub">Métricas de rendimiento y análisis de reclutamiento</div>
+<!-- ========== TOP NAVBAR ========== -->
+<div class="top-navbar">
+    <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="Buscar reportes, métricas...">
+    </div>
+    <div class="header-actions">
+        <div class="dropdown-container">
+            <div class="icon-btn" id="notif-trigger">
+                <div class="bell-icon"></div>
             </div>
-            <div class="date-filter">
-                <div class="filter-btn">📅 Últimos 30 días ▼</div>
-                <div class="filter-btn">⚙️</div>
-            </div>
-        </div>
-
-        <!-- 3 stat cards -->
-        <div class="stats-row">
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="icon-badge" style="background:rgba(37,99,235,0.1);">📊</div>
-                    <div class="trend-badge">▲ +12%</div>
-                </div>
-                <div class="stat-label">Total Aplicaciones</div>
-                <div class="stat-value">1,248</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="icon-badge" style="background:rgba(98,250,227,0.3);">⏱️</div>
-                    <div class="trend-badge">▼ -3 días</div>
-                </div>
-                <div class="stat-label">Tiempo de Contratación</div>
-                <div class="stat-value">18 días</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="icon-badge" style="background:rgba(139,103,0,0.2);">🎯</div>
-                    <div class="trend-badge" style="background:rgba(244,63,94,0.1); color:#93000A;">Estable</div>
-                </div>
-                <div class="stat-label">Match Promedio</div>
-                <div class="stat-value">78%</div>
+            <div id="notif-dropdown" class="dropdown-menu">
+                <div class="dropdown-header">Notificaciones</div>
+                <ul id="notif-list">
+                    <li>
+                        <span>Nuevo candidato potencial</span>
+                        <button onclick="removeNotif(this)">×</button>
+                    </li>
+                    <li>
+                        <span>Recordatorio: entrevista hoy</span>
+                        <button onclick="removeNotif(this)">×</button>
+                    </li>
+                </ul>
             </div>
         </div>
 
-        <!-- Funnel + Skills en dos columnas -->
-        <div class="two-columns">
-            <!-- Columna izquierda: Embudo -->
-            <div class="funnel-col">
-                <div class="funnel-section">
-                    <div class="funnel-header">
-                        <div class="funnel-title">Eficiencia del Embudo de Contratación</div>
-                        <div class="funnel-link">Ver detalle →</div>
-                    </div>
-                    <div class="funnel-item">
-                        <div style="width:100%; background:rgba(37,99,235,0.1); border-radius:0 8px 8px 0; height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;">
-                            <span class="funnel-label">Vistas de Vacantes</span>
-                            <span class="funnel-number">5,420</span>
-                        </div>
-                    </div>
-                    <div class="funnel-item">
-                        <div style="width:71%; background:rgba(37,99,235,0.2); border-radius:0 8px 8px 0; height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;">
-                            <span class="funnel-label">Aplicaciones Recibidas</span>
-                            <span class="funnel-number">1,248</span>
-                        </div>
-                        <span class="conv-badge">23% conv.</span>
-                    </div>
-                    <div class="funnel-item">
-                        <div style="width:33%; background:rgba(37,99,235,0.6); border-radius:0 8px 8px 0; height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;">
-                            <span class="funnel-label" style="color:white;">Entrevistas</span>
-                            <span class="funnel-number" style="color:white;">215</span>
-                        </div>
-                        <span class="conv-badge">17% conv.</span>
-                    </div>
-                    <div class="funnel-item">
-                        <div style="width:16.4%; background:rgba(37,99,235,0.8); border-radius:0 8px 8px 0; height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;">
-                            <span class="funnel-label" style="color:white;">Ofertas</span>
-                            <span class="funnel-number" style="color:white;">64</span>
-                        </div>
-                        <span class="conv-badge">30% conv.</span>
-                    </div>
-                    <div class="funnel-item">
-                        <div style="width:11%; background:#2563EB; border-radius:0 8px 8px 0; height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;">
-                            <span class="funnel-label" style="color:white;">Contratados</span>
-                            <span class="funnel-number" style="color:white;">42</span>
-                        </div>
-                        <span class="conv-badge">65% conv.</span>
+        <div class="dropdown-container">
+            <div class="icon-btn" id="msg-trigger">
+                <div style="width:20px;height:20px;background:#64748B;mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E'); background-size:contain;"></div>
+            </div>
+            <div id="msg-dropdown" class="dropdown-menu">
+                <div class="dropdown-header">Mensajes Recientes</div>
+                <div class="chat-item">
+                    <img src="https://ui-avatars.com/api/?name=Ana" alt="Avatar">
+                    <div class="chat-info">
+                        <strong>Ana de TechCorp</strong>
+                        <p>Revisa la postura de la entrevista.</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Columna derecha: Habilidades más Demandadas -->
-            <div class="skills-col">
-                <div class="skills-section">
-                    <div class="skills-title">Habilidades más<br>Demandadas</div>
-                    <div class="donut-container">
-                        <div class="donut-center">
-                            <div class="donut-number">4</div>
-                            <div class="donut-label">Top Skills</div>
-                        </div>
-                    </div>
-                    <div class="skill-list">
-                        <div class="skill-row">
-                            <div class="skill-name"><span class="skill-dot" style="background:#2563EB;"></span> Desarrollo Frontend (React)</div>
-                            <div class="skill-percent">45%</div>
-                        </div>
-                        <div class="skill-row">
-                            <div class="skill-name"><span class="skill-dot" style="background:#3CDDC7;"></span> Análisis de Datos</div>
-                            <div class="skill-percent">30%</div>
-                        </div>
-                        <div class="skill-row">
-                            <div class="skill-name"><span class="skill-dot" style="background:#F9BD22;"></span> Gestión de Proyectos</div>
-                            <div class="skill-percent">15%</div>
-                        </div>
-                        <div class="skill-row">
-                            <div class="skill-name"><span class="skill-dot" style="background:#E2E8F0;"></span> Otras</div>
-                            <div class="skill-percent">10%</div>
-                        </div>
-                    </div>
+        <div class="dropdown-container">
+            <div id="profile-trigger" style="cursor: pointer;">
+                <img class="avatar-img" id="user-avatar" src="https://placehold.co/32x32" alt="avatar">
+            </div>
+            <div id="profile-dropdown" class="dropdown-menu small-dropdown">
+                <a href="Rportal.html" class="drop-item">Configuración</a>
+                <hr>
+                <a href="#" onclick="handleLogout()" class="drop-item logout">Cerrar sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== MAIN CONTENT ========== -->
+<div class="main-content">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <div class="page-title">Panel de Control</div>
+            <div class="page-subtitle">Métricas de rendimiento y análisis de reclutamiento</div>
+        </div>
+        <div class="date-filter">
+            <button class="filter-btn" id="btnDateFilter">
+                📅 Últimos 30 días ▼
+            </button>
+            <button class="filter-btn" id="btnSettings">
+                ⚙️
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">📊</div>
+                <span class="trend-badge trend-up">▲ +12%</span>
+            </div>
+            <div class="stat-label">Total Aplicaciones</div>
+            <div class="stat-value">1,248</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">⏱️</div>
+                <span class="trend-badge trend-down">▼ -3 días</span>
+            </div>
+            <div class="stat-label">Tiempo de Contratación</div>
+            <div class="stat-value">18 días</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">🎯</div>
+                <span class="trend-badge trend-stable">Estable</span>
+            </div>
+            <div class="stat-label">Match Promedio</div>
+            <div class="stat-value">78%</div>
+        </div>
+    </div>
+
+    <!-- Two Columns: Funnel + Skills -->
+    <div class="two-columns">
+        <!-- Left: Recruitment Funnel -->
+        <div class="funnel-section">
+            <div class="funnel-header">
+                <div class="funnel-title">Eficiencia del Embudo de Contratación</div>
+                <div class="funnel-link" id="funnelLink">Ver detalle →</div>
+            </div>
+            
+            <div class="funnel-item">
+                <div class="funnel-bar" style="width:100%; background:#EFF6FF;">
+                    <span class="funnel-label">Vistas de Vacantes</span>
+                    <span class="funnel-number">5,420</span>
                 </div>
             </div>
-         </div>
-     </div>
- </div>
-     
-     <script>
-         // Active state handling for sidebar navigation
-         document.addEventListener('DOMContentLoaded', function() {
-             const currentPath = window.location.pathname;
-             const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
-             
-             // Find all nav links
-             const navLinks = document.querySelectorAll('.nav-link');
-             
-             // Remove active class from all
-             navLinks.forEach(link => {
-                 link.classList.remove('active');
-             });
-             
-             // Add active class to matching link
-             navLinks.forEach(link => {
-                 const href = link.getAttribute('href');
-                 if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
-                     link.classList.add('active');
-                 }
-             });
-             
-             // Special case for dashboard (when on root or no file specified)
-             if (fileName === '' || fileName === 'Rdashboard.html') {
-                 document.querySelector('.nav-link[href="Rdashboard.html"]').classList.add('active');
-             }
-         });
-     </script>
- </body>
+            
+            <div class="funnel-item">
+                <div class="funnel-bar" style="width:71%; background:#DBEAFE;">
+                    <span class="funnel-label">Aplicaciones Recibidas</span>
+                    <span class="funnel-number">1,248</span>
+                </div>
+                <span class="conv-badge">23% conversión</span>
+            </div>
+            
+            <div class="funnel-item">
+                <div class="funnel-bar" style="width:33%; background:#93C5FD;">
+                    <span class="funnel-label">Entrevistas</span>
+                    <span class="funnel-number">215</span>
+                </div>
+                <span class="conv-badge">17% conversión</span>
+            </div>
+            
+            <div class="funnel-item">
+                <div class="funnel-bar" style="width:16.4%; background:#60A5FA;">
+                    <span class="funnel-label">Ofertas</span>
+                    <span class="funnel-number">64</span>
+                </div>
+                <span class="conv-badge">30% conversión</span>
+            </div>
+            
+            <div class="funnel-item">
+                <div class="funnel-bar" style="width:11%; background:#2563EB;">
+                    <span class="funnel-label" style="color:white;">Contratados</span>
+                    <span class="funnel-number" style="color:white;">42</span>
+                </div>
+                <span class="conv-badge">65% conversión</span>
+            </div>
+        </div>
+
+        <!-- Right: Most Demanded Skills -->
+        <div class="skills-section">
+            <div class="skills-title">Habilidades más Demandadas</div>
+            
+            <div class="donut-container">
+                <div class="donut-center">
+                    <div class="donut-number">4</div>
+                    <div class="donut-label">Top Skills</div>
+                </div>
+            </div>
+            
+            <div class="skill-list">
+                <div class="skill-row">
+                    <div class="skill-name">
+                        <span class="skill-dot" style="background:#2563EB;"></span>
+                        Desarrollo Frontend (React)
+                    </div>
+                    <div class="skill-percent">45%</div>
+                </div>
+                
+                <div class="skill-row">
+                    <div class="skill-name">
+                        <span class="skill-dot" style="background:#14B8A6;"></span>
+                        Análisis de Datos
+                    </div>
+                    <div class="skill-percent">30%</div>
+                </div>
+                
+                <div class="skill-row">
+                    <div class="skill-name">
+                        <span class="skill-dot" style="background:#F59E0B;"></span>
+                        Gestión de Proyectos
+                    </div>
+                    <div class="skill-percent">15%</div>
+                </div>
+                
+                <div class="skill-row">
+                    <div class="skill-name">
+                        <span class="skill-dot" style="background:#94A3B8;"></span>
+                        Otras
+                    </div>
+                    <div class="skill-percent">10%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sidebar toggle para móvil
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+        });
+    }
+    
+    // Cerrar sidebar al hacer click en enlace en móvil
+    const navLinks = document.querySelectorAll('.nav-item');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.remove('open');
+            }
+        });
+    });
+    
+    // Active state handling
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+        
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        navItems.forEach(item => {
+            const href = item.getAttribute('href');
+            if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
+                item.classList.add('active');
+            }
+        });
+        
+        if (fileName === '' || fileName === 'Rdashboard.html') {
+            const dashboardLink = document.querySelector('.nav-item[href="Rdashboard.html"]');
+            if (dashboardLink) dashboardLink.classList.add('active');
+        }
+    });
+    
+    // Botones funcionales
+    document.getElementById('btnDateFilter')?.addEventListener('click', () => {
+        alert('📅 Cambiando rango de fechas...');
+    });
+    
+    document.getElementById('btnSettings')?.addEventListener('click', () => {
+        alert('⚙️ Configuración del panel');
+    });
+    
+    document.getElementById('funnelLink')?.addEventListener('click', () => {
+        alert('📊 Ver detalle completo del embudo de contratación');
+    });
+    
+    // Notificaciones demo
+    document.querySelector('.notif-btn')?.addEventListener('click', () => {
+        alert('📬 No tienes notificaciones nuevas');
+    });
+    
+    document.querySelector('.msg-btn')?.addEventListener('click', () => {
+        alert('💬 Bandeja de mensajes');
+    });
+</script>
+    <script src="../../js/main.js"></script>
+</body>
 </html>

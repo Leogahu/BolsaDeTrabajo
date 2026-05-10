@@ -63,6 +63,11 @@
             width: auto;
             filter: brightness(0) invert(1);
         }
+        .dashboard-container {
+            min-height: 100vh;
+            position: relative;
+            background: #F8F9FF;
+        }
         .logo-text {
             font-family: 'Lexend', sans-serif;
             font-size: 24px;
@@ -202,17 +207,19 @@
                     <button class="selector-btn active" id="toggle-remp">Empresa</button>
                 </div>
 
-                <form id="rregistro-form">
+                <form id="companyRegisterForm">
                     <div class="input-group">
                         <label>Nombre de la Empresa</label>
                         <input type="text" id="empresa" placeholder="Ej. Tech Solutions SAC" required>
                     </div>
-
                     <div class="input-group">
                         <label>RUC (ID Fiscal)</label>
                         <input type="text" id="ruc" placeholder="11 dígitos" required>
                     </div>
-
+                    <div class="input-group">
+                        <label>Nombre Completo del Reclutador</label>
+                        <input type="text" id="nombreCompleto" placeholder="Ej: Juan Pérez" required>
+                    </div>
                     <div class="input-group">
                         <label>Sector Económico</label>
                         <select id="sector" required>
@@ -236,7 +243,6 @@
                             <span class="material-symbols-outlined" id="togglePassword">visibility_off</span>
                         </div>
                     </div>
-
                     <button type="submit" class="btn-submit">Crear cuenta &rarr;</button>
                 </form>
 

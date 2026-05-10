@@ -38,6 +38,13 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
+    @PostMapping("/reclutador/login")
+    public ResponseEntity<?> loginReclutador(@RequestBody Map<String, String> credentials) {
+        return reclutadorRepository.findByEmail(credentials.get("email"))
+            .filter(r -> r.getPassword().equals(credentials.get("password")))
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.status(401).build());
+    }
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         String username = credentials.get("username");

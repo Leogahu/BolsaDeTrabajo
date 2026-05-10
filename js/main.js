@@ -40,10 +40,18 @@ function navigateTo(page) {
     window.location.href = target;
 }
 
-function setSession(userData) {
-    localStorage.setItem('currentUser', JSON.stringify(userData));
-    localStorage.setItem('userType', userData.tipo);
-    localStorage.setItem('isLogged', 'true');
+function setSession(userData, type) {
+    const session = {
+        isLogged: true,
+        userType: type, // 'postante' o 'reclutador'
+        user: {
+            id: userData.id,
+            nombreCompleto: userData.nombreCompleto, // Asegúrate que el backend envíe este campo
+            email: userData.email,
+            username: userData.username
+        }
+    };
+    localStorage.setItem('userSession', JSON.stringify(session));
 }
 
 function getSession() {
@@ -58,6 +66,10 @@ function getSession() {
 function logout() {
     localStorage.clear();
     navigateTo(ROUTES.landing);
+}
+
+function handleLogout() {
+    logout();
 }
 
 // ============================================
@@ -242,56 +254,50 @@ async function handleResponse(response) {
 }
 
 async function handleLogin(event) {
-    event.preventDefault();
-   
-    const errorDiv = document.getElementById('error-message');
+    if (event) event.preventDefault();
+
     const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('contrasena');
+    const passInput = document.getElementById('contrasena');
+    const errorMsg = document.getElementById('error-message');
 
-    if (errorDiv) {
-        errorDiv.style.display = 'none';
-        errorDiv.textContent = '';
-    }
+    [emailInput, passInput].forEach(input => input.style.borderColor = 'var(--border-color)');
+    errorMsg.style.display = 'none';
 
-    const credentials = {
+    const loginData = { 
         username: emailInput.value, 
-        password: passwordInput.value
+        password: passInput.value 
     };
 
     try {
         const response = await fetch('http://localhost:8080/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(credentials)
+            body: JSON.stringify(loginData)
         });
 
         if (response.ok) {
-            const user = await response.json();
-            setSession(user); 
-            
-            if (user.tipo === 'postante') {
-                window.location.href = ROUTES.cdashboard;
-            } else {
-                window.location.href = ROUTES.rdashboard;
-            }
+            const userData = await response.json();
+            setSession(userData, userData.tipo);
+            window.location.href = userData.tipo === 'reclutador' ? ROUTES.rdashboard : ROUTES.cdashboard;
         } else {
-            const errorData = await response.json();
-            if (errorDiv) {
-                errorDiv.textContent = errorData.error || "Usuario o contraseña incorrectos";
-                errorDiv.style.display = 'block';
-                
-                emailInput.style.outline = '2px solid #DC2626';
-                passwordInput.style.outline = '2px solid #DC2626';
-            }
+            emailInput.style.borderColor = '#dc2626';
+            passInput.style.borderColor = '#dc2626';
+            errorMsg.style.display = 'block';
+            errorMsg.textContent = "Credenciales incorrectas. Verifica tu correo y contraseña.";
         }
     } catch (error) {
-        console.error("Error en la conexión:", error);
-        if (errorDiv) {
-            errorDiv.textContent = "Error de conexión con el servidor";
-            errorDiv.style.display = 'block';
-        }
+        console.error('Error:', error);
+        errorMsg.style.display = 'block';
+        errorMsg.textContent = "Error de conexión con el servidor.";
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+});
 
 async function handleRegisterPostante(event) {
     event.preventDefault();
@@ -318,7 +324,7 @@ async function handleRegisterPostante(event) {
             window.location.href = '../../login.html';
         } else {
             const error = await response.json();
-            alert("Error: " + (error.error || "Datos inválidos"));
+            alert("Error: " + (error.error || "Datos invalidos"));
         }
     } catch (e) {
         console.error("Error de red:", e);
@@ -326,43 +332,42 @@ async function handleRegisterPostante(event) {
 }
 
 async function handleRegisterReclutador(event) {
-    if (event) event.preventDefault();
+    if (event) event.preventDefault(); 
     
-    const name = document.getElementById('nombre')?.value;
+    const nombreCompleto = document.getElementById('nombreCompleto')?.value;
+    const empresa = document.getElementById('empresa')?.value;
     const email = document.getElementById('email')?.value;
     const password = document.getElementById('contrasena')?.value;
-    const empresa = document.getElementById('empresa')?.value || 'Empresa Individual';
 
-    if (!name || !email || !password) {
-        alert('Por favor completa todos los campos');
+    if (!nombreCompleto || !empresa || !email || !password) {
+        alert('Por favor, completa todos los campos obligatorios');
         return;
     }
 
     const reclutadorData = {
-        nombreCompleto: name,
-        email: email,
-        username: email,
+        username: email,        
         password: password,
+        nombreCompleto: nombreCompleto,
+        email: email,
         empresa: empresa
     };
 
     try {
-        const response = await fetch('http://localhost:8080/api/auth/reclutador/register', {
+        const response = await fetch('http://localhost:8080/api/reclutadores/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(reclutadorData)
         });
 
         if (response.ok) {
-            alert('¡Registro de empresa exitoso!');
-            navigateTo(ROUTES.login);
+            window.location.href = '../../login.html';
         } else {
-            const errorData = await response.json();
-            alert(errorData.error || 'Error en el registro');
+            const error = await response.json();
+            alert('Error: ' + (error.error || 'No se pudo registrar'));
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Error de red al intentar registrar');
+        alert('No se pudo conectar con el servidor');
     }
 }
 // ============================================
@@ -373,7 +378,7 @@ async function applyToJob(jobId) {
     const session = getSession();
 
     if (!session.isLogged || session.userType !== 'postante') {
-        alert('Debes iniciar sesión como postulante para aplicar');
+        alert('Debes iniciar sesion como postulante para aplicar');
         navigateTo(ROUTES.login);
         return;
     }
@@ -400,12 +405,16 @@ async function applyToJob(jobId) {
             alert('Error al postular: ' + (error.message || 'Intenta de nuevo'));
         }
     } catch (error) {
-        console.error('Error en la postulación:', error);
-        alert('Error de conexión con el servidor');
+        console.error('Error en la postulacion:', error);
+        alert('Error de conexion con el servidor');
     }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    const companyForm = document.getElementById('companyRegisterForm');
+    if (companyForm) {
+        companyForm.addEventListener('submit', handleRegisterReclutador);
+    }
     const btnAplicar = document.getElementById('btn-aplicar');
     if (btnAplicar) {
         btnAplicar.addEventListener('click', function() {
@@ -414,3 +423,241 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const session = JSON.parse(localStorage.getItem('userSession'));
+
+    if (session.isLogged) {
+        const title = document.getElementById('welcome-title');
+        if (title) title.textContent = `¡Hola, ${session.user.nombreCompleto}`;
+        
+        const avatar = document.getElementById('user-avatar');
+        if (avatar) avatar.src = `https://ui-avatars.com/api/?name=${session.user.nombreCompleto}&background=0052EA&color=fff`;
+    }
+
+    const setup = (triggerId, menuId) => {
+        const trigger = document.getElementById(triggerId);
+        const menu = document.getElementById(menuId);
+        if (trigger && menu) {
+            trigger.onclick = (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.dropdown-menu').forEach(m => {
+                    if (m.id !== menuId) m.classList.remove('show');
+                });
+                menu.classList.toggle('show');
+            };
+        }
+    };
+
+    setup('notif-trigger', 'notif-dropdown');
+    setup('msg-trigger', 'msg-dropdown');
+    setup('profile-trigger', 'profile-dropdown');
+
+    window.onclick = () => {
+        document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+    };
+});
+
+function removeNotif(btn) {
+    const list = document.getElementById('notif-list');
+    const dot = document.getElementById('notif-dot');
+    btn.closest('li').remove();
+
+    if (list.children.length === 0) {
+        list.innerHTML = '<p style="font-size:12px; color:#94A3B8; text-align:center;">Sin notificaciones</p>';
+        if (dot) dot.style.display = 'none';
+    }
+}
+
+
+// 1. VARIABLES DE ESTADO GLOBALES
+let currentStep = 1;
+let isPublishing = false;
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Referencias a elementos
+    const btnNext = document.getElementById('btnNext');
+    const btnBack = document.getElementById('btnBack');
+    const btnPublicar = document.getElementById('btnPublicar');
+    if (btnNext) {
+        btnNext.onclick = (e) => {
+            e.preventDefault();
+            if (validarPaso(currentStep)) {
+                avanzarPaso();
+            }
+        };
+    }
+
+    if (btnBack) {
+        btnBack.onclick = (e) => {
+            e.preventDefault();
+            retrocederPaso();
+        };
+    }
+
+    if (btnPublicar) {
+        btnPublicar.onclick = (e) => {
+            e.preventDefault();
+            ejecutarPublicacion();
+        };
+    }
+
+    if (document.getElementById('mis-ofertas-container')) {
+        cargarMisOfertas();
+    }
+});
+
+function avanzarPaso() {
+    if (currentStep < 4) {
+        document.getElementById(`step${currentStep}`).style.display = 'none';
+        
+        const stepIndicator = document.querySelector(`.step[data-step="${currentStep}"]`);
+        if (stepIndicator) {
+            stepIndicator.classList.remove('active');
+            stepIndicator.classList.add('completed');
+            stepIndicator.querySelector('.step-circle').innerHTML = '✓';
+        }
+
+        currentStep++;
+
+        document.getElementById(`step${currentStep}`).style.display = 'block';
+        const nextIndicator = document.querySelector(`.step[data-step="${currentStep}"]`);
+        if (nextIndicator) nextIndicator.classList.add('active');
+
+        actualizarBotonesNavegacion();
+        if (currentStep === 4) prepararRevision();
+    }
+}
+
+function retrocederPaso() {
+    if (currentStep > 1) {
+        document.getElementById(`step${currentStep}`).style.display = 'none';
+        document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+
+        currentStep--;
+
+        document.getElementById(`step${currentStep}`).style.display = 'block';
+        const prevIndicator = document.querySelector(`.step[data-step="${currentStep}"]`);
+        if (prevIndicator) {
+            prevIndicator.classList.remove('completed');
+            prevIndicator.classList.add('active');
+            prevIndicator.querySelector('.step-circle').innerHTML = currentStep;
+        }
+
+        actualizarBotonesNavegacion();
+    }
+}
+
+function actualizarBotonesNavegacion() {
+    const btnBack = document.getElementById('btnBack');
+    const btnNext = document.getElementById('btnNext');
+    const btnPublicar = document.getElementById('btnPublicar');
+
+    if (btnBack) btnBack.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+    
+    if (currentStep === 4) {
+        if (btnNext) btnNext.style.display = 'none';
+        if (btnPublicar) btnPublicar.style.display = 'block';
+    } else {
+        if (btnNext) btnNext.style.display = 'block';
+        if (btnPublicar) btnPublicar.style.display = 'none';
+    }
+}
+
+// --- LÓGICA DE NEGOCIO Y API ---
+
+function validarPaso(step) {
+    if (step === 1) {
+        const t = document.getElementById('titulo').value;
+        const u = document.getElementById('ubicacion').value;
+        if (!t || !u) { 
+            alert("Por favor, completa el título y la ubicación."); 
+            return false; 
+        }
+    }
+    return true;
+}
+
+function prepararRevision() {
+    const resumen = document.getElementById('resumenFinal');
+    if (resumen) {
+        resumen.innerHTML = `
+            <div class="review-item"><strong>Título:</strong> ${document.getElementById('titulo').value}</div>
+            <div class="review-item"><strong>Ubicación:</strong> ${document.getElementById('ubicacion').value}</div>
+            <div class="review-item"><strong>Descripción:</strong> ${document.getElementById('descripcion').value.substring(0, 150)}...</div>
+        `;
+    }
+}
+
+async function ejecutarPublicacion() {
+    if (isPublishing) return; 
+
+    const session = JSON.parse(localStorage.getItem('userSession'));
+    if (!session || !session.user) {
+        alert("Sesión no encontrada. Inicia sesión nuevamente.");
+        return;
+    }
+
+    const btn = document.getElementById('btnPublicar');
+    
+    const ofertaData = {
+        titulo: document.getElementById('titulo').value,
+        descripcion: document.getElementById('descripcion').value,
+        requisitos: document.getElementById('requisitos').value,
+        ubicacion: document.getElementById('ubicacion').value,
+        fechaPublicacion: new Date().toISOString()
+    };
+
+    try {
+        isPublishing = true;
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = "Publicando...";
+        }
+
+        const response = await fetch(`http://localhost:8080/api/reclutadores/${session.user.id}/postulaciones`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(ofertaData)
+        });
+
+        if (response.ok) {
+            window.location.href = 'Rvacantes.html';
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Error en el servidor");
+        }
+
+    } catch (error) {
+        console.error("Error al publicar:", error);
+        alert("Hubo un error: " + error.message);
+        isPublishing = false; 
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = "Publicar Empleo";
+        }
+    }
+}
+
+async function cargarMisOfertas() {
+    const session = JSON.parse(localStorage.getItem('userSession'));
+    const container = document.getElementById('mis-ofertas-container');
+    if (!session || !container) return;
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/reclutadores/${session.user.id}/postulaciones`);
+        const ofertas = await response.json();
+        
+        container.innerHTML = ofertas.map(oferta => `
+            <div class="oferta-card">
+                <h4>${oferta.titulo}</h4>
+                <p>${oferta.ubicacion}</p>
+                <div class="card-footer">
+                    <span>Candidatos: ${oferta.candidatos?.length || 0}</span>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error("Error cargando ofertas:", error);
+    }
+}
