@@ -52,7 +52,31 @@ public class PostulacionService {
     public List<PostulacionEstado> obtenerCandidatos(Long postulacionId) {
         return postulacionEstadoRepository.findByPostulacionId(postulacionId);
     }
-    
+    public void eliminar(Long id) {
+    if (!postulacionRepository.existsById(id)) {
+        throw new RuntimeException("La vacante con ID " + id + " no existe.");
+    }
+    postulacionRepository.deleteById(id);
+    }
+    public Postulacion actualizar(Long id, Postulacion datosActualizados) {
+    return postulacionRepository.findById(id)
+        .map(postulacion -> {
+            // Actualizamos solo los campos necesarios
+            postulacion.setTitulo(datosActualizados.getTitulo());
+            postulacion.setDescripcion(datosActualizados.getDescripcion());
+            postulacion.setRequisitos(datosActualizados.getRequisitos());
+            postulacion.setUbicacion(datosActualizados.getUbicacion());
+            
+            // La fecha de publicación se suele mantener o actualizar 
+            // según prefieras (aquí la mantenemos)
+            
+            return postulacionRepository.save(postulacion);
+        })
+        .orElseThrow(() -> new RuntimeException("No se encontró la vacante para actualizar"));
+    }
+    public Optional<Postulacion> buscarPorId(Long id) {
+    return postulacionRepository.findById(id);
+    }
     public PostulacionEstado actualizarEstado(Long id, PostulacionEstado.EstadoPostulacion nuevoEstado, String motivo) {
         PostulacionEstado estado = postulacionEstadoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Postulacion no encontrada"));

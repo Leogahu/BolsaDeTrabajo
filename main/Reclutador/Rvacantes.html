@@ -18,7 +18,6 @@
             overflow-x: hidden;
         }
 
-        /* ========== SIDEBAR FIJA IZQUIERDA (mismo estilo que te gustó) ========== */
         .sidebar {
             width: 280px;
             height: 100vh;
@@ -42,7 +41,68 @@
             padding-bottom: 24px;
             border-bottom: 1px solid #E9EFF5;
         }
+        .custom-modal-overlay {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.7); /* Azul oscuro traslúcido */
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
 
+        /* El recuadro blanco/rojo */
+        .custom-modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border-top: 6px solid #EF4444; /* Borde rojo superior */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .custom-modal-content h3 {
+            color: #1E293B;
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+
+        .custom-modal-content p {
+            color: #64748B;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        /* Botones */
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-secondary, .btn-danger {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-secondary { background: #F1F5F9; color: #475569; }
+        .btn-secondary:hover { background: #E2E8F0; }
+
+        .btn-danger { background: #EF4444; color: white; }
+        .btn-danger:hover { background: #DC2626; }
         .sidebar-logo {
             font-weight: 800;
             font-size: 24px;
@@ -518,9 +578,10 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 12px;
+            gap: 12px; /* Crea una zona de seguridad entre texto y badge */
+            margin-bottom: 15px;
+            padding-right: 40px; /* Deja espacio para los botones si estos flotan */
+            position: relative;
         }
 
         .job-title {
@@ -549,6 +610,8 @@
         .badge-talento-joven { background: #FEF3C7; color: #92400E; }
 
         .status-badge {
+            flex-shrink: 0;
+            z-index: 1;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -602,10 +665,12 @@
 
         .card-actions {
             position: absolute;
-            right: 20px;
-            top: 20px;
+            top: 15px;
+            right: 15px;
             display: flex;
             gap: 8px;
+            background: white; /* Fondo blanco para que no se trasluzca el texto */
+            padding-left: 5px;
         }
 
         .card-action-btn {
@@ -946,7 +1011,6 @@
     </div>
 </div>
 
-<!-- ========== MAIN CONTENT ========== -->
 <div class="main-content">
     <div class="page-title">Vacantes</div>
     <div class="page-subtitle">Gestiona tus procesos de reclutamiento activos</div>
@@ -959,131 +1023,20 @@
         <button class="filter-tab" id="filterClosed">Cerradas</button>
     </div>
 
-    <div class="jobs-grid">
-        <!-- Promo Card - Rendimiento Total -->
-        <div class="promo-card">
-            <div class="promo-card-bg"></div>
-            <div style="position: relative; z-index: 2;">
-                <div style="font-size: 13px; font-weight: 600; opacity: 0.8;">Rendimiento Total</div>
-                <div style="font-size: 42px; font-weight: 800;">158</div>
-                <div style="font-size: 13px; opacity: 0.9;">Nuevos postulantes hoy</div>
-                <div class="promo-stats">
-                    <div class="avatars-group">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div class="avatar-more">+12</div>
-                    </div>
-                    <div class="promo-link" id="viewDetails">Ver Detalles →</div>
-                </div>
-            </div>
+    <div class="jobs-grid" id="jobs-grid">
         </div>
-
-        <!-- Vacante 1 - Frontend Developer Jr. -->
-        <div class="job-card">
-            <div class="job-card-border" style="background: #2563EB;"></div>
-            <div class="job-card-header">
-                <div>
-                    <div class="job-title">Frontend Developer Jr. (React)</div>
-                    <div class="badge-group">
-                        <span class="badge badge-junior-real">JUNIOR REAL</span>
-                        <span class="badge badge-sin-exp">SIN EXPERIENCIA</span>
-                    </div>
-                </div>
-                <div class="status-badge status-active">
-                    <span style="width: 8px; height: 8px; background: #22C55E; border-radius: 50%;"></span>
-                    Activa
-                </div>
-            </div>
-            <div class="metrics-row">
-                <div class="metric">
-                    <span class="metric-label">PUBLICADO</span>
-                    <span class="metric-value">12 de Oct, 2023</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">POSTULANTES</span>
-                    <span class="metric-value metric-highlight">24 perfiles →</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">VISITAS</span>
-                    <span class="metric-value">1,240</span>
-                </div>
-            </div>
-            <div class="card-actions">
-                <button class="card-action-btn" onclick="alert('Opciones de vacante')">⋮</button>
-                <button class="card-action-btn" onclick="alert('Editar vacante')">✎</button>
-            </div>
-        </div>
-
-        <!-- Vacante 2 - UX/UI Designer Trainee -->
-        <div class="job-card">
-            <div class="job-card-border" style="background: #F59E0B;"></div>
-            <div class="job-card-header">
-                <div>
-                    <div class="job-title">UX/UI Designer Trainee</div>
-                    <div class="badge-group">
-                        <span class="badge badge-talento-joven">TALENTO JOVEN</span>
-                        <span class="badge badge-sin-exp">SIN EXPERIENCIA</span>
-                    </div>
-                </div>
-                <div class="status-badge status-paused">
-                    <span style="width: 8px; height: 8px; background: #F59E0B; border-radius: 50%;"></span>
-                    Pausada
-                </div>
-            </div>
-            <div class="metrics-row">
-                <div class="metric">
-                    <span class="metric-label">PUBLICADO</span>
-                    <span class="metric-value">05 de Oct, 2023</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">POSTULANTES</span>
-                    <span class="metric-value metric-highlight">48 perfiles →</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">VISITAS</span>
-                    <span class="metric-value">3,892</span>
-                </div>
-            </div>
-            <div class="card-actions">
-                <button class="card-action-btn" onclick="alert('Opciones de vacante')">⋮</button>
-                <button class="card-action-btn" onclick="alert('Editar vacante')">✎</button>
-            </div>
-        </div>
-
-        <!-- Boost Card - ¿Necesitas contratar rápido? -->
-        <div class="boost-card">
-            <div class="boost-icon">⚡</div>
-            <div class="boost-title">¿Necesitas contratar rápido?</div>
-            <div class="boost-text">Destaca tu vacante para llegar a un<br>300% más de estudiantes talentosos.</div>
-            <div class="boost-btn" id="boostVacancy">Impulsar Vacante</div>
-        </div>
-
-        <!-- Vacante 3 - Backend Dev (Compacta) -->
-        <div class="compact-job-card">
-            <div class="compact-icon">📁</div>
-            <div class="compact-info">
-                <div class="compact-title">Backend Dev (Node.js)</div>
-                <div class="compact-ref">Ref: NOD-2023</div>
-                <div class="compact-badge">
-                    <span class="badge badge-junior-real">JUNIOR REAL</span>
-                </div>
-                <div style="font-size: 11px; color: #94A3B8; margin-top: 6px;">Publicado: Sep 28</div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 8px;">
-                    <div class="status-badge status-closed">
-                        <span style="width: 8px; height: 8px; background: #CBD5E1; border-radius: 50%;"></span>
-                        Cerrada
-                    </div>
-                    <div style="color: #2563EB; font-weight: 700;">12 postulantes</div>
-                </div>
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="card-action-btn" onclick="alert('Opciones')">⋮</button>
-                <button class="card-action-btn" onclick="alert('Más opciones')">⋯</button>
+    </div>
+    <div id="deleteModal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <div class="modal-icon">⚠️</div>
+            <h3>¿Estás seguro de eliminar esta vacante?</h3>
+            <p>Esta acción no se puede deshacer y se perderán todos los datos asociados.</p>
+            <div class="modal-actions">
+                <button id="cancelDelete" class="btn-secondary">Cancelar</button>
+                <button id="confirmDelete" class="btn-danger">Sí, eliminar vacante</button>
             </div>
         </div>
     </div>
-
     <!-- Pagination -->
     <div class="pagination">
         <div class="page-item" onclick="alert('Página anterior')">‹</div>
@@ -1147,7 +1100,6 @@
         tab.addEventListener('click', function() {
             filterTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
-            alert(`Filtrando por: ${this.textContent}`);
         });
     });
     

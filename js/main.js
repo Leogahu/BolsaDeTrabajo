@@ -1,21 +1,10 @@
-// ChapaTuChamba - Sistema de Navegación y Funcionalidades
-// NAVEGACIÓN PRINCIPAL
-
-// Rutas de navegación
 const ROUTES = {
-  // Landing
   landing: 'ladingpage.html',
   login: 'login.html',
-  
-  // Registro
   cregistro: 'main/Candidatos/Cregister.html',
   rregistro: 'main/Reclutador/Rregistro.html',
-  
-  // Dashboards
   cdashboard: 'main/Candidatos/Cdashboard.html',
   rdashboard: 'main/Reclutador/Rdashboard.html',
-  
-  // Candidatos
   cvacantes: 'main/Candidatos/Cvacantes.html',
   cpostulaciones: 'main/Candidatos/Cpostulaciones.html',
   chabilidades: 'main/Candidatos/Chabilidades.html',
@@ -25,8 +14,6 @@ const ROUTES = {
   cexplorar: 'main/Candidatos/Cexplorar.html',
   cdetalles: 'main/Candidatos/Cdetalles.html',
   ceditarPerfil: 'main/Candidatos/CeditarPerfil.html',
-  
-  // Reclutador
   rvacantes: 'main/Reclutador/Rvacantes.html',
   rgestion: 'main/Reclutador/Rgestion.html',
   rpubOferta: 'main/Reclutador/RpubOferta.html',
@@ -43,10 +30,10 @@ function navigateTo(page) {
 function setSession(userData, type) {
     const session = {
         isLogged: true,
-        userType: type, // 'postante' o 'reclutador'
+        userType: type,
         user: {
             id: userData.id,
-            nombreCompleto: userData.nombreCompleto, // Asegúrate que el backend envíe este campo
+            nombreCompleto: userData.nombreCompleto,
             email: userData.email,
             username: userData.username
         }
@@ -190,7 +177,6 @@ function initFormularios() {
     if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        console.log("Intentando login...");
         await handleLogin(e);
     });
 }
@@ -426,8 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', () => {
     const session = JSON.parse(localStorage.getItem('userSession'));
-
-    if (session.isLogged) {
+    if (session && session.isLogged) {
         const title = document.getElementById('welcome-title');
         if (title) title.textContent = `¡Hola, ${session.user.nombreCompleto}`;
         
@@ -439,13 +424,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const trigger = document.getElementById(triggerId);
         const menu = document.getElementById(menuId);
         if (trigger && menu) {
-            trigger.onclick = (e) => {
+            trigger.addEventListener('click', (e) => {
                 e.stopPropagation();
                 document.querySelectorAll('.dropdown-menu').forEach(m => {
                     if (m.id !== menuId) m.classList.remove('show');
                 });
                 menu.classList.toggle('show');
-            };
+            });
+
+            menu.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
         }
     };
 
@@ -469,13 +458,10 @@ function removeNotif(btn) {
     }
 }
 
-
-// 1. VARIABLES DE ESTADO GLOBALES
 let currentStep = 1;
 let isPublishing = false;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Referencias a elementos
     const btnNext = document.getElementById('btnNext');
     const btnBack = document.getElementById('btnBack');
     const btnPublicar = document.getElementById('btnPublicar');
@@ -593,6 +579,8 @@ async function ejecutarPublicacion() {
     if (isPublishing) return; 
 
     const session = JSON.parse(localStorage.getItem('userSession'));
+    const editId = localStorage.getItem('editPostulacionId'); 
+
     if (!session || !session.user) {
         alert("Sesión no encontrada. Inicia sesión nuevamente.");
         return;
@@ -607,21 +595,27 @@ async function ejecutarPublicacion() {
         ubicacion: document.getElementById('ubicacion').value,
         fechaPublicacion: new Date().toISOString()
     };
+    const url = editId 
+        ? `http://localhost:8080/api/postulaciones/${editId}` 
+        : `http://localhost:8080/api/reclutadores/${session.user.id}/postulaciones`;
+    
+    const metodo = editId ? 'PUT' : 'POST'; 
 
     try {
         isPublishing = true;
         if (btn) {
             btn.disabled = true;
-            btn.textContent = "Publicando...";
+            btn.textContent = editId ? "Guardando cambios..." : "Publicando...";
         }
 
-        const response = await fetch(`http://localhost:8080/api/reclutadores/${session.user.id}/postulaciones`, {
-            method: 'POST',
+        const response = await fetch(url, {
+            method: metodo,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(ofertaData)
         });
 
         if (response.ok) {
+            localStorage.removeItem('editPostulacionId');
             window.location.href = 'Rvacantes.html';
         } else {
             const errorData = await response.json();
@@ -629,12 +623,12 @@ async function ejecutarPublicacion() {
         }
 
     } catch (error) {
-        console.error("Error al publicar:", error);
+        console.error("Error:", error);
         alert("Hubo un error: " + error.message);
         isPublishing = false; 
         if (btn) {
             btn.disabled = false;
-            btn.textContent = "Publicar Empleo";
+            btn.textContent = editId ? "Guardar Cambios" : "Publicar Empleo";
         }
     }
 }
@@ -729,4 +723,237 @@ async function cargarEmpleos() {
 function verDetalleVacante(id) {
     localStorage.setItem('selectedJobId', id);
     window.location.href = 'Cvacantes.html';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('jobs-grid')) {
+        cargarVacantesReclutador();
+    }
+});
+
+async function cargarVacantesReclutador() {
+    const grid = document.getElementById('jobs-grid');
+    const session = JSON.parse(localStorage.getItem('userSession'));
+
+    if (!session || !session.user) return;
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/reclutadores/${session.user.id}/postulaciones`);
+        const vacantes = await response.json();
+        let htmlContent = `
+            <div class="promo-card">
+                <div class="promo-card-bg"></div>
+                <div style="position: relative; z-index: 2;">
+                    <div style="font-size: 13px; font-weight: 600; opacity: 0.8;">Total Vacantes</div>
+                    <div style="font-size: 42px; font-weight: 800;">${vacantes.length}</div>
+                    <div style="font-size: 13px; opacity: 0.9;">Procesos activos actualmente</div>
+                    <div class="promo-link" onclick="window.location.href='Rdashboard.html'">Ver Dashboard →</div>
+                </div>
+            </div>
+        `;
+        const vacantesHtml = vacantes.map(v => {
+            const fecha = v.fechaPublicacion ? new Date(v.fechaPublicacion).toLocaleDateString() : 'Reciente';
+            
+            return `
+            <div class="job-card">
+                <div class="job-card-border" style="background: #2563EB;"></div>
+                
+                <div class="job-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; position: relative;">
+                    
+                    <div style="flex: 1; min-width: 0;"> <div class="job-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px; font-weight: 700;">
+                            ${v.titulo}
+                        </div>
+                        <div class="badge-group" style="margin-top: 4px;">
+                            <span class="badge badge-junior-real">JUNIOR REAL</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0;">
+                        <div class="status-badge status-active" style="margin: 0; white-space: nowrap;">
+                            <span style="width: 8px; height: 8px; background: #22C55E; border-radius: 50%;"></span>
+                            Activa
+                        </div>
+                        <div class="card-actions-inline" style="display: flex; gap: 4px;">
+                            <button class="card-action-btn" onclick="editarVacante(${v.id})" title="Editar">✎</button>
+                            <button class="card-action-btn" onclick="eliminarVacante(${v.id})" title="Eliminar">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metrics-row" style="margin-top: 15px;">
+                    <div class="metric">
+                        <span class="metric-label">PUBLICADO</span>
+                        <span class="metric-value">${fecha}</span>
+                    </div>
+                    <div class="metric" onclick="verPostulantes(${v.id})" style="cursor:pointer">
+                        <span class="metric-label">POSTULANTES</span>
+                        <span class="metric-value metric-highlight">${v.candidatos?.length || 0} perfiles →</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">UBICACIÓN</span>
+                        <span class="metric-value">${v.ubicacion}</span>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+        const boostCard = `
+            <div class="boost-card">
+                <div class="boost-icon">⚡</div>
+                <div class="boost-title">¿Necesitas contratar rápido?</div>
+                <div class="boost-btn">Impulsar Vacante</div>
+            </div>
+        `;
+
+        grid.innerHTML = htmlContent + vacantesHtml + boostCard;
+
+    } catch (error) {
+        console.error("Error al cargar vacantes:", error);
+        grid.innerHTML = "<p>Error al conectar con el servidor.</p>";
+    }
+}
+
+function verPostulantes(id) {
+    localStorage.setItem('viewJobId', id);
+    window.location.href = ROUTES.rgestion; 
+}
+
+let idAEliminar = null; 
+
+function eliminarVacante(id) {
+    idAEliminar = id; 
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'flex'; 
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const btnConfirmar = document.getElementById('confirmDelete');
+    const btnCancelar = document.getElementById('cancelDelete');
+    const modal = document.getElementById('deleteModal');
+
+    btnCancelar.onclick = () => {
+        modal.style.display = 'none';
+        idAEliminar = null;
+    };
+    btnConfirmar.onclick = async () => {
+        if (!idAEliminar) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/postulaciones/${idAEliminar}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+                modal.style.display = 'none'; 
+                cargarVacantesReclutador();   
+            } else {
+                alert("Error al eliminar");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            idAEliminar = null;
+        }
+    };
+});
+function editarVacante(id) {
+    localStorage.setItem('editPostulacionId', id);
+    window.location.href = 'RpubOferta.html'; 
+}
+function filtrarVacantes(estado) {
+    const cards = document.querySelectorAll('.job-card');
+    cards.forEach(card => {
+        const statusText = card.querySelector('.status-badge').textContent.trim().toLowerCase();
+        if (estado === 'all' || statusText === estado) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+function irAPublicar() {
+    localStorage.removeItem('editPostulacionId');
+    window.location.href = 'RpubOferta.html';
+}
+document.getElementById('filterActive')?.addEventListener('click', () => filtrarVacantes('activa'));
+document.getElementById('filterAll')?.addEventListener('click', () => filtrarVacantes('all'));
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const editId = localStorage.getItem('editPostulacionId');
+    
+    if (editId) {
+        const titleElement = document.querySelector('.page-title');
+        if (titleElement) titleElement.textContent = "Editar Vacante";
+        
+        try {
+            const response = await fetch(`http://localhost:8080/api/postulaciones/${editId}`);
+            const data = await response.json();
+            
+            if(document.getElementById('titulo')) document.getElementById('titulo').value = data.titulo;
+            if(document.getElementById('ubicacion')) document.getElementById('ubicacion').value = data.ubicacion;
+            if(document.getElementById('descripcion')) document.getElementById('descripcion').value = data.descripcion;
+            if(document.getElementById('requisitos')) document.getElementById('requisitos').value = data.requisitos;
+            
+            const btnPub = document.getElementById('btnPublicar');
+            if (btnPub) btnPub.textContent = "Guardar Cambios";
+
+        } catch (error) {
+            console.error("Error cargando datos para editar:", error);
+        }
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('det-titulo')) {
+        cargarDetalleVacante();
+    }
+});
+
+async function cargarDetalleVacante() {
+    const jobId = localStorage.getItem('selectedJobId');
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/reclutadores/postulaciones/${jobId}`);
+        const empleo = await response.json();
+
+        document.getElementById('det-titulo').innerText = empleo.titulo;
+        document.getElementById('det-ubicacion').innerText = empleo.ubicacion;
+        document.getElementById('det-descripcion').innerText = empleo.descripcion;
+        document.getElementById('det-requisitos').innerText = empleo.requisitos;
+        document.getElementById('det-fecha').innerText = new Date(empleo.fechaPublicacion).toLocaleDateString();
+
+        const nombreEmpresa = "Empresa Aliada"; 
+        document.getElementById('det-empresa').innerText = nombreEmpresa;
+        
+        const iniciales = nombreEmpresa.substring(0, 2).toUpperCase();
+        document.getElementById('det-empresa-logo').innerText = iniciales;
+
+    } catch (error) {
+        console.error("Error cargando detalles:", error);
+    }
+}
+
+async function realizarPostulacion(jobId) {
+    const session = JSON.parse(localStorage.getItem('userSession'));
+    if (!session || !session.user) {
+        alert("Debes iniciar sesión para postularte");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/postulaciones/${jobId}/postular`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ postanteId: session.user.id })
+        });
+
+        if (response.ok) {
+            alert("¡Postulación exitosa!");
+            window.location.href = 'Cpostulaciones.html';
+        } else {
+            const error = await response.json();
+            alert(error.error || "Ya has postulado a esta vacante");
+        }
+    } catch (error) {
+        console.error("Error al postular:", error);
+    }
 }

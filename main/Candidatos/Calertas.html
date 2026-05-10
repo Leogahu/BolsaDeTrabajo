@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ChapatuChamba - Alertas</title>
-    <!-- Google Fonts: Inter y Nimbus Sans (fallback a sistema) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -14,11 +13,10 @@
         }
 
         body {
-            background: #F1F5F9; /* fondo exterior suave para contraste, pero el diseño original tiene el wrapper blanco/gris */
+            background: #F1F5F9; 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        /* contenedor principal: igual ancho 1280px, centrado, relativo para sidebar absolute */
         .dashboard-container {
             width: 1280px;
             min-height: 1241px;
@@ -28,7 +26,6 @@
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
         }
 
-        /* SIDEBAR izquierda fija estilo imagen */
         .sidebar {
             width: 256px;
             height: 100%;
@@ -85,7 +82,6 @@
             color: #475569;
         }
 
-         /* iconos de reemplazo mediante pseudo o background simplificado */
         .icon-dashboard { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
         .icon-oportunidades { width: 20px; height: 19px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3Crect width='20' height='14' x='2' y='6' rx='2'/%3E%3C/svg%3E") no-repeat center; background-size: contain; background-color: #475569; }
         .icon-postulaciones { width: 20px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
@@ -95,7 +91,6 @@
         .icon-entrevistas { width: 20px; height: 20px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='10' r='8'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3Cpath d='M7 22h10'/%3E%3Cpath d='M12 22v-4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
         .icon-logout { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
 
-        /* Main content */
         .main-content {
             margin-left: 256px;
             padding: 96px 48px 72px 48px;
@@ -626,7 +621,7 @@
 </head>
 <body>
 <div class="dashboard-container">
-        <!-- Sidebar izquierda -->
+
                  <div class="sidebar">
             <div class="sidebar-nav">
                 <a href="Cdashboard.html" class="nav-item">
@@ -666,7 +661,6 @@
             </div>
         </div>
 
-    <!-- Top Navbar -->
     <div class="top-navbar">
         <div class="logo-area">
             <div class="logo-text">ChapatuChamba</div>
