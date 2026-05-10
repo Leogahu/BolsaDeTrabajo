@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ChapatuChamba - Oportunidades</title>
-    <!-- Google Fonts: Inter y Nimbus Sans (fallback a sistema) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -14,11 +13,10 @@
         }
 
         body {
-            background: #F1F5F9; /* fondo exterior suave para contraste, pero el diseño original tiene el wrapper blanco/gris */
+            background: #F1F5F9; 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        /* contenedor principal: igual ancho 1280px, centrado, relativo para sidebar absolute */
         .dashboard-container {
             width: 1280px;
             min-height: 1241px;
@@ -28,7 +26,6 @@
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
         }
 
-        /* SIDEBAR izquierda fija estilo imagen */
         .sidebar {
             width: 256px;
             height: 100%;
@@ -618,7 +615,6 @@
 </head>
 <body>
 <div class="dashboard-container">
-        <!-- Sidebar izquierda -->
                  <div class="sidebar">
             <div class="sidebar-nav">
                 <a href="Cdashboard.html" class="nav-item">
@@ -738,61 +734,13 @@
             <div class="filter-tag tag-outline">Full-time</div>
         </div>
 
-        <div class="opportunities-grid">
-            <div class="job-card">
-                <div class="bookmark-icon">🔖</div>
-                <div class="company-logo" style="background: #002D5B;">Logo</div>
-                <div class="job-badge" style="background: #FFE4E9; color: #FF4D6D;">Junior Real</div>
-                <div class="job-title">Desarrollador Frontend React</div>
-                <div class="company-name">TechNova Solutions</div>
-                <div class="job-meta">
-                    <span>📍 Remoto (Perú)</span>
-                    <span>💵 S/ 2,500 - S/ 3,500</span>
-                </div>
+        <div class="opportunities-grid" id="opportunities-grid">
             </div>
-
-            <div class="job-card">
-                <div class="bookmark-icon">🔖</div>
-                <div class="company-logo" style="background: #1A1A1A;">Logo</div>
-                <div class="job-badge" style="background: #E0FFF9; color: #00D1B2;">Sin Experiencia</div>
-                <div class="job-title">Practicante de Marketing...</div>
-                <div class="company-name">Creative Agency</div>
-                <div class="job-meta">
-                    <span>📍 Híbrido (Lima)</span>
-                    <span>💵 Subvención Económica</span>
-                </div>
-            </div>
-
-            <div class="job-card">
-                <div class="bookmark-icon">🔖</div>
-                <div class="company-logo" style="background: #004A99;">Logo</div>
-                <div class="job-badge" style="background: #FFF7E0; color: #FFB800;">Talento Joven</div>
-                <div class="job-title">Trainee Comercial y...</div>
-                <div class="company-name">Grupo Intercorp</div>
-                <div class="job-meta">
-                    <span>📍 Presencial (San Isidro)</span>
-                    <span>💵 Competitivo</span>
-                </div>
-            </div>
-
-            <div class="job-card">
-                <div class="bookmark-icon">🔖</div>
-                <div class="company-logo" style="background: #E6EEFF;">Logo</div>
-                <div class="job-badge" style="background: #FFE4E9; color: #FF4D6D;">Junior Real</div>
-                <div class="job-title">Analista de Datos Junior</div>
-                <div class="company-name">Fintech PayGo</div>
-                <div class="job-meta">
-                    <span>📍 Remoto</span>
-                    <span>💵 S/ 3,000 - S/ 4,000</span>
-                </div>
-            </div>
-        </div>
 
         <div class="load-more-container">
-            <button class="btn-load-more">Cargar más oportunidades</button>
+            <button class="btn-load-more" id="btnLoadMore">Cargar más oportunidades</button>
         </div>
     </div>
-
 </div>
   <script src="../../js/main.js"></script>
 </body>

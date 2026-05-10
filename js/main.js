@@ -661,3 +661,72 @@ async function cargarMisOfertas() {
         console.error("Error cargando ofertas:", error);
     }
 }
+
+let currentPage = 0;
+const JOBS_PER_PAGE = 16;
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('opportunities-grid')) {
+        cargarEmpleos();
+        
+        const btnLoadMore = document.getElementById('btnLoadMore');
+        if (btnLoadMore) {
+            btnLoadMore.onclick = () => {
+                currentPage++;
+                cargarEmpleos();
+            };
+        }
+    }
+});
+
+async function cargarEmpleos() {
+    const grid = document.getElementById('opportunities-grid');
+    const btnLoadMore = document.getElementById('btnLoadMore');
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/reclutadores/postulaciones?page=${currentPage}&size=${JOBS_PER_PAGE}`);
+        const data = await response.json(); 
+        
+        const empleos = data.content; 
+
+        if (empleos.length === 0 && currentPage === 0) {
+            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748B;">No hay vacantes disponibles en este momento.</p>';
+            if (btnLoadMore) btnLoadMore.style.display = 'none';
+            return;
+        }
+
+        const htmlCards = empleos.map(empleo => `
+            <div class="job-card" onclick="verDetalleVacante(${empleo.id})">
+                <div class="bookmark-icon">🔖</div>
+                <div class="company-logo" style="background: #0052EA; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px;">
+                    ${empleo.titulo.substring(0, 2).toUpperCase()}
+                </div>
+                <div class="job-badge" style="background: #E0FFF9; color: #00D1B2;">Junior Real</div>
+                <div class="job-title">${empleo.titulo}</div>
+                <div class="company-name">Empresa Aliada</div>
+                <div class="job-meta">
+                    <span>📍 ${empleo.ubicacion}</span>
+                    <span>💵 Consultar</span>
+                </div>
+            </div>
+        `).join('');
+
+        if (currentPage === 0) {
+            grid.innerHTML = htmlCards;
+        } else {
+            grid.insertAdjacentHTML('beforeend', htmlCards);
+        }
+
+        if (data.last) {
+            if (btnLoadMore) btnLoadMore.style.display = 'none';
+        }
+
+    } catch (error) {
+        console.error("Error cargando empleos:", error);
+    }
+}
+
+function verDetalleVacante(id) {
+    localStorage.setItem('selectedJobId', id);
+    window.location.href = 'Cvacantes.html';
+}
