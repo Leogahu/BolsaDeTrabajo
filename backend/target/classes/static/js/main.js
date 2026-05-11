@@ -168,9 +168,9 @@ function initSidebar(elementId, targetPage) {
     }
 }
 
-// ============================================
+// ===========================================
 // FORMULARIOS
-// ============================================
+// ===========================================
 
 function initFormularios() {
     const loginForm = document.getElementById('login-form');
