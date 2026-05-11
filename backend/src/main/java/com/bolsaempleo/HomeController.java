@@ -8,7 +8,6 @@ public class HomeController {
     
     @GetMapping("/")
     public String home() {
-        // Redirige al archivo ladingpage.html que está en la raíz del proyecto
-        return "redirect:/ladingpage.html";
+        return "forward:/ladingpage.html";
     }
 }
