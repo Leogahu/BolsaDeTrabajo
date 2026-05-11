@@ -35,7 +35,7 @@
             transition: transform 0.3s ease;
         }
 
-        /* Logo dentro del sidebar */
+        
         .sidebar-header {
             margin-bottom: 40px;
             padding-bottom: 24px;
@@ -59,7 +59,7 @@
             font-weight: 500;
         }
 
-        /* Navegación */
+        
         .sidebar-nav {
             display: flex;
             flex-direction: column;
@@ -122,7 +122,7 @@
             color: #475569;
         }
 
-        /* Botón toggle para móvil */
+        
         .sidebar-toggle {
             display: none;
             position: fixed;
@@ -139,7 +139,7 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        /* ========== TOP NAVBAR ========== */
+        
         .top-navbar {
             position: fixed;
             top: 0;
@@ -155,7 +155,7 @@
             height: 70px;
         }
 
-        /* Buscador */
+        
         .search-wrapper {
             position: relative;
             width: 320px;
@@ -186,7 +186,7 @@
             color: #94A3B8;
         }
 
-        /* Acciones del header */
+        
         .header-actions {
             display: flex;
             align-items: center;
@@ -323,7 +323,7 @@
             color: #DC2626 !important;
         }
 
-        /* ========== MAIN CONTENT ========== */
+        
         .main-content {
             margin-left: 280px;
             margin-top: 70px;
@@ -332,7 +332,7 @@
             background: #F8F9FF;
         }
 
-        /* Vacancy Header */
+        
         .vacancy-header {
             display: flex;
             justify-content: space-between;
@@ -397,7 +397,7 @@
             transform: translateY(-1px);
         }
 
-        /* Kanban Board */
+        
         .kanban-board {
             display: flex;
             gap: 24px;
@@ -490,7 +490,7 @@
             color: #475569;
         }
 
-        /* Candidate Card */
+        
         .candidate-card {
             background: white;
             border-radius: 14px;
@@ -675,7 +675,7 @@
             background: #DBEAFE;
         }
 
-        /* Empty state */
+        
         .empty-state {
             display: flex;
             flex-direction: column;
@@ -688,7 +688,7 @@
             background: white;
         }
 
-        /* ===== RESPONSIVE ===== */
+        
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -954,7 +954,7 @@
             </div>
             
             <div>
-                <!-- Diego Castro -->
+                
                 <div class="candidate-card highlight">
                     <div class="card-header">
                         <div class="candidate-info">
@@ -1064,7 +1064,6 @@
 </div>
 
 <script>
-    // Sidebar toggle para móvil
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
     
@@ -1074,7 +1073,6 @@
         });
     }
     
-    // Cerrar sidebar al hacer click en enlace en móvil
     const navLinks = document.querySelectorAll('.nav-item');
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
@@ -1084,7 +1082,6 @@
         });
     });
     
-    // Active state handling
     document.addEventListener('DOMContentLoaded', function() {
         const currentPath = window.location.pathname;
         const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
