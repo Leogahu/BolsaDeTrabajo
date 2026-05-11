@@ -13,7 +13,7 @@ WORKDIR /app
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 # Copiar el JAR generado
-COPY --from=builder --chown=appuser:appgroup /build/target/bolsa-empleo-1.0.0.jar app.jar
+COPY --from=builder --chown=appuser:appgroup /build/target/*.jar app.jar
 
 # Puerto por defecto de Spring Boot
 EXPOSE 8080

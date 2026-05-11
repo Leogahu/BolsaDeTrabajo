@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Mis Postulaciones</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F1F5F9; /* fondo exterior suave para contraste, pero el diseño original tiene el wrapper blanco/gris */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* contenedor principal: igual ancho 1280px, centrado, relativo para sidebar absolute */
+        .dashboard-container {
+            width: 1280px;
+            min-height: 1241px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        /* SIDEBAR izquierda fija estilo imagen */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #F8FAFC;
+            border-right: 1px solid #E2E8F0;
+            padding: 80px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #EFF6FF;
+        }
+
+        .nav-item:hover .nav-text {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+        }
+
+        .nav-item.active .nav-text {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-text {
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 21px;
+            color: #475569;
+        }
+
+        /* iconos de reemplazo mediante pseudo o background simplificado */
+        .icon-dashboard { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-oportunidades { width: 20px; height: 19px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3Crect width='20' height='14' x='2' y='6' rx='2'/%3E%3C/svg%3E") no-repeat center; background-size: contain; background-color: #475569; }
+        .icon-postulaciones { width: 20px; height: 18px; background: #2563EB; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-pruebas { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z'/%3E%3Cpath d='M12 17h.01'/%3E%3Cpath d='M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-perfil { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-alertas { width: 20px; height: 20px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.268 21a2 2 0 0 0 3.464 0'/%3E%3Cpath d='M22 8c0-2.3-.8-4.3-2-6'/%3E%3Cpath d='M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326'/%3E%3Cpath d='M4 2C2.8 3.7 2 5.7 2 8'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-entrevistas { width: 20px; height: 20px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='10' r='8'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3Cpath d='M7 22h10'/%3E%3Cpath d='M12 22v-4'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+        .icon-logout { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
+
+        /* Main content */
+        .main-content {
+            margin-left: 256px;
+            padding: 96px 48px 72px 48px;
+            width: calc(100% - 256px);
+        }
+
+        /* Header (navbar) duplicado pero fijo en la parte superior, siguiendo el diseño */
+        .top-navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: white;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: #2563EB;
+            line-height: 28px;
+        }
+
+        .panel-text {
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748B;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 464px;
+            max-width: 464px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: #EFF4FF;
+            border-radius: 9999px;
+            border: 1px solid #C3C6D7;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #6B7280;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            background: #C3C6D7;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C3C6D7'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 9999px;
+            cursor: pointer;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        .icon-btn *, #profile-trigger *, #profile-trigger {
+            cursor: pointer;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .bell-icon {
+            width: 20px;
+            height: 20px;
+            background: #64748B;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .dot-notify {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: #BA1A1A;
+            border-radius: 9999px;
+        }
+
+        .avatar-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            border: 1px solid #E2E8F0;
+            background: #E6EEFF;
+        }
+
+        .dropdown-container {
+            position: relative;
+            z-index: 101;
+        }
+
+        .icon-btn:hover, #profile-trigger:hover {
+            background-color: #F1F5F9;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            z-index: 9999;
+            padding: 12px;
+        }
+
+        .dropdown-menu.show {
+            display: block !important;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dropdown-header {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            padding-bottom: 5px;
+        }
+
+        .chat-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .chat-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .chat-info p {
+            font-size: 11px;
+            color: #64748B;
+        }
+
+        .drop-item {
+            display: block;
+            padding: 8px;
+            text-decoration: none;
+            color: #1E293B;
+            font-size: 13px;
+        }
+
+        .drop-item:hover {
+            background: #F1F5F9;
+        }
+
+        #notif-list {
+            list-style: none;
+        }
+
+        #notif-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F8FAFC;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        #notif-list li button {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #94A3B8;
+            font-size: 16px;
+        }
+
+        .logout {
+            color: #DC2626 !important;
+        }
+
+        .small-dropdown { width: 180px; }
+
+        /* grillas y tarjetas */
+        .stats-grid {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+            outline: 1px solid rgba(195, 198, 215, 0.30);
+            outline-offset: -1px;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .icon-bg {
+            width: 40px;
+            height: 40px;
+            background: #E6EEFF;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .badge-positive {
+            background: #DCE9FF;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #004AC6;
+            line-height: 16px;
+        }
+
+        .stat-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #434655;
+            letter-spacing: 0.14px;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0D1C2E;
+            line-height: 44px;
+        }
+
+        .warning-card {
+            background: #FFDAD6;
+            outline: 1px solid rgba(186, 26, 26, 0.20);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .warning-blur {
+            position: absolute;
+            width: 96px;
+            height: 96px;
+            right: 0;
+            top: -15px;
+            background: rgba(186,26,26,0.10);
+            filter: blur(12px);
+            border-radius: 9999px;
+        }
+
+        .vacancy-row {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            outline: 1px solid rgba(195,198,215,0.30);
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .tag-dev { background: #62FAE3; color: #005047; }
+        .tag-design { background: #FFDF9F; color: #261A00; }
+
+        .applicant-count {
+            background: #EFF4FF;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .funnel-step {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .progress-bar {
+            height: 32px;
+            background: #E6EEFF;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: rgba(0, 74, 198, 0.5);
+            border-radius: 9999px;
+        }
+
+        /* Ajustes tipográficos */
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0D1C2E;
+        }
+
+        .text-muted {
+            color: #434655;
+            font-size: 16px;
+        }
+
+        hr {
+            margin: 16px 0;
+        }
+
+        .mt-24 { margin-top: 24px; }
+
+        /* Estilos para el contenido de Mis Postulaciones */
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0D1C2E;
+    margin-bottom: 8px;
+}
+
+.section-subtitle {
+    font-size: 14px;
+    color: #64748B;
+    margin-bottom: 32px;
+}
+
+/* Tarjetas de proceso */
+.process-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #E2E8F0;
+    position: relative;
+}
+
+.process-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.company-info {
+    display: flex;
+    gap: 16px;
+}
+
+.company-logo {
+    width: 48px;
+    height: 48px;
+    background: #000;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2563EB;
+    font-weight: bold;
+}
+
+.job-details h3 {
+    font-size: 18px;
+    color: #0D1C2E;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.badge-junior { background: #FFEDF0; color: #E11D48; }
+.badge-status { background: #E0E7FF; color: #4338CA; border-radius: 12px; }
+
+/* Línea de Tiempo (Stepper) */
+.timeline-container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0;
+    padding: 0 20px;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background: #E2E8F0;
+    z-index: 1;
+    transform: translateY(-50%);
+}
+
+.timeline-progress {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    height: 2px;
+    background: #2DD4BF; /* Color turquesa de la imagen */
+    z-index: 2;
+    transform: translateY(-50%);
+}
+
+.step {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.step-dot {
+    width: 12px;
+    height: 12px;
+    background: white;
+    border: 2px solid #E2E8F0;
+    border-radius: 50%;
+}
+
+.step.active .step-dot {
+    background: #2DD4BF;
+    border-color: #2DD4BF;
+}
+
+.step-label {
+    font-size: 12px;
+    color: #94A3B8;
+}
+
+.step.active .step-label {
+    color: #2DD4BF;
+    font-weight: 600;
+}
+
+/* Botones */
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-secondary { background: #F8FAFC; color: #475569; border: 1px solid #E2E8F0; }
+.btn-primary { background: #2563EB; color: white; }
+.btn-video { background: #2563EB; color: white; display: flex; align-items: center; gap: 8px; }
+
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+
+                 <div class="sidebar">
+            <div class="sidebar-nav">
+                <a href="Cdashboard.html" class="nav-item">
+                    <div class="icon-dashboard"></div>
+                    <span class="nav-text">Inicio</span>
+                </a>
+                <a href="Cexplorar.html" class="nav-item">
+                    <div class="icon-oportunidades"></div>
+                    <span class="nav-text">Oportunidades</span>
+                </a>
+                <a href="Cpostulaciones.html" class="nav-item active">
+                    <div class="icon-postulaciones"></div>
+                    <span class="nav-text">Mis Postulaciones</span>
+                </a>
+                <a href="Chabilidades.html" class="nav-item">
+                    <div class="icon-pruebas"></div>
+                    <span class="nav-text">Pruebas</span>
+                </a>
+                <a href="Cperfil.html" class="nav-item">
+                    <div class="icon-perfil"></div>
+                    <span class="nav-text">Mi perfil</span>
+                </a>
+                <a href="Calertas.html" class="nav-item">
+                    <div class="icon-alertas"></div>
+                    <span class="nav-text">Alertas</span>
+                </a>
+                <a href="Centrevistas.html" class="nav-item">
+                    <div class="icon-entrevistas"></div>
+                    <span class="nav-text">Simulador</span>
+                </a>
+            </div>
+            <div class="sidebar-nav" style="border-top: 1px solid #E2E8F0; padding-top: 16px;">
+                <a href="login.html" class="nav-item">
+                    <div class="icon-logout"></div>
+                    <span class="nav-text">Cerrar sesión</span>
+                </a>
+            </div>
+        </div>
+
+    <div class="top-navbar">
+        <div class="logo-area">
+            <div class="logo-text">ChapatuChamba</div>
+            <div class="panel-text">Panel de Control</div>
+        </div>
+        <div class="search-wrapper">
+            <input type="text" class="search-input" placeholder="Buscar candidatos, vacantes...">
+            <div class="search-icon"></div>
+        </div>
+        <div class="header-actions">
+            <div class="dropdown-container">
+                <div class="icon-btn" id="notif-trigger">
+                    <div class="bell-icon"></div>
+                </div>
+                <div id="notif-dropdown" class="dropdown-menu">
+                    <div class="dropdown-header">Notificaciones</div>
+                    <ul id="notif-list">
+                        <li>
+                            <span>Nueva vacante de Frontend</span>
+                            <button onclick="removeNotif(this)">×</button>
+                        </li>
+                        <li>
+                            <span>TechCorp revisó tu perfil</span>
+                            <button onclick="removeNotif(this)">×</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="dropdown-container">
+                <div class="icon-btn" id="msg-trigger">
+                    <div style="width:20px;height:20px;background:#64748B;mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E'); background-size:contain;"></div>
+                </div>
+                <div id="msg-dropdown" class="dropdown-menu">
+                    <div class="dropdown-header">Mensajes Recientes</div>
+                    <div class="chat-item">
+                        <img src="https://ui-avatars.com/api/?name=Recruiter" alt="Avatar">
+                        <div class="chat-info">
+                            <strong>Ana de TechCorp</strong>
+                            <p>¿Tienes disponibilidad mañana?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown-container">
+                <div id="profile-trigger" style="cursor: pointer;">
+                    <img class="avatar-img" id="user-avatar" src="https://placehold.co/32x32" alt="avatar">
+                </div>
+                <div id="profile-dropdown" class="dropdown-menu small-dropdown">
+                    <a href="CeditarPerfil.html" class="drop-item">Configurar perfil</a>
+                    <hr>
+                    <a href="#" onclick="handleLogout()" class="drop-item logout">Cerrar sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1 class="section-title">Mis Postulaciones</h1>
+        <p class="section-subtitle">Sigue el estado de tus procesos de selección activos y pasados.</p>
+
+        <div class="stats-grid" style="margin-bottom: 40px;">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Procesos Activos</span>
+                    <div class="icon-bg" style="background: #EEF2FF;"><span style="color:#6366F1">📈</span></div>
+                </div>
+                <div class="stat-number">3</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Entrevistas Agendadas</span>
+                    <div class="icon-bg" style="background: #ECFDF5;"><span style="color:#10B981">📅</span></div>
+                </div>
+                <div class="stat-number">1</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Descartadas</span>
+                    <div class="icon-bg" style="background: #F8FAFC;"><span style="color:#94A3B8">🕒</span></div>
+                </div>
+                <div class="stat-number">12</div>
+            </div>
+        </div>
+
+        <h2 style="margin-bottom: 24px;">Procesos en Curso</h2>
+
+        <div class="process-card" style="border-top: 4px solid #2563EB;">
+            <div class="process-header">
+                <div class="company-info">
+                    <div class="company-logo">TC</div>
+                    <div class="job-details">
+                        <h3>Analista de Datos Junior <span class="badge badge-junior">Junior Real</span></h3>
+                        <p class="text-muted" style="font-size: 14px;">TechCorp Solutions SAC • Lima, Híbrido • S/ 2,500 - 3,000</p>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span class="badge badge-status">En Revisión</span>
+                    <p style="font-size: 11px; color: #94A3B8; margin-top: 4px;">Postulado el 15 Oct 2023</p>
+                </div>
+            </div>
+
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                <div class="timeline-progress" style="width: 33%;"></div>
+                <div class="step active">
+                    <div class="step-dot"></div>
+                    <span class="step-label">Postulado</span>
+                </div>
+                <div class="step active">
+                    <div class="step-dot"></div>
+                    <span class="step-label">En Revisión</span>
+                </div>
+                <div class="step">
+                    <div class="step-dot"></div>
+                    <span class="step-label">Entrevista</span>
+                </div>
+                <div class="step">
+                    <div class="step-dot"></div>
+                    <span class="step-label">Oferta Final</span>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <button class="btn btn-secondary">Retirar postulación</button>
+                <button class="btn btn-primary">Ver detalle</button>
+            </div>
+        </div>
+
+        <div class="process-card" style="border-top: 4px solid #2DD4BF;">
+            <div class="process-header">
+                <div class="company-info">
+                    <div class="company-logo" style="background:#001529;">IB</div>
+                    <div class="job-details">
+                        <h3>Trainee Comercial <span class="badge" style="background:#FEF3C7; color:#92400E;">Talento Joven</span></h3>
+                        <p class="text-muted" style="font-size: 14px;">InnovaBank Perú • Arequipa, Presencial</p>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span class="badge" style="background:#ECFDF5; color:#059669;">📅 Entrevista Agendada</span>
+                    <p style="font-size: 11px; color: #94A3B8; margin-top: 4px;">Próximo paso: 25 Oct, 10:00 AM</p>
+                </div>
+        </div>
+
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                <div class="timeline-progress" style="width: 66%;"></div>
+                <div class="step active"><div class="step-dot"></div><span class="step-label">Postulado</span></div>
+                <div class="step active"><div class="step-dot"></div><span class="step-label">Evaluación</span></div>
+                <div class="step active"><div class="step-dot"></div><span class="step-label">Entrevista</span></div>
+                <div class="step"><div class="step-dot"></div><span class="step-label">Oferta Final</span></div>
+            </div>
+
+            <div style="background: #F8FAFC; padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 13px; color: #475569;">
+                <span>ℹ️ Recuerda preparar tu presentación personal.</span>
+            </div>
+
+            <div class="card-actions">
+                <button class="btn btn-video">🔗 Ir a videollamada</button>
+            </div>
+        </div>
+    </div>
+</div>
+  <script src="../../js/main.js"></script>
+</body>
+</html>

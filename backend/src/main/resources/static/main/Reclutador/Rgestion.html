@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ChapaTuChamba - Gestión de Postulantes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F1F5F9;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: white;
+            border-right: 1px solid #E9EFF5;
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        /* Logo dentro del sidebar */
+        .sidebar-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #E9EFF5;
+        }
+
+        .sidebar-logo {
+            font-weight: 800;
+            font-size: 24px;
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            color: #94A3B8;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* Navegación */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: #475569;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .nav-item:hover {
+            background: #F1F5F9;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+        }
+
+        .nav-item.active .nav-text {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-icon[class*="icon-"] {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            background-color: #475569;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            -webkit-mask-size: contain;
+            color: transparent;
+        }
+
+        .nav-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        /* Botón toggle para móvil */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            left: 16px;
+            top: 16px;
+            z-index: 101;
+            background: #2563EB;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* ========== TOP NAVBAR ========== */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid #E9EFF5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 99;
+            height: 70px;
+        }
+
+        /* Buscador */
+        .search-wrapper {
+            position: relative;
+            width: 320px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 42px;
+            background: #F8FAFC;
+            border-radius: 40px;
+            border: 1px solid #E2E8F0;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #2563EB;
+            background: white;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #94A3B8;
+        }
+
+        /* Acciones del header */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .dashboard-container {
+                    min-height: 100vh;
+                    position: relative;
+                    background: #F8F9FF;
+                }
+        .icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 9999px;
+            cursor: pointer;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        .icon-btn *, #profile-trigger *, #profile-trigger {
+            cursor: pointer;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .bell-icon {
+            width: 20px;
+            height: 20px;
+            background: #64748B;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .dropdown-container {
+            position: relative;
+            z-index: 101;
+        }
+
+        .icon-btn:hover, #profile-trigger:hover {
+            background-color: #F1F5F9;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            z-index: 9999;
+            padding: 12px;
+        }
+
+        .dropdown-menu.show {
+            display: block !important;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dropdown-header {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            padding-bottom: 5px;
+        }
+
+        .chat-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .chat-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .chat-info p {
+            font-size: 11px;
+            color: #64748B;
+        }
+
+        .drop-item {
+            display: block;
+            padding: 8px;
+            text-decoration: none;
+            color: #1E293B;
+            font-size: 13px;
+        }
+
+        .drop-item:hover {
+            background: #F1F5F9;
+        }
+
+        #notif-list {
+            list-style: none;
+        }
+
+        #notif-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F8FAFC;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        #notif-list li button {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #94A3B8;
+            font-size: 16px;
+        }
+
+        .logout {
+            color: #DC2626 !important;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 32px 40px 48px 40px;
+            min-height: calc(100vh - 70px);
+            background: #F8F9FF;
+        }
+
+        /* Vacancy Header */
+        .vacancy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .vacancy-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0F172A;
+        }
+
+        .vacancy-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748B;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-filter {
+            background: #F1F5F9;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #475569;
+            cursor: pointer;
+            border: 1px solid #E2E8F0;
+            transition: all 0.2s;
+        }
+
+        .btn-filter:hover {
+            background: #E2E8F0;
+        }
+
+        .btn-new {
+            background: #2563EB;
+            padding: 10px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-new:hover {
+            background: #1D4ED8;
+            transform: translateY(-1px);
+        }
+
+        /* Kanban Board */
+        .kanban-board {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            padding-bottom: 16px;
+        }
+
+        .kanban-column {
+            min-width: 320px;
+            width: 320px;
+            background: #F1F5F9;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .column-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #0F172A;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+.icon-dashboard {
+            background-color: #2563EB;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .icon-vacantes {
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 7a2 2 0 0 1 2-2h4V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7z'/%3E%3Cpath d='M8 7V4h8v3'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 7a2 2 0 0 1 2-2h4V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7z'/%3E%3Cpath d='M8 7V4h8v3'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .icon-postulantes {
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2a3 3 0 0 0-5.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2a3 3 0 0 1 5.356-1.857M15 7a3 3 0 1 0-6 0 3 3 0 0 0 6 0zM19 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0zM7 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0z'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2a3 3 0 0 0-5.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2a3 3 0 0 1 5.356-1.857M15 7a3 3 0 1 0-6 0 3 3 0 0 0 6 0zM19 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0zM7 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0z'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .icon-publicar {
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v16M4 12h16'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v16M4 12h16'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .icon-reportes {
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19h16M6 15V9a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v6M14 15V7a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v8'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19h16M6 15V9a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v6M14 15V7a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v8'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .icon-config {
+            width: 24px;
+            height: 24px;
+            background-color: currentColor; 
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12.22 2h-.44a2 2 0 0 0-2 2a2 2 0 0 1-2 2a2 2 0 0 0-2 2a2 2 0 0 1-2 2a2 2 0 0 0-2 2v.44a2 2 0 0 0 2 2a2 2 0 0 1 2 2a2 2 0 0 0 2 2a2 2 0 0 1 2 2a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2a2 2 0 0 1 2-2a2 2 0 0 0 2-2a2 2 0 0 1 2-2a2 2 0 0 0 2-2v-.44a2 2 0 0 0-2-2a2 2 0 0 1-2-2a2 2 0 0 0-2-2a2 2 0 0 1-2-2a2 2 0 0 0-2-2z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") no-repeat center;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12.22 2h-.44a2 2 0 0 0-2 2a2 2 0 0 1-2 2a2 2 0 0 0-2 2a2 2 0 0 1-2 2a2 2 0 0 0-2 2v.44a2 2 0 0 0 2 2a2 2 0 0 1 2 2a2 2 0 0 0 2 2a2 2 0 0 1 2 2a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2a2 2 0 0 1 2-2a2 2 0 0 0 2-2a2 2 0 0 1 2-2a2 2 0 0 0 2-2v-.44a2 2 0 0 0-2-2a2 2 0 0 1-2-2a2 2 0 0 0-2-2a2 2 0 0 1-2-2a2 2 0 0 0-2-2z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") no-repeat center;
+            
+            -webkit-mask-size: contain;
+            mask-size: contain;
+        }
+        .dot-gray { background: #94A3B8; }
+        .dot-blue { background: #3B82F6; }
+        .dot-yellow { background: #F59E0B; }
+        .dot-teal { background: #14B8A6; }
+        .dot-green { background: #10B981; }
+        .dot-red { background: #EF4444; }
+
+        .badge-count {
+            background: #E2E8F0;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        /* Candidate Card */
+        .candidate-card {
+            background: white;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E9EFF5;
+            transition: all 0.2s;
+        }
+
+        .candidate-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .candidate-card.highlight {
+            position: relative;
+            border-left: 4px solid #3B82F6;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .candidate-info {
+            display: flex;
+            gap: 12px;
+        }
+        .avatar-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            border: 1px solid #E2E8F0;
+            background: #E6EEFF;
+        }
+        .avatar-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #EFF6FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #2563EB;
+        }
+
+        .avatar-img-sm {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .avatar-yellow {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .candidate-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #0F172A;
+        }
+
+        .candidate-role {
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 2px;
+        }
+
+        .match-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 6px;
+            color: #64748B;
+        }
+
+        .match-percent {
+            color: #2563EB;
+            font-weight: 700;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: #E2E8F0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 6px;
+            background: #10B981;
+            border-radius: 10px;
+        }
+
+        .skills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .skill-tag {
+            background: #F1F5F9;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .skill-green {
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .skill-red {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .skill-yellow {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .skill-blue {
+            background: #EFF6FF;
+            color: #1D4ED8;
+        }
+
+        .test-badge {
+            background: rgba(37, 99, 235, 0.08);
+            border-radius: 10px;
+            padding: 8px 12px;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            font-size: 12px;
+            color: #1D4ED8;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid #E9EFF5;
+            padding-top: 12px;
+            margin-top: 4px;
+        }
+
+        .action-link {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 8px;
+            border-radius: 8px;
+            color: #64748B;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-link:hover {
+            background: #F1F5F9;
+        }
+
+        .action-primary {
+            background: #EFF6FF;
+            color: #2563EB;
+        }
+
+        .action-primary:hover {
+            background: #DBEAFE;
+        }
+
+        /* Empty state */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            border: 2px dashed #E2E8F0;
+            border-radius: 14px;
+            background: white;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            .top-navbar {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 90px 20px 40px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-navbar {
+                justify-content: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                height: auto;
+                padding: 12px 16px;
+            }
+            
+            .search-wrapper {
+                width: 100%;
+                order: 1;
+            }
+            
+            .header-actions {
+                order: 2;
+            }
+            
+            .main-content {
+                padding-top: 110px;
+            }
+            
+            .vacancy-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .kanban-board {
+                gap: 16px;
+            }
+            
+            .kanban-column {
+                min-width: 280px;
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 100px 16px 32px 16px;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                justify-content: stretch;
+            }
+            
+            .btn-filter, .btn-new {
+                flex: 1;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle">☰</button>
+<div class="dashboard-container">
+    <div class="sidebar" id="sidebar">
+        <div>
+            <div class="sidebar-header">
+                <div class="sidebar-logo">ChapaTuChamba</div>
+                <div class="sidebar-subtitle">Panel de Control</div>
+            </div>
+            <div class="sidebar-nav">
+                <a href="Rdashboard.html" class="nav-item active">
+                    <span class="nav-icon icon-dashboard"></span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="Rvacantes.html" class="nav-item">
+                    <span class="nav-icon icon-vacantes"></span>
+                    <span class="nav-text">Vacantes</span>
+                </a>
+                <a href="Rgestion.html" class="nav-item">
+                    <span class="nav-icon icon-postulantes"></span>
+                    <span class="nav-text">Postulantes</span>
+                </a>
+                <a href="RpubOferta.html" class="nav-item">
+                    <span class="nav-icon icon-publicar"></span>
+                    <span class="nav-text">Publicar Empleo</span>
+                </a>
+                <a href="Rreportes.html" class="nav-item">
+                    <span class="nav-icon icon-reportes"></span>
+                    <span class="nav-text">Reportes</span>
+                </a>
+                <a href="Rportal.html" class="nav-item">
+                    <span class="nav-icon icon-config"></span>
+                    <span class="nav-text">Configuración</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+<div class="top-navbar">
+    <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="Buscar postulante...">
+    </div>
+    <div class="header-actions">
+        <div class="dropdown-container">
+            <div class="icon-btn" id="notif-trigger">
+                <div class="bell-icon"></div>
+            </div>
+            <div id="notif-dropdown" class="dropdown-menu">
+                <div class="dropdown-header">Notificaciones</div>
+                <ul id="notif-list">
+                    <li>
+                        <span>Nuevo candidato potencial</span>
+                        <button onclick="removeNotif(this)">×</button>
+                    </li>
+                    <li>
+                        <span>Recordatorio: entrevista hoy</span>
+                        <button onclick="removeNotif(this)">×</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="dropdown-container">
+            <div class="icon-btn" id="msg-trigger">
+                <div style="width:20px;height:20px;background:#64748B;mask:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748B\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\'/%3E%3C/svg%3E'); background-size:contain;"></div>
+            </div>
+            <div id="msg-dropdown" class="dropdown-menu">
+                <div class="dropdown-header">Mensajes Recientes</div>
+                <div class="chat-item">
+                    <img src="https://ui-avatars.com/api/?name=Ana" alt="Avatar">
+                    <div class="chat-info">
+                        <strong>Ana de TechCorp</strong>
+                        <p>Revisa la postura de la entrevista.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dropdown-container">
+            <div id="profile-trigger" style="cursor: pointer;">
+                <img class="avatar-img" id="user-avatar" src="https://placehold.co/32x32" alt="avatar">
+            </div>
+            <div id="profile-dropdown" class="dropdown-menu small-dropdown">
+                <a href="Rportal.html" class="drop-item">Configuración</a>
+                <hr>
+                <a href="#" onclick="handleLogout()" class="drop-item logout">Cerrar sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="vacancy-header">
+        <div>
+            <div class="vacancy-title">Frontend Developer Sr.</div>
+            <div class="vacancy-location">
+                <span>📍</span> Lima, Perú (Híbrido) • 24 Postulantes Activos
+            </div>
+        </div>
+        <div class="action-buttons">
+            <button class="btn-filter" id="btnFilter">Filtrar</button>
+            <button class="btn-new" id="btnNewCandidate">
+                + Nuevo Candidato
+            </button>
+        </div>
+    </div>
+
+    <div class="kanban-board">
+        <div class="kanban-column">
+            <div class="column-header">
+                <div class="column-title">
+                    <span class="dot dot-gray"></span>
+                    Recibido
+                </div>
+                <div class="badge-count">12</div>
+            </div>
+            
+            <div>
+                <div class="candidate-card">
+                    <div class="card-header">
+                        <div class="candidate-info">
+                            <div class="avatar-circle">VT</div>
+                            <div>
+                                <div class="candidate-name">Valeria Torres</div>
+                                <div class="candidate-role">Ingeniería de Software</div>
+                            </div>
+                        </div>
+                        <span style="color:#94A3B8;">⁝</span>
+                    </div>
+                    <div class="match-row">
+                        <span>Match de Perfil</span>
+                        <span class="match-percent">85%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-fill" style="width:85%"></div>
+                    </div>
+                    <div class="skills">
+                        <span class="skill-tag skill-green">⚡ React.js</span>
+                        <span class="skill-tag">TypeScript</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-link" onclick="alert('Ver perfil de Valeria Torres')">Ver Perfil</button>
+                        <button class="action-link action-primary" onclick="alert('Avanzar candidato Valeria Torres')">Avanzar</button>
+                    </div>
+                </div>
+
+                <div class="candidate-card">
+                    <div class="card-header">
+                        <div class="candidate-info">
+                            <div class="avatar-circle">LM</div>
+                            <div>
+                                <div class="candidate-name">Luis Mendoza</div>
+                                <div class="candidate-role">Desarrollo Web</div>
+                            </div>
+                        </div>
+                        <span style="color:#94A3B8;">⁝</span>
+                    </div>
+                    <div class="match-row">
+                        <span>Match de Perfil</span>
+                        <span class="match-percent">72%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-fill" style="width:72%"></div>
+                    </div>
+                    <div class="skills">
+                        <span class="skill-tag skill-red">JUNIOR REAL</span>
+                        <span class="skill-tag">Vue.js</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-link" onclick="alert('Ver perfil de Luis Mendoza')">Ver Perfil</button>
+                        <button class="action-link action-primary" onclick="alert('Avanzar candidato Luis Mendoza')">Avanzar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="kanban-column">
+            <div class="column-header">
+                <div class="column-title">
+                    <span class="dot dot-blue"></span>
+                    En Revisión
+                </div>
+                <div class="badge-count">5</div>
+            </div>
+            
+            <div>
+                <!-- Diego Castro -->
+                <div class="candidate-card highlight">
+                    <div class="card-header">
+                        <div class="candidate-info">
+                            <div class="avatar-circle">DC</div>
+                            <div>
+                                <div class="candidate-name">Diego Castro</div>
+                                <div class="candidate-role">Ciencias de la Computación</div>
+                            </div>
+                        </div>
+                        <span style="color:#94A3B8;">⁝</span>
+                    </div>
+                    <div class="match-row">
+                        <span>Match de Perfil</span>
+                        <span class="match-percent">94%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-fill" style="width:94%"></div>
+                    </div>
+                    <div class="skills">
+                        <span class="skill-tag skill-yellow">TALENTO JOVEN</span>
+                        <span class="skill-tag skill-green">⚡ Angular</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-link" onclick="alert('Ver perfil de Diego Castro')">Ver Perfil</button>
+                        <button class="action-link action-primary" onclick="alert('Avanzar candidato Diego Castro')">Avanzar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="kanban-column">
+            <div class="column-header">
+                <div class="column-title">
+                    <span class="dot dot-yellow"></span>
+                    Entrevista
+                </div>
+                <div class="badge-count">3</div>
+            </div>
+            
+            <div class="empty-state">
+                <div style="width:48px; height:48px; background:#E2E8F0; border-radius:50%; margin-bottom:16px; display:flex; align-items:center; justify-content:center; font-size:20px;">📅</div>
+                <div style="font-weight:600; color:#64748B;">Sin entrevistas</div>
+                <div style="font-size:12px; color:#94A3B8; margin-top:6px;">Mueve candidatos aquí para agendar.</div>
+            </div>
+        </div>
+
+        <div class="kanban-column">
+            <div class="column-header">
+                <div class="column-title">
+                    <span class="dot dot-teal"></span>
+                    Prueba
+                </div>
+                <div class="badge-count">1</div>
+            </div>
+
+            <div>
+                <div class="candidate-card">
+                    <div class="card-header">
+                        <div class="candidate-info">
+                            <div class="avatar-circle avatar-yellow">SP</div>
+                            <div>
+                                <div class="candidate-name">Sofía Paredes</div>
+                                <div class="candidate-role">Diseño y Desarrollo</div>
+                            </div>
+                        </div>
+                        <span style="color:#94A3B8;">⁝</span>
+                    </div>
+                    <div class="test-badge">
+                        <span>📄</span>
+                        <span>Prueba Técnica enviada</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-link action-primary" onclick="alert('Evaluar prueba de Sofía Paredes')">Evaluar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="kanban-column">
+            <div class="column-header">
+                <div class="column-title">
+                    <span class="dot dot-green"></span>
+                    Finalistas
+                </div>
+                <div class="badge-count">2</div>
+            </div>
+            
+            <div class="empty-state">
+                <div style="font-size:14px; color:#94A3B8;">Aún no hay finalistas</div>
+            </div>
+        </div>
+
+        <div class="kanban-column">
+            <div class="column-header">
+                <div class="column-title">
+                    <span class="dot dot-red"></span>
+                    Rechazados
+                </div>
+                <div class="badge-count">15</div>
+            </div>
+            
+            <div class="empty-state">
+                <div style="font-size:14px; color:#94A3B8;">Lista vacía</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sidebar toggle para móvil
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+        });
+    }
+    
+    // Cerrar sidebar al hacer click en enlace en móvil
+    const navLinks = document.querySelectorAll('.nav-item');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.remove('open');
+            }
+        });
+    });
+    
+    // Active state handling
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+        
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        navItems.forEach(item => {
+            const href = item.getAttribute('href');
+            if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
+                item.classList.add('active');
+            }
+        });
+        
+        if (fileName === '' || fileName === 'Rdashboard.html') {
+            const dashboardLink = document.querySelector('.nav-item[href="Rdashboard.html"]');
+            if (dashboardLink) dashboardLink.classList.add('active');
+        }
+    });
+    
+    // Botones funcionales
+    document.getElementById('btnFilter')?.addEventListener('click', () => {
+        alert('🔍 Abriendo opciones de filtrado...');
+    });
+    
+    document.getElementById('btnNewCandidate')?.addEventListener('click', () => {
+        alert('➕ Agregar nuevo candidato manualmente');
+    });
+    
+    // Notificaciones demo
+    document.querySelector('.notif-btn')?.addEventListener('click', () => {
+        alert('📬 No tienes notificaciones nuevas');
+    });
+    
+    document.querySelector('.msg-btn')?.addEventListener('click', () => {
+        alert('💬 Bandeja de mensajes');
+    });
+</script>
+    <script src="../../js/main.js"></script>
+</body>
+</html>

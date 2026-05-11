@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChapatuChamba - Herramienta de Feedback</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F8;
+            font-family: 'Inter', 'Nimbus Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* contenedor principal exacto 1280px */
+        .dashboard {
+            width: 1280px;
+            min-height: 1024px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(0deg, #F8F9FF 0%, #F8F9FF 100%), white;
+        }
+
+        /* SIDEBAR izquierda */
+        .sidebar {
+            width: 256px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 64px;
+            background: white;
+            border-right: 1px solid #E2E8F0;
+            padding: 24px 16px 17px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 5;
+            box-shadow: 0px 4px 6px -4px rgba(0,0,0,0.1);
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            transition: all 0.1s;
+            cursor: default;
+        }
+
+        .nav-link.active {
+            background: #EFF6FF;
+            border-left: 4px solid #2563EB;
+            color: #2563EB;
+            padding-left: 12px;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            background: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+        }
+
+        .icon-dashboard { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+        .icon-vacantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A8 8 0 0117.5 20M3 13.255A8 8 0 006.5 20M12 3v8m0 0-3-3m3 3 3-3'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:19px; }
+        .icon-postulantes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:24px; height:12px; }
+        .icon-publicar { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:20px; }
+        .icon-reportes { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'/%3E%3C/svg%3E"); background-color: currentColor; width:16px; height:16px; }
+        .icon-config { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); background-color: currentColor; width:20px; height:20px; }
+        .icon-logout { mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E"); background-color: currentColor; width:18px; height:18px; }
+
+        /* TOP BAR */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 20px;
+            color: #2563EB;
+            font-family: 'Nimbus Sans', 'Inter', sans-serif;
+        }
+
+        .search-area {
+            position: relative;
+        }
+
+        .search-input {
+            width: 256px;
+            padding: 8px 16px 8px 40px;
+            background: #F1F5F9;
+            border: none;
+            border-radius: 9999px;
+            font-size: 14px;
+            color: #94A3B8;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 9px;
+            width: 16px;
+            height: 16px;
+            background: #94A3B8;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding-left: 24px;
+            border-left: 1px solid #E2E8F0;
+        }
+
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #3B82F6, #2DD4BF);
+            border: 2px solid white;
+        }
+
+        /* MODAL FEEDBACK */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 28, 46, 0.20);
+            backdrop-filter: blur(1px);
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            z-index: 20;
+        }
+
+        .feedback-modal {
+            width: 512px;
+            height: 100%;
+            background: white;
+            box-shadow: 0px 20px 50px rgba(0,0,0,0.12);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(195,198,215,0.30);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0D1C2E;
+        }
+
+        .modal-sub {
+            font-size: 14px;
+            color: #434655;
+        }
+
+        .modal-body {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .candidate-badge {
+            background: #EFF4FF;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .candidate-avatar {
+            width: 48px;
+            height: 48px;
+            background: #CCDBF3;
+            border-radius: 50%;
+        }
+
+        .areas-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .chip {
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #F8F9FF;
+            border: 1px solid #C3C6D7;
+            color: #434655;
+        }
+
+        .chip-primary {
+            background: #2563EB;
+            color: white;
+            border: none;
+        }
+
+        .message-area {
+            margin-top: 8px;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .markdown-badge {
+            font-size: 12px;
+            color: #737686;
+            text-align: right;
+        }
+
+        .message-box {
+            border: 1px solid #C3C6D7;
+            border-radius: 12px;
+            padding: 16px;
+            background: white;
+            position: relative;
+        }
+
+        .message-text {
+            font-size: 16px;
+            line-height: 24px;
+            color: #0D1C2E;
+        }
+
+        .toolbar {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            display: flex;
+            gap: 4px;
+            background: #E6EEFF;
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .growth-card {
+            background: #EFF4FF;
+            border-radius: 12px;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-row {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .resource-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-add {
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+            background: transparent;
+            color: #004AC6;
+            border: none;
+        }
+
+        .btn-added {
+            background: #2563EB;
+            color: white;
+        }
+
+        .modal-footer {
+            padding: 24px;
+            border-top: 1px solid rgba(195,198,215,0.30);
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+
+        .btn-cancel {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid #C3C6D7;
+            background: white;
+            font-weight: 600;
+            color: #434655;
+        }
+
+        .btn-send {
+            background: #004AC6;
+            padding: 12px 24px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0px 4px 14px rgba(37,99,235,0.2);
+        }
+
+        /* scroll */
+        .feedback-modal::-webkit-scrollbar {
+            width: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+     <div class="sidebar">
+         <div class="nav-items">
+             <a href="Rdashboard.html" class="nav-link active"><span class="icon icon-dashboard"></span> Dashboard</a>
+             <a href="Rvacantes.html" class="nav-link"><span class="icon icon-vacantes"></span> Vacantes</a>
+             <a href="Rgestion.html" class="nav-link"><span class="icon icon-postulantes"></span> Postulantes</a>
+             <a href="RpubOferta.html" class="nav-link"><span class="icon icon-publicar"></span> Publicar Empleo</a>
+             <a href="Rreportes.html" class="nav-link"><span class="icon icon-reportes"></span> Reportes</a>
+             <a href="Rportal.html" class="nav-link"><span class="icon icon-config"></span> Configuración</a>
+         </div>
+         <div class="nav-items" style="border-top:1px solid #E2E8F0; padding-top:16px;">
+             <a href="login.html" class="nav-link"><span class="icon icon-logout"></span> Cerrar sesión</a>
+         </div>
+     </div>
+
+    <div class="top-nav">
+        <div class="logo">ChapatuChamba</div>
+        <div class="search-area">
+            <input class="search-input" placeholder="Buscar postulante...">
+            <div class="search-icon"></div>
+        </div>
+        <div class="header-icons">
+            <div style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;">🔔</div>
+            <div style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;">✉️</div>
+            <div class="avatar-sm"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay">
+        <div class="feedback-modal">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">Enviar Feedback</div>
+                    <div class="modal-sub">Ayuda al talento a seguir creciendo</div>
+                </div>
+                <div style="cursor:default;">✕</div>
+            </div>
+
+            <div class="modal-body">
+                <div class="candidate-badge">
+                    <img class="candidate-avatar" src="https://placehold.co/48x48" alt="avatar" style="object-fit:cover;">
+                    <div>
+                        <div style="font-weight:600; font-size:14px;">Camila Rodríguez</div>
+                        <div style="font-size:12px; color:#434655;">Postulante a Desarrollador Frontend Jr.</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="areas-title">Áreas de mejora identificadas</div>
+                    <div style="font-size:14px; color:#434655; margin-bottom:12px;">Selecciona los motivos principales para darle contexto a Camila.</div>
+                    <div class="chips-container">
+                        <span class="chip chip-primary">Experiencia con React</span>
+                        <span class="chip">Arquitectura de Software</span>
+                        <span class="chip chip-primary">Nivel de Inglés (B2)</span>
+                        <span class="chip">Prueba Técnica Práctica</span>
+                        <span class="chip">Alineación Cultural</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="message-header">
+                        <div>
+                            <div class="areas-title">Mensaje Personalizado</div>
+                            <div style="font-size:14px; color:#434655;">Un tono empático marca la diferencia en su carrera.</div>
+                        </div>
+                        <div class="markdown-badge">Markdown<br>soportado</div>
+                    </div>
+                    <div class="message-box">
+                        <div class="message-text">
+                            Hola Camila, apreciamos mucho tu tiempo y entusiasmo durante el proceso. Nos encantó tu actitud proactiva y tu portafolio visual.<br><br>
+                            Actualmente, el rol requiere un manejo más profundo de hooks personalizados en React y gestión de estado global, áreas donde notamos oportunidad de mejora en la prueba técnica. Te animamos a seguir desarrollando estas habilidades, ¡tienes una gran base!
+                        </div>
+                        <div class="toolbar">
+                            <span style="padding:6px;">B</span>
+                            <span style="padding:6px;">I</span>
+                            <span style="padding:6px;">🔗</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="growth-card">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+                        <span style="font-size:20px;">🌱</span>
+                        <span style="font-weight:600; font-size:20px;">Impulsa su Crecimiento</span>
+                    </div>
+                    <div style="font-size:14px; color:#434655; margin-bottom:16px;">
+                        Añade recursos recomendados a tu mensaje para guiar sus próximos pasos.
+                    </div>
+                    <div class="resource-row">
+                        <div class="resource-info">
+                            <div style="width:32px; height:32px; background:#F8F9FF; border-radius:50%; display:flex; align-items:center; justify-content:center;">📘</div>
+                            <div>
+                                <div style="font-size:12px; font-weight:500;">Curso: React Hooks Avanzados</div>
+                                <div style="font-size:10px; color:#737686;">Plataforma de Aprendizaje</div>
+                            </div>
+                        </div>
+                        <button class="btn-add">Añadir</button>
+                    </div>
+                    <div class="resource-row">
+                        <div class="resource-info">
+                            <div style="width:32px; height:32px; background:#F8F9FF; border-radius:50%; display:flex; align-items:center; justify-content:center;">⚡</div>
+                            <div>
+                                <div style="font-size:12px; font-weight:500;">Retos de Estado Global</div>
+                                <div style="font-size:10px; color:#737686;">Frontend Mentor</div>
+                            </div>
+                        </div>
+                        <button class="btn-add btn-added" style="background:#2563EB; color:white;">Añadido</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel">Cancelar</button>
+                <button class="btn-send">✈️ Enviar Feedback</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fondo borroso (simula el contenido de fondo, igual que la imagen) -->
+    <div style="position: absolute; top:64px; left:256px; right:0; bottom:0; background:#F8FAFC; filter:blur(2px); opacity:0.5; pointer-events:none; z-index:1;">
+        <div style="padding:32px;">
+            <div style="background:white; height:200px; border-radius:12px; margin-bottom:24px;"></div>
+            <div style="background:white; height:200px; border-radius:12px; margin-bottom:24px;"></div>
+            <div style="background:white; height:200px; border-radius:12px;"></div>
+        </div>
+         </div>
+     </div>
+     
+     <script>
+         // Active state handling for sidebar navigation
+         document.addEventListener('DOMContentLoaded', function() {
+             const currentPath = window.location.pathname;
+             const fileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+             
+             // Find all nav links
+             const navLinks = document.querySelectorAll('.nav-link');
+             
+             // Remove active class from all
+             navLinks.forEach(link => {
+                 link.classList.remove('active');
+             });
+             
+             // Add active class to matching link
+             navLinks.forEach(link => {
+                 const href = link.getAttribute('href');
+                 if (href && (fileName === href || (fileName === '' && href === 'Rdashboard.html'))) {
+                     link.classList.add('active');
+                 }
+             });
+             
+             // Special case for dashboard (when on root or no file specified)
+             if (fileName === '' || fileName === 'Rdashboard.html') {
+                 document.querySelector('.nav-link[href="Rdashboard.html"]').classList.add('active');
+             }
+         });
+     </script>
+ </body>
+</html>
