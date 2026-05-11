@@ -255,7 +255,7 @@ async function handleLogin(event) {
     };
 
     try {
-        const response = await fetch('http://localhost:8080/api/auth/login', {
+        const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(loginData)
@@ -298,7 +298,7 @@ async function handleRegisterPostante(event) {
     };
     console.log("Enviando datos de registro:", postanteData);
     try {
-        const response = await fetch('http://localhost:8080/api/auth/postante/register', {
+        const response = await fetch('/api/auth/postante/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -339,7 +339,7 @@ async function handleRegisterReclutador(event) {
     };
 
     try {
-        const response = await fetch('http://localhost:8080/api/reclutadores/register', {
+        const response = await fetch('/api/reclutadores/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(reclutadorData)
@@ -377,7 +377,7 @@ async function applyToJob(jobId) {
     };
 
     try {
-        const response = await fetch('http://localhost:8080/api/postulaciones', {
+        const response = await fetch('/api/postulaciones', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(postulacionData)
@@ -596,8 +596,8 @@ async function ejecutarPublicacion() {
         fechaPublicacion: new Date().toISOString()
     };
     const url = editId 
-        ? `http://localhost:8080/api/postulaciones/${editId}` 
-        : `http://localhost:8080/api/reclutadores/${session.user.id}/postulaciones`;
+        ? `/api/postulaciones/${editId}` 
+        : `/api/reclutadores/${session.user.id}/postulaciones`;
     
     const metodo = editId ? 'PUT' : 'POST'; 
 
@@ -639,7 +639,7 @@ async function cargarMisOfertas() {
     if (!session || !container) return;
 
     try {
-        const response = await fetch(`http://localhost:8080/api/reclutadores/${session.user.id}/postulaciones`);
+        const response = await fetch(`/api/reclutadores/${session.user.id}/postulaciones`);
         const ofertas = await response.json();
         
         container.innerHTML = ofertas.map(oferta => `
@@ -678,7 +678,7 @@ async function cargarEmpleos() {
     const btnLoadMore = document.getElementById('btnLoadMore');
 
     try {
-        const response = await fetch(`http://localhost:8080/api/reclutadores/postulaciones?page=${currentPage}&size=${JOBS_PER_PAGE}`);
+        const response = await fetch(`/api/reclutadores/postulaciones?page=${currentPage}&size=${JOBS_PER_PAGE}`);
         const data = await response.json(); 
         
         const empleos = data.content; 
@@ -738,7 +738,7 @@ async function cargarVacantesReclutador() {
     if (!session || !session.user) return;
 
     try {
-        const response = await fetch(`http://localhost:8080/api/reclutadores/${session.user.id}/postulaciones`);
+        const response = await fetch(`/api/reclutadores/${session.user.id}/postulaciones`);
         const vacantes = await response.json();
         let htmlContent = `
             <div class="promo-card">
@@ -837,7 +837,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!idAEliminar) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/postulaciones/${idAEliminar}`, {
+            const response = await fetch(`/api/postulaciones/${idAEliminar}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -885,7 +885,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (titleElement) titleElement.textContent = "Editar Vacante";
         
         try {
-            const response = await fetch(`http://localhost:8080/api/postulaciones/${editId}`);
+            const response = await fetch(`/api/postulaciones/${editId}`);
             const data = await response.json();
             
             if(document.getElementById('titulo')) document.getElementById('titulo').value = data.titulo;
@@ -912,7 +912,7 @@ async function cargarDetalleVacante() {
     const jobId = localStorage.getItem('selectedJobId');
 
     try {
-        const response = await fetch(`http://localhost:8080/api/reclutadores/postulaciones/${jobId}`);
+        const response = await fetch(`/api/reclutadores/postulaciones/${jobId}`);
         const empleo = await response.json();
 
         document.getElementById('det-titulo').innerText = empleo.titulo;
@@ -940,7 +940,7 @@ async function realizarPostulacion(jobId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/postulaciones/${jobId}/postular`, {
+        const response = await fetch(`/api/postulaciones/${jobId}/postular`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ postanteId: session.user.id })
