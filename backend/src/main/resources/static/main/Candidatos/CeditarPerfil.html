@@ -83,7 +83,47 @@
             line-height: 21px;
             color: #475569;
         }
+        .button-container {
+            display: flex;
+            justify-content: flex-end; 
+            gap: 15px;                 
+            margin-top: 30px;       
+            width: 100%;            
+        }
 
+        .btn-save {
+            background-color: #2563EB;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save:hover {
+            background-color: #1D4ED8;
+            transform: translateY(-1px);
+        }
+
+        .btn-cancel {
+            background-color: #EF4444;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background-color: #DC2626;
+            transform: translateY(-1px);
+        }
         
         .icon-dashboard { width: 18px; height: 18px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") no-repeat center; background-size: contain; }
         .icon-oportunidades { width: 20px; height: 19px; background: #475569; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3Crect width='20' height='14' x='2' y='6' rx='2'/%3E%3C/svg%3E") no-repeat center; background-size: contain; background-color: #475569; }
@@ -794,11 +834,11 @@
                         <div class="input-row">
                             <div class="input-group">
                                 <label>NOMBRES</label>
-                                <input type="text" value="Carlos Eduardo">
+                                <input type="text" id="input-nombres" placeholder="Tus nombres">
                             </div>
                             <div class="input-group">
                                 <label>APELLIDOS</label>
-                                <input type="text" value="Mendoza Silva">
+                                <input type="text" id="input-apellidos" placeholder="Tus apellidos">
                             </div>
                         </div>
                         <div class="input-group">
@@ -877,6 +917,14 @@
                         <input type="text" placeholder="S/ 0.00">
                     </div>
                 </div>
+            </div>
+            <div class="button-container">
+                <button type="button" class="btn-cancel" onclick="window.location.href='Cperfil.html'">
+                    Cancelar
+                </button>
+                <button id="btn-guardar-perfil" class="btn-save">
+                    Guardar Cambios
+                </button>
             </div>
         </div>
     </div>

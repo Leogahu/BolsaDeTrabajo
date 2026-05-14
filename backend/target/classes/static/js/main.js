@@ -957,3 +957,56 @@ async function realizarPostulacion(jobId) {
         console.error("Error al postular:", error);
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.includes('CeditarPerfil.html')) {
+        cargarDatosPerfil();
+        
+        document.getElementById('btn-guardar-perfil').addEventListener('click', actualizarDatosPerfil);
+    }
+});
+
+async function cargarDatosPerfil() {
+    const session = JSON.parse(localStorage.getItem('userSession'));
+    if (!session || !session.user) return;
+
+    try {
+        const response = await fetch(`/api/candidatos/${session.user.id}`);
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('input-nombres').value = data.nombres || '';
+            document.getElementById('input-apellidos').value = data.apellidos || '';
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+async function actualizarDatosPerfil() {
+    const session = JSON.parse(localStorage.getItem('userSession'));
+    const nuevosNombres = document.getElementById('input-nombres').value;
+    const nuevosApellidos = document.getElementById('input-apellidos').value;
+
+    try {
+        const response = await fetch(`/api/candidatos/${session.user.id}/actualizar-datos`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                nombres: nuevosNombres,
+                apellidos: nuevosApellidos
+            })
+        });
+
+        if (response.ok) {
+            alert("Perfil actualizado correctamente");
+            
+            session.user.nombres = nuevosNombres;
+            session.user.apellidos = nuevosApellidos;
+            localStorage.setItem('userSession', JSON.stringify(session));
+        } else {
+            alert("Error al actualizar");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
