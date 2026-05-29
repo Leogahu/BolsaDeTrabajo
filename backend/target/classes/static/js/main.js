@@ -1,5 +1,5 @@
 const ROUTES = {
-  landing: 'ladingpage.html',
+  landing: 'landingpage.html',
   login: 'login.html',
   cregistro: 'main/Candidatos/Cregister.html',
   rregistro: 'main/Reclutador/Rregistro.html',
@@ -293,8 +293,6 @@ async function handleRegisterPostante(event) {
         nombreCompleto: document.getElementById('nombre').value,
         email: document.getElementById('email').value,
         password: document.getElementById('contrasena').value,
-        telefono: "NP",
-        carrera: "NP"
     };
     console.log("Enviando datos de registro:", postanteData);
     try {
@@ -555,10 +553,32 @@ function actualizarBotonesNavegacion() {
 function validarPaso(step) {
     if (step === 1) {
         const t = document.getElementById('titulo').value;
+        const tp = document.getElementById('tipoPuesto').value;
         const u = document.getElementById('ubicacion').value;
-        if (!t || !u) { 
-            alert("Por favor, completa el título y la ubicación."); 
+        if (!t || !tp || !u) { 
+            alert("Por favor, completa el título, tipo de puesto y la ubicación."); 
             return false; 
+        }
+    }
+    if (step === 2) {
+        const d = document.getElementById('descripcion').value;
+        const r = document.getElementById('requisitos').value;
+        if (!d || !r) {
+            alert("Por favor, completa la descripción y los requisitos del puesto.");
+            return false;
+        }
+    }
+    if (step === 3) {
+        const m = document.getElementById('tipoModalidad').value;
+        const sMin = document.getElementById('salarioMinimo').value;
+        const sMax = document.getElementById('salarioMaximo').value;
+        if (!m || !sMin || !sMax) {
+            alert("Por favor, selecciona la modalidad e ingresa los rangos salariales.");
+            return false;
+        }
+        if (parseFloat(sMin) > parseFloat(sMax)) {
+            alert("El salario mínimo no puede ser mayor que el salario máximo.");
+            return false;
         }
     }
     return true;
@@ -568,9 +588,13 @@ function prepararRevision() {
     const resumen = document.getElementById('resumenFinal');
     if (resumen) {
         resumen.innerHTML = `
-            <div class="review-item"><strong>Título:</strong> ${document.getElementById('titulo').value}</div>
+            <div class="review-item"><strong>Título del Puesto:</strong> ${document.getElementById('titulo').value}</div>
+            <div class="review-item"><strong>Tipo de Puesto:</strong> ${document.getElementById('tipoPuesto').value}</div>
             <div class="review-item"><strong>Ubicación:</strong> ${document.getElementById('ubicacion').value}</div>
-            <div class="review-item"><strong>Descripción:</strong> ${document.getElementById('descripcion').value.substring(0, 150)}...</div>
+            <div class="review-item"><strong>Modalidad:</strong> ${document.getElementById('tipoModalidad').value}</div>
+            <div class="review-item"><strong>Rango Salarial:</strong> S/ ${parseFloat(document.getElementById('salarioMinimo').value).toFixed(2)} - S/ ${parseFloat(document.getElementById('salarioMaximo').value).toFixed(2)}</div>
+            <div class="review-item"><strong>Descripción:</strong> ${document.getElementById('descripcion').value.substring(0, 120)}...</div>
+            <div class="review-item"><strong>Requisitos:</strong> ${document.getElementById('requisitos').value.substring(0, 120)}...</div>
         `;
     }
 }
@@ -590,11 +614,16 @@ async function ejecutarPublicacion() {
     
     const ofertaData = {
         titulo: document.getElementById('titulo').value,
+        tipoPuesto: document.getElementById('tipoPuesto').value,
+        ubicacion: document.getElementById('ubicacion').value,
         descripcion: document.getElementById('descripcion').value,
         requisitos: document.getElementById('requisitos').value,
-        ubicacion: document.getElementById('ubicacion').value,
+        tipoModalidad: document.getElementById('tipoModalidad').value,
+        salarioMinimo: parseFloat(document.getElementById('salarioMinimo').value),
+        salarioMaximo: parseFloat(document.getElementById('salarioMaximo').value),
         fechaPublicacion: new Date().toISOString()
     };
+
     const url = editId 
         ? `/api/postulaciones/${editId}` 
         : `/api/reclutadores/${session.user.id}/postulaciones`;
@@ -653,162 +682,6 @@ async function cargarMisOfertas() {
         `).join('');
     } catch (error) {
         console.error("Error cargando ofertas:", error);
-    }
-}
-
-let currentPage = 0;
-const JOBS_PER_PAGE = 16;
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('opportunities-grid')) {
-        cargarEmpleos();
-        
-        const btnLoadMore = document.getElementById('btnLoadMore');
-        if (btnLoadMore) {
-            btnLoadMore.onclick = () => {
-                currentPage++;
-                cargarEmpleos();
-            };
-        }
-    }
-});
-
-async function cargarEmpleos() {
-    const grid = document.getElementById('opportunities-grid');
-    const btnLoadMore = document.getElementById('btnLoadMore');
-
-    try {
-        const response = await fetch(`/api/reclutadores/postulaciones?page=${currentPage}&size=${JOBS_PER_PAGE}`);
-        const data = await response.json(); 
-        
-        const empleos = data.content; 
-
-        if (empleos.length === 0 && currentPage === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748B;">No hay vacantes disponibles en este momento.</p>';
-            if (btnLoadMore) btnLoadMore.style.display = 'none';
-            return;
-        }
-
-        const htmlCards = empleos.map(empleo => `
-            <div class="job-card" onclick="verDetalleVacante(${empleo.id})">
-                <div class="bookmark-icon">🔖</div>
-                <div class="company-logo" style="background: #0052EA; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px;">
-                    ${empleo.titulo.substring(0, 2).toUpperCase()}
-                </div>
-                <div class="job-badge" style="background: #E0FFF9; color: #00D1B2;">Junior Real</div>
-                <div class="job-title">${empleo.titulo}</div>
-                <div class="company-name">Empresa Aliada</div>
-                <div class="job-meta">
-                    <span>📍 ${empleo.ubicacion}</span>
-                    <span>💵 Consultar</span>
-                </div>
-            </div>
-        `).join('');
-
-        if (currentPage === 0) {
-            grid.innerHTML = htmlCards;
-        } else {
-            grid.insertAdjacentHTML('beforeend', htmlCards);
-        }
-
-        if (data.last) {
-            if (btnLoadMore) btnLoadMore.style.display = 'none';
-        }
-
-    } catch (error) {
-        console.error("Error cargando empleos:", error);
-    }
-}
-
-function verDetalleVacante(id) {
-    localStorage.setItem('selectedJobId', id);
-    window.location.href = 'Cvacantes.html';
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('jobs-grid')) {
-        cargarVacantesReclutador();
-    }
-});
-
-async function cargarVacantesReclutador() {
-    const grid = document.getElementById('jobs-grid');
-    const session = JSON.parse(localStorage.getItem('userSession'));
-
-    if (!session || !session.user) return;
-
-    try {
-        const response = await fetch(`/api/reclutadores/${session.user.id}/postulaciones`);
-        const vacantes = await response.json();
-        let htmlContent = `
-            <div class="promo-card">
-                <div class="promo-card-bg"></div>
-                <div style="position: relative; z-index: 2;">
-                    <div style="font-size: 13px; font-weight: 600; opacity: 0.8;">Total Vacantes</div>
-                    <div style="font-size: 42px; font-weight: 800;">${vacantes.length}</div>
-                    <div style="font-size: 13px; opacity: 0.9;">Procesos activos actualmente</div>
-                    <div class="promo-link" onclick="window.location.href='Rdashboard.html'">Ver Dashboard →</div>
-                </div>
-            </div>
-        `;
-        const vacantesHtml = vacantes.map(v => {
-            const fecha = v.fechaPublicacion ? new Date(v.fechaPublicacion).toLocaleDateString() : 'Reciente';
-            
-            return `
-            <div class="job-card">
-                <div class="job-card-border" style="background: #2563EB;"></div>
-                
-                <div class="job-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; position: relative;">
-                    
-                    <div style="flex: 1; min-width: 0;"> <div class="job-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px; font-weight: 700;">
-                            ${v.titulo}
-                        </div>
-                        <div class="badge-group" style="margin-top: 4px;">
-                            <span class="badge badge-junior-real">JUNIOR REAL</span>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0;">
-                        <div class="status-badge status-active" style="margin: 0; white-space: nowrap;">
-                            <span style="width: 8px; height: 8px; background: #22C55E; border-radius: 50%;"></span>
-                            Activa
-                        </div>
-                        <div class="card-actions-inline" style="display: flex; gap: 4px;">
-                            <button class="card-action-btn" onclick="editarVacante(${v.id})" title="Editar">✎</button>
-                            <button class="card-action-btn" onclick="eliminarVacante(${v.id})" title="Eliminar">🗑️</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="metrics-row" style="margin-top: 15px;">
-                    <div class="metric">
-                        <span class="metric-label">PUBLICADO</span>
-                        <span class="metric-value">${fecha}</span>
-                    </div>
-                    <div class="metric" onclick="verPostulantes(${v.id})" style="cursor:pointer">
-                        <span class="metric-label">POSTULANTES</span>
-                        <span class="metric-value metric-highlight">${v.candidatos?.length || 0} perfiles →</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">UBICACIÓN</span>
-                        <span class="metric-value">${v.ubicacion}</span>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-        const boostCard = `
-            <div class="boost-card">
-                <div class="boost-icon">⚡</div>
-                <div class="boost-title">¿Necesitas contratar rápido?</div>
-                <div class="boost-btn">Impulsar Vacante</div>
-            </div>
-        `;
-
-        grid.innerHTML = htmlContent + vacantesHtml + boostCard;
-
-    } catch (error) {
-        console.error("Error al cargar vacantes:", error);
-        grid.innerHTML = "<p>Error al conectar con el servidor.</p>";
     }
 }
 
@@ -902,6 +775,191 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+let currentPage = 0;
+const JOBS_PER_PAGE = 16;
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('opportunities-grid')) {
+        cargarEmpleos();
+        
+        const btnLoadMore = document.getElementById('btnLoadMore');
+        if (btnLoadMore) {
+            btnLoadMore.onclick = () => {
+                currentPage++;
+                cargarEmpleos();
+            };
+        }
+    }
+});
+
+// Función para redirigir guardando el ID elegido en LocalStorage
+function verDetalleVacante(id) {
+    localStorage.setItem('selectedJobId', id);
+    window.location.href = 'Cvacantes.html';
+}
+
+async function cargarEmpleos() {
+    const grid = document.getElementById('opportunities-grid');
+    const btnLoadMore = document.getElementById('btnLoadMore');
+
+    try {
+        const response = await fetch(`/api/postulaciones?page=${currentPage}&size=${JOBS_PER_PAGE}`);
+        if (!response.ok) throw new Error("Error obteniendo el listado de vacantes");
+        
+        const data = await response.json(); 
+        const empleos = data.content; 
+
+        if (empleos.length === 0 && currentPage === 0) {
+            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748B;">No hay vacantes disponibles en este momento.</p>';
+            if (btnLoadMore) btnLoadMore.style.display = 'none';
+            return;
+        }
+
+        const htmlCards = empleos.map(empleo => {
+            const nombreEmpresa = empleo.empresa?.nombre || empleo.nombreEmpresa || "Empresa Aliada";
+            const inicialesLogo = nombreEmpresa.substring(0, 2).toUpperCase();
+
+            const sueldoMin = empleo.sueldoMin || empleo.sueldo_min;
+            const sueldoMax = empleo.sueldoMax || empleo.sueldo_max;
+            let textoSueldo = "Consultar";
+
+            if (sueldoMin && sueldoMax) {
+                textoSueldo = `S/. ${sueldoMin} - S/. ${sueldoMax}`;
+            } else if (sueldoMin || sueldoMax) {
+                textoSueldo = `S/. ${sueldoMin || sueldoMax}`;
+            }
+
+            const modalidad = empleo.tipo_modalidad || empleo.tipoModalidad || "No especificado";
+
+            return `
+                <div class="job-card" onclick="verDetalleVacante(${empleo.id})" style="cursor: pointer;">
+                    <div class="bookmark-icon">🔖</div>
+                    <div class="company-logo" style="background: #0052EA; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px;">
+                        ${inicialesLogo}
+                    </div>
+                    <div class="job-badge" style="background: #E0FFF9; color: #00D1B2;">Junior Real</div>
+                    <div class="job-title" title="${empleo.titulo}">${empleo.titulo}</div>
+                    <div class="company-name">${nombreEmpresa}</div>
+                    <div class="job-meta" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <span>📍 ${empleo.ubicacion || 'Perú'}</span>
+                        <span>💻 ${modalidad}</span>
+                        <span>💵 ${textoSueldo}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        if (currentPage === 0) {
+            grid.innerHTML = htmlCards;
+        } else {
+            grid.insertAdjacentHTML('beforeend', htmlCards);
+        }
+
+        if (data.last) {
+            if (btnLoadMore) btnLoadMore.style.display = 'none';
+        } else {
+            if (btnLoadMore) btnLoadMore.style.display = 'block';
+        }
+
+    } catch (error) {
+        console.error("Error cargando empleos:", error);
+    }
+}
+
+function verDetalleVacante(id) {
+    localStorage.setItem('selectedJobId', id);
+    window.location.href = 'Cvacantes.html';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('jobs-grid')) {
+        cargarVacantesReclutador();
+    }
+});
+
+async function cargarVacantesReclutador() {
+    const grid = document.getElementById('jobs-grid');
+    const session = JSON.parse(localStorage.getItem('userSession'));
+
+    if (!session || !session.user) return;
+
+    try {
+        const response = await fetch(`/api/reclutadores/${session.user.id}/postulaciones`);
+        const vacantes = await response.json();
+        
+        let htmlContent = `
+            <div class="promo-card">
+                <div class="promo-card-bg"></div>
+                <div style="position: relative; z-index: 2;">
+                    <div style="font-size: 13px; font-weight: 600; opacity: 0.8;">Total Vacantes</div>
+                    <div style="font-size: 42px; font-weight: 800;">${vacantes.length}</div>
+                    <div style="font-size: 13px; opacity: 0.9;">Procesos activos actualmente</div>
+                    <div class="promo-link" onclick="window.location.href='Rdashboard.html'">Ver Dashboard →</div>
+                </div>
+            </div>
+        `;
+        
+        const vacantesHtml = vacantes.map(v => {
+            const fecha = v.fechaPublicacion ? new Date(v.fechaPublicacion).toLocaleDateString() : 'Reciente';
+            
+            return `
+            <div class="job-card">
+                <div class="job-card-border" style="background: #2563EB;"></div>
+                
+                <div class="job-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; position: relative;">
+                    <div style="flex: 1; min-width: 0;" onclick="verDetalleVacante(${v.id})" style="cursor:pointer;"> 
+                        <div class="job-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px; font-weight: 700;">
+                            ${v.titulo}
+                        </div>
+                        <div class="badge-group" style="margin-top: 4px;">
+                            <span class="badge badge-junior-real">JUNIOR REAL</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0;">
+                        <div class="status-badge status-active" style="margin: 0; white-space: nowrap;">
+                            <span style="width: 8px; height: 8px; background: #22C55E; border-radius: 50%;"></span>
+                            Activa
+                        </div>
+                        <div class="card-actions-inline" style="display: flex; gap: 4px;">
+                            <button class="card-action-btn" onclick="editarVacante(${v.id})" title="Editar">✎</button>
+                            <button class="card-action-btn" onclick="eliminarVacante(${v.id})" title="Eliminar">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metrics-row" style="margin-top: 15px;">
+                    <div class="metric">
+                        <span class="metric-label">PUBLICADO</span>
+                        <span class="metric-value">${fecha}</span>
+                    </div>
+                    <div class="metric" onclick="verDetalleVacante(${v.id})" style="cursor:pointer">
+                        <span class="metric-label">POSTULANTES</span>
+                        <span class="metric-value metric-highlight">${v.candidatos?.length || 0} perfiles →</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">UBICACIÓN</span>
+                        <span class="metric-value">${v.ubicacion}</span>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+        
+        const boostCard = `
+            <div class="boost-card">
+                <div class="boost-icon">⚡</div>
+                <div class="boost-title">¿Necesitas contratar rápido?</div>
+                <div class="boost-btn">Impulsar Vacante</div>
+            </div>
+        `;
+
+        grid.innerHTML = htmlContent + vacantesHtml + boostCard;
+
+    } catch (error) {
+        console.error("Error al cargar vacantes:", error);
+        grid.innerHTML = "<p>Error al conectar con el servidor.</p>";
+    }
+}
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('det-titulo')) {
         cargarDetalleVacante();
@@ -910,58 +968,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function cargarDetalleVacante() {
     const jobId = localStorage.getItem('selectedJobId');
-
-    try {
-        const response = await fetch(`/api/reclutadores/postulaciones/${jobId}`);
-        const empleo = await response.json();
-
-        document.getElementById('det-titulo').innerText = empleo.titulo;
-        document.getElementById('det-ubicacion').innerText = empleo.ubicacion;
-        document.getElementById('det-descripcion').innerText = empleo.descripcion;
-        document.getElementById('det-requisitos').innerText = empleo.requisitos;
-        document.getElementById('det-fecha').innerText = new Date(empleo.fechaPublicacion).toLocaleDateString();
-
-        const nombreEmpresa = "Empresa Aliada"; 
-        document.getElementById('det-empresa').innerText = nombreEmpresa;
-        
-        const iniciales = nombreEmpresa.substring(0, 2).toUpperCase();
-        document.getElementById('det-empresa-logo').innerText = iniciales;
-
-    } catch (error) {
-        console.error("Error cargando detalles:", error);
-    }
-}
-
-async function realizarPostulacion(jobId) {
-    const session = JSON.parse(localStorage.getItem('userSession'));
-    if (!session || !session.user) {
-        alert("Debes iniciar sesión para postularte");
+    if (!jobId) {
+        console.warn("No se encontró 'selectedJobId' en el localStorage.");
+        document.getElementById('det-titulo').innerText = "Vacante no especificada";
         return;
     }
 
     try {
-        const response = await fetch(`/api/postulaciones/${jobId}/postular`, {
+        const response = await fetch(`/api/postulaciones/${jobId}`);
+        if (!response.ok) throw new Error("Error en la respuesta del servidor");
+        
+        const empleo = await response.json();
+
+        document.getElementById('det-titulo').innerText = empleo.titulo || "Título no disponible";
+        document.getElementById('det-ubicacion').innerText = empleo.ubicacion || "No especificada";
+        document.getElementById('det-fecha').innerText = empleo.fechaPublicacion 
+            ? new Date(empleo.fechaPublicacion).toLocaleDateString() 
+            : 'Reciente';
+
+        if (document.getElementById('det-modalidad')) {
+            document.getElementById('det-modalidad').innerText = empleo.tipo_modalidad || empleo.modalidad || "No especificado";
+        }
+        if (document.getElementById('det-tipo-puesto')) {
+            document.getElementById('det-tipo-puesto').innerText = empleo.tipo_puesto || empleo.tipoPuesto || "Full-time";
+        }
+        
+        if (document.getElementById('det-sueldo')) {
+            const sueldoMin = empleo.sueldo_min || empleo.sueldoMin;
+            const sueldoMax = empleo.sueldo_max || empleo.sueldoMax;
+            
+            if (sueldoMin && sueldoMax) {
+                document.getElementById('det-sueldo').innerText = `S/. ${sueldoMin} - S/. ${sueldoMax}`;
+            } else if (sueldoMin || sueldoMax) {
+                document.getElementById('det-sueldo').innerText = `S/. ${sueldoMin || sueldoMax}`;
+            } else {
+                document.getElementById('det-sueldo').innerText = "Sueldo no especificado";
+            }
+        }
+
+        document.getElementById('det-descripcion').innerHTML = empleo.descripcion || "Sin descripción.";
+        document.getElementById('det-requisitos').innerHTML = empleo.requisitos || "Sin requisitos especificados.";
+        const nombreEmpresa = empleo.empresa?.nombre || empleo.nombreEmpresa || empleo.reclutador?.empresa || "Empresa Confidencial"; 
+        document.getElementById('det-empresa').innerText = nombreEmpresa;
+        
+        const iniciales = nombreEmpresa.substring(0, 2).toUpperCase();
+        document.getElementById('det-empresa-logo').innerText = iniciales;
+        if (document.getElementById('det-vacantes-activas')) {
+            document.getElementById('det-vacantes-activas').innerText = empleo.empresa?.totalVacantes || "1";
+        }
+
+        const btnPostular = document.getElementById('btnPostular');
+        if (btnPostular) {
+            btnPostular.onclick = () => ejecutarPostulacion(jobId);
+        }
+
+    } catch (error) {
+        console.error("Error cargando detalles:", error);
+        document.getElementById('det-titulo').innerText = "Error al cargar la vacante";
+    }
+}
+
+async function ejecutarPostulacion(idVacante) {
+    const session = JSON.parse(localStorage.getItem('userSession'));
+    
+    if (!session || !session.user) {
+        alert('Debes iniciar sesión como candidato para poder postularte.');
+        window.location.href = ROUTES.login;
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/vacantes/${idVacante}/postular`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ postanteId: session.user.id })
+            body: JSON.stringify({ candidatoId: session.user.id })
         });
 
         if (response.ok) {
-            alert("¡Postulación exitosa!");
-            window.location.href = 'Cpostulaciones.html';
+            alert('¡Te has postulado con éxito a esta vacante!');
         } else {
-            const error = await response.json();
-            alert(error.error || "Ya has postulado a esta vacante");
+            const errData = await response.json();
+            alert(`Hubo un problema: ${errData.message || 'No se pudo procesar la postulación.'}`);
         }
     } catch (error) {
         console.error("Error al postular:", error);
+        alert('Error de conexión. Inténtalo más tarde.');
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.includes('CeditarPerfil.html')) {
         cargarDatosPerfil();
-        
         document.getElementById('btn-guardar-perfil').addEventListener('click', actualizarDatosPerfil);
     }
 });

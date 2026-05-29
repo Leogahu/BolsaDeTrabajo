@@ -1,25 +1,26 @@
 package com.bolsaempleo.model;
-
 import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDate;
+
 
 @Entity
-@Table(name = "habilidades")
+@Table(name = "certificaciones")
 @Data
-public class Habilidad {
+public class Certificados {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @Column(nullable = false)
-    private String nombre;
+    private String nombreCurso;
     
-    private String tipoHabilidad;
-
-    @Column(nullable = false)
-    private boolean verificada = false;
+    private String institucionEmisora;
+    
+    private LocalDate fechaEmision;
     
     @ManyToOne
     @JoinColumn(name = "postante_id", nullable = false)
     private Postante postante;
 }
+

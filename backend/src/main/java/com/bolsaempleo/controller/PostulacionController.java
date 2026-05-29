@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bolsaempleo.model.Postulacion;
+import com.bolsaempleo.repository.PostulacionRepository;
 import com.bolsaempleo.model.PostulacionEstado;
 import com.bolsaempleo.service.PostulacionService;
 
@@ -23,9 +24,12 @@ import com.bolsaempleo.service.PostulacionService;
 public class PostulacionController {
     
     private final PostulacionService postulacionService;
+    private final com.bolsaempleo.repository.PostulacionRepository postulacionRepository;
     
-    public PostulacionController(PostulacionService postulacionService) {
+    public PostulacionController(PostulacionService postulacionService, 
+                                 com.bolsaempleo.repository.PostulacionRepository postulacionRepository) {
         this.postulacionService = postulacionService;
+        this.postulacionRepository = postulacionRepository;
     }
     
     @PostMapping("/{id}/postular")
@@ -66,7 +70,7 @@ public class PostulacionController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarPostulacion(@PathVariable Long id) {
         try {
-            postulacionService.eliminar(id); // Debes crear este método en el Service
+            postulacionService.eliminar(id);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -85,7 +89,69 @@ public class PostulacionController {
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerPorId(@PathVariable Long id) {
         return postulacionService.buscarPorId(id)
-                .map(ResponseEntity::ok)
+                .map(empleo -> {
+                    java.util.Map<String, Object> respuesta = new java.util.HashMap<>();
+                    
+                    respuesta.put("id", empleo.getId());
+                    respuesta.put("titulo", empleo.getTitulo());
+                    respuesta.put("descripcion", empleo.getDescripcion());
+                    respuesta.put("requisitos", empleo.getRequisitos());
+                    respuesta.put("ubicacion", empleo.getUbicacion());
+                    respuesta.put("fechaPublicacion", empleo.getFechaPublicacion());
+                    respuesta.put("sueldoMin", empleo.getSalarioMinimo());
+                    respuesta.put("sueldoMax", empleo.getSalarioMaximo());
+                    respuesta.put("tipo_modalidad", empleo.getTipoModalidad());
+                    respuesta.put("tipo_puesto", empleo.getTipoPuesto());
+                    
+                    String empresaReal = "Empresa Aliada";
+                    if (empleo.getReclutador() != null) {
+                        if (empleo.getReclutador().getEmpresa() != null) {
+                            empresaReal = empleo.getReclutador().getEmpresa();
+                        }
+                    }
+                    java.util.Map<String, Object> infoEmpresa = new java.util.HashMap<>();
+                    infoEmpresa.put("nombre", empresaReal);
+                    infoEmpresa.put("totalVacantes", 3);
+                    respuesta.put("empresa", infoEmpresa);
+                    return ResponseEntity.ok(respuesta);
+                })
                 .orElse(ResponseEntity.notFound().build());
+    }
+    @GetMapping
+    public ResponseEntity<?> obtenerTodasPaginas(
+            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "0") int page,
+            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "16") int size) {
+        
+        org.springframework.data.domain.Pageable paginacion = 
+            org.springframework.data.domain.PageRequest.of(page, size);
+
+        org.springframework.data.domain.Page<Postulacion> paginaPostulaciones = 
+            postulacionRepository.findAll(paginacion);
+
+        org.springframework.data.domain.Page<java.util.Map<String, Object>> paginaTransformada = 
+            paginaPostulaciones.map(empleo -> {
+                java.util.Map<String, Object> item = new java.util.HashMap<>();
+                item.put("id", empleo.getId());
+                item.put("titulo", empleo.getTitulo());
+                item.put("ubicacion", empleo.getUbicacion());
+                item.put("fechaPublicacion", empleo.getFechaPublicacion());
+                item.put("sueldoMin", empleo.getSalarioMinimo());
+                item.put("sueldoMax", empleo.getSalarioMaximo());
+                item.put("tipo_modalidad", empleo.getTipoModalidad());
+                item.put("tipo_puesto", empleo.getTipoPuesto());
+                
+                String empresaReal = "Empresa Aliada";
+                if (empleo.getReclutador() != null && empleo.getReclutador().getEmpresa() != null) {
+                    empresaReal = empleo.getReclutador().getEmpresa();
+                }
+                
+                java.util.Map<String, Object> infoEmpresa = new java.util.HashMap<>();
+                infoEmpresa.put("nombre", empresaReal);
+                item.put("empresa", infoEmpresa);
+                
+                return item;
+            });
+
+        return ResponseEntity.ok(paginaTransformada);
     }
 }

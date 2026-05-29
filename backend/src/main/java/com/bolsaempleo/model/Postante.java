@@ -24,17 +24,29 @@ public class Postante {
     @Column(nullable = false, unique = true)
     private String email;
     
-    @Column(nullable = false)
     private String telefono;
     
-    @Column(nullable = false)
     private String carrera;
-    
+
+    private Boolean egresado;
+
+    @Column(length = 100)
+    private String institucion;
+
     @Column(length = 1000)
     private String cvPath;
     
     @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL)
     private List<Habilidad> habilidades;
+
+    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL)
+    private List<Proyectos> proyectosAcademicos;
+
+    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL)
+    private List<Certificados> certificaciones;
+
+    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL)
+    private List<Avales> avalesAcademicos;
     
     private String fotoPerfil;
 }

@@ -17,7 +17,19 @@ public class Postulacion {
     
     @Column(nullable = false)
     private String titulo;
+
+    @Column(nullable = false)
+    private String tipoModalidad;
+
+    @Column(nullable = false)
+    private Double salarioMaximo;
     
+    @Column(nullable = false)
+    private Double salarioMinimo;
+
+    @Column(nullable = false)
+    private String tipoPuesto;
+
     @Column(columnDefinition = "TEXT")
     private String descripcion;
     

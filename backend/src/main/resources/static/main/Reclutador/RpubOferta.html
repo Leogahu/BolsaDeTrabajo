@@ -895,7 +895,7 @@
         </div>
         <div class="step" data-step="3">
             <div class="step-circle">3</div>
-            <div class="step-label">Beneficios</div>
+            <div class="step-label">Condiciones</div>
         </div>
         <div class="step" data-step="4">
             <div class="step-circle">4</div>
@@ -904,59 +904,72 @@
     </div>
     
     <div class="form-card">
-        <div class="field-group">
-            <div class="field-label">
-                Título de la Publicación del Empleo
-                <span class="required-star">*</span>
+        <div class="step-content active" id="step1">
+            <div class="field-group">
+                <div class="field-label">Título del Puesto <span class="required-star">*</span></div>
+                <input class="input-text" type="text" id="titulo" placeholder="Ej: Desarrollador Frontend Junior">
             </div>
-            <input class="input-text" type="text" value="Desarrollador Frontend Junior">
+            <div class="field-group">
+                <div class="field-label">Tipo de Puesto <span class="required-star">*</span></div>
+                <select class="input-text" id="tipoPuesto">
+                    <option value="">Selecciona una opción</option>
+                    <option value="Prácticas Preprofesionales">Prácticas Preprofesionales</option>
+                    <option value="Prácticas Profesionales">Prácticas Profesionales</option>
+                    <option value="Empleo Junior">Empleo Junior</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <div class="field-label">Ubicación <span class="required-star">*</span></div>
+                <input class="input-text" type="text" id="ubicacion" placeholder="Ej: Lima, Perú">
+            </div>
         </div>
 
-        
-        <div class="form-card">
-            <div class="step-content active" id="step1">
-                <div class="field-group">
-                    <div class="field-label">Título del Puesto <span class="required-star">*</span></div>
-                    <input class="input-text" type="text" id="titulo" placeholder="Ej: Desarrollador Frontend Junior">
-                </div>
-                <div class="field-group">
-                    <div class="field-label">Ubicación <span class="required-star">*</span></div>
-                    <input class="input-text" type="text" id="ubicacion" placeholder="Ej: Lima, Perú (Híbrido)">
+        <div class="step-content" id="step2" style="display:none;">
+            <div class="field-group">
+                <div class="field-label">Descripción General <span class="required-star">*</span></div>
+                <textarea class="input-text" id="descripcion" rows="4" placeholder="Describe las principales responsabilidades..."></textarea>
+            </div>
+            <div class="field-group">
+                <div class="field-label">Requisitos <span class="required-star">*</span></div>
+                <textarea class="input-text" id="requisitos" rows="4" placeholder="Habilidades técnicas, ciclo académico, carrera, etc..."></textarea>
+            </div>
+        </div>
+
+        <div class="step-content" id="step3" style="display:none;">
+            <div class="field-group">
+                <div class="field-label">Modalidad de Trabajo <span class="required-star">*</span></div>
+                <select class="input-text" id="tipoModalidad">
+                    <option value="">Selecciona la modalidad</option>
+                    <option value="Remoto">Remoto</option>
+                    <option value="Presencial">Presencial</option>
+                    <option value="Híbrido">Híbrido</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <div class="field-label">Rango Salarial Mensual (S/) <span class="required-star">*</span></div>
+                <div style="display: flex; gap: 15px;">
+                    <input class="input-text" type="number" id="salarioMinimo" placeholder="Mínimo (Ej: 1025)" step="0.01">
+                    <input class="input-text" type="number" id="salarioMaximo" placeholder="Máximo (Ej: 1500)" step="0.01">
                 </div>
             </div>
-
-            <div class="step-content" id="step2" style="display:none;">
-                <div class="field-group">
-                    <div class="field-label">Descripción General <span class="required-star">*</span></div>
-                    <textarea class="input-text" id="descripcion" rows="4"></textarea>
-                </div>
-                <div class="field-group">
-                    <div class="field-label">Requisitos <span class="required-star">*</span></div>
-                    <textarea class="input-text" id="requisitos" rows="4"></textarea>
-                </div>
+            <div class="field-group">
+                <div class="field-label">Beneficios y Cultura</div>
+                <textarea class="input-text" id="beneficios" placeholder="Seguro, capacitaciones, convenios, etc."></textarea>
             </div>
+        </div>
 
-            <div class="step-content" id="step3" style="display:none;">
-                <div class="field-group">
-                    <div class="field-label">Beneficios y Cultura</div>
-                    <textarea class="input-text" id="beneficios" placeholder="Seguro, capacitaciones, etc."></textarea>
-                </div>
+        <div class="step-content" id="step4" style="display:none;">
+            <div class="review-box">
+                <h3>Resumen de la Vacante</h3>
+                <div id="resumenFinal"></div>
             </div>
+        </div>
 
-            <div class="step-content" id="step4" style="display:none;">
-                <div class="review-box">
-                    <h3>Resumen de la Vacante</h3>
-                    <div id="resumenFinal">
-                        </div>
-                </div>
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn-back" id="btnBack" style="visibility: hidden;">← Atrás</button>
-                <div class="right-buttons">
-                    <button class="btn-continue" id="btnNext">Continuar →</button>
-                    <button class="btn-continue" id="btnPublicar" style="display:none; background: #059669;">Publicar Empleo</button>
-                </div>
+        <div class="action-buttons">
+            <button class="btn-back" id="btnBack" style="visibility: hidden;">← Atrás</button>
+            <div class="right-buttons">
+                <button class="btn-continue" id="btnNext">Continuar →</button>
+                <button class="btn-continue" id="btnPublicar" style="display:none; background: #059669;">Publicar Empleo</button>
             </div>
         </div>
     </div>

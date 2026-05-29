@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+
 @Entity
 @Table(name = "postulacion_estado")
 @Data
@@ -23,6 +25,8 @@ public class PostulacionEstado {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EstadoPostulacion estado = EstadoPostulacion.CV_ENVIADO;
+    
+    @CreatedDate private LocalDateTime fechaPostulacion;
     
     private LocalDateTime fechaActualizacion;
     

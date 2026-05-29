@@ -61,15 +61,10 @@ public class PostulacionService {
     public Postulacion actualizar(Long id, Postulacion datosActualizados) {
     return postulacionRepository.findById(id)
         .map(postulacion -> {
-            // Actualizamos solo los campos necesarios
             postulacion.setTitulo(datosActualizados.getTitulo());
             postulacion.setDescripcion(datosActualizados.getDescripcion());
             postulacion.setRequisitos(datosActualizados.getRequisitos());
             postulacion.setUbicacion(datosActualizados.getUbicacion());
-            
-            // La fecha de publicación se suele mantener o actualizar 
-            // según prefieras (aquí la mantenemos)
-            
             return postulacionRepository.save(postulacion);
         })
         .orElseThrow(() -> new RuntimeException("No se encontró la vacante para actualizar"));
