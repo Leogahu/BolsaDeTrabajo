@@ -719,18 +719,22 @@
         </div>
 
         <div class="search-main-bar">
-            <input type="text" class="search-main-input" placeholder="Ej. Analista de Datos, Frontend Developer...">
-            <button class="btn-search">Buscar</button>
+            <input type="text" id="search-input" class="search-main-input" placeholder="Ej. Analista de Datos, Frontend Developer...">
+            <button class="btn-search" id="btn-search">Buscar</button>
         </div>
 
-        <div class="filters-row">
-            <span style="color: #64748B; font-size: 14px; margin-right: 8px;">Filtrar por:</span>
-            <div class="filter-tag tag-junior">✓ Junior Real</div>
-            <div class="filter-tag tag-experiencia">✓ Sin Experiencia</div>
-            <div class="filter-tag tag-talento">☆ Talento Joven</div>
+        <div class="filters-row" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+            <span style="color: #64748B; font-size: 14px; margin-right: 8px;">Tipo Puesto:</span>
+            <div class="filter-tag tag-outline" data-filter-type="tipoPuesto" data-value="Practicas Preprofesionales">Practicas Preprofesionales</div>
+            <div class="filter-tag tag-outline" data-filter-type="tipoPuesto" data-value="Practicas Profesionales">Practicas Profesionales</div>
+            <div class="filter-tag tag-outline" data-filter-type="tipoPuesto" data-value="Empleo Junior">Empleo Junior</div>
+            
             <div style="width: 1px; height: 24px; background: #E2E8F0; margin: 0 8px;"></div>
-            <div class="filter-tag tag-outline">Remoto</div>
-            <div class="filter-tag tag-outline">Full-time</div>
+            
+            <span style="color: #64748B; font-size: 14px; margin-right: 8px;">Modalidad:</span>
+            <div class="filter-tag tag-outline" data-filter-type="modalidad" data-value="Remoto">Remoto</div>
+            <div class="filter-tag tag-outline" data-filter-type="modalidad" data-value="Presencial">Presencial</div>
+            <div class="filter-tag tag-outline" data-filter-type="modalidad" data-value="Hibrido">Hibrido</div>
         </div>
 
         <div class="opportunities-grid" id="opportunities-grid">

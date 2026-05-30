@@ -765,22 +765,32 @@ document.addEventListener('DOMContentLoaded', async () => {
             if(document.getElementById('ubicacion')) document.getElementById('ubicacion').value = data.ubicacion;
             if(document.getElementById('descripcion')) document.getElementById('descripcion').value = data.descripcion;
             if(document.getElementById('requisitos')) document.getElementById('requisitos').value = data.requisitos;
-            
-            const btnPub = document.getElementById('btnPublicar');
-            if (btnPub) btnPub.textContent = "Guardar Cambios";
-
+            if(document.getElementById('tipoPuesto')) document.getElementById('tipoPuesto').value = data.tipoPuesto;
+            if(document.getElementById('tipoModalidad')) document.getElementById('tipoModalidad').value = data.tipoModalidad;
+            if(document.getElementById('salarioMinimo')) document.getElementById('salarioMinimo').value = data.salarioMinimo;
+            if(document.getElementById('salarioMaximo')) document.getElementById('salarioMaximo').value = data.salarioMaximo;
         } catch (error) {
             console.error("Error cargando datos para editar:", error);
         }
     }
 });
 
+
 let currentPage = 0;
 const JOBS_PER_PAGE = 16;
+
+// Estructuras de control globales
+let todasLasVacantesDescargadas = []; 
+let filtrosSeleccionados = {
+    tipoPuesto: [],  // Ej: ['Empleo Junior', 'Practicas Profesionales']
+    modalidad: []    // Ej: ['Presencial']
+};
+let palabraBusqueda = "";
 
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('opportunities-grid')) {
         cargarEmpleos();
+        configurarEventosFiltros();
         
         const btnLoadMore = document.getElementById('btnLoadMore');
         if (btnLoadMore) {
@@ -792,78 +802,155 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Función para redirigir guardando el ID elegido en LocalStorage
-function verDetalleVacante(id) {
+function verDetailVacante(id) {
     localStorage.setItem('selectedJobId', id);
     window.location.href = 'Cvacantes.html';
 }
 
+// 1. Configuración de Listeners para Tags y Barra de Búsqueda
+function configurarEventosFiltros() {
+    // Evento para los Tags de Filtro
+    const tags = document.querySelectorAll('.filter-tag');
+    tags.forEach(tag => {
+        tag.style.cursor = 'pointer'; // Asegurar feedback visual
+        
+        tag.addEventListener('click', () => {
+            const tipo = tag.getAttribute('data-filter-type');
+            const valor = tag.getAttribute('data-value');
+            
+            // Alternar estado en la estructura de datos
+            if (filtrosSeleccionados[tipo].includes(valor)) {
+                filtrosSeleccionados[tipo] = filtrosSeleccionados[tipo].filter(v => v !== valor);
+                // Restaurar estilo visual apagado
+                tag.style.background = '';
+                tag.style.color = '';
+                tag.style.borderColor = '';
+            } else {
+                filtrosSeleccionados[tipo].push(valor);
+                // Aplicar estilo visual encendido (azul corporativo de ChapaTuChamba)
+                tag.style.background = '#2563EB';
+                tag.style.color = '#FFFFFF';
+                tag.style.borderColor = '#2563EB';
+            }
+            
+            // Ejecutar el motor de filtrado
+            aplicarFiltrosYBusqueda();
+        });
+    });
+
+    // Evento para el Botón Buscar
+    const btnSearch = document.getElementById('btn-search');
+    const inputSearch = document.getElementById('search-input');
+    
+    if (btnSearch && inputSearch) {
+        btnSearch.addEventListener('click', () => {
+            palabraBusqueda = inputSearch.value.trim().toLowerCase();
+            aplicarFiltrosYBusqueda();
+        });
+
+        // Soporte para ejecutar la búsqueda al pulsar la tecla "Enter"
+        inputSearch.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                palabraBusqueda = inputSearch.value.trim().toLowerCase();
+                aplicarFiltrosYBusqueda();
+            }
+        });
+    }
+}
+
+// 2. Carga Inicial y Paginación desde la API de Postulaciones
 async function cargarEmpleos() {
-    const grid = document.getElementById('opportunities-grid');
     const btnLoadMore = document.getElementById('btnLoadMore');
 
     try {
         const response = await fetch(`/api/postulaciones?page=${currentPage}&size=${JOBS_PER_PAGE}`);
-        if (!response.ok) throw new Error("Error obteniendo el listado de vacantes");
+        if (!response.ok) throw new Error("Error cargando los empleos");
         
         const data = await response.json(); 
-        const empleos = data.content; 
+        const nuevosEmpleos = data.content;
 
-        if (empleos.length === 0 && currentPage === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748B;">No hay vacantes disponibles en este momento.</p>';
-            if (btnLoadMore) btnLoadMore.style.display = 'none';
-            return;
+        // Concatenamos las nuevas vacantes al repositorio global en memoria
+        todasLasVacantesDescargadas = todasLasVacantesDescargadas.concat(nuevosEmpleos);
+
+        // Control del botón de cargar más
+        if (btnLoadMore) {
+            btnLoadMore.style.display = data.last ? 'none' : 'block';
         }
 
-        const htmlCards = empleos.map(empleo => {
-            const nombreEmpresa = empleo.empresa?.nombre || empleo.nombreEmpresa || "Empresa Aliada";
-            const inicialesLogo = nombreEmpresa.substring(0, 2).toUpperCase();
-
-            const sueldoMin = empleo.sueldoMin || empleo.sueldo_min;
-            const sueldoMax = empleo.sueldoMax || empleo.sueldo_max;
-            let textoSueldo = "Consultar";
-
-            if (sueldoMin && sueldoMax) {
-                textoSueldo = `S/. ${sueldoMin} - S/. ${sueldoMax}`;
-            } else if (sueldoMin || sueldoMax) {
-                textoSueldo = `S/. ${sueldoMin || sueldoMax}`;
-            }
-
-            const modalidad = empleo.tipo_modalidad || empleo.tipoModalidad || "No especificado";
-
-            return `
-                <div class="job-card" onclick="verDetalleVacante(${empleo.id})" style="cursor: pointer;">
-                    <div class="bookmark-icon">🔖</div>
-                    <div class="company-logo" style="background: #0052EA; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px;">
-                        ${inicialesLogo}
-                    </div>
-                    <div class="job-badge" style="background: #E0FFF9; color: #00D1B2;">Junior Real</div>
-                    <div class="job-title" title="${empleo.titulo}">${empleo.titulo}</div>
-                    <div class="company-name">${nombreEmpresa}</div>
-                    <div class="job-meta" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                        <span>📍 ${empleo.ubicacion || 'Perú'}</span>
-                        <span>💻 ${modalidad}</span>
-                        <span>💵 ${textoSueldo}</span>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        if (currentPage === 0) {
-            grid.innerHTML = htmlCards;
-        } else {
-            grid.insertAdjacentHTML('beforeend', htmlCards);
-        }
-
-        if (data.last) {
-            if (btnLoadMore) btnLoadMore.style.display = 'none';
-        } else {
-            if (btnLoadMore) btnLoadMore.style.display = 'block';
-        }
+        // Renderizamos procesando los filtros activos actuales
+        aplicarFiltrosYBusqueda();
 
     } catch (error) {
-        console.error("Error cargando empleos:", error);
+        console.error("Error al procesar la carga:", error);
     }
+}
+
+// 3. El Motor de Filtrado Multicriterio (Puesto + Modalidad + Búsqueda de Texto)
+function aplicarFiltrosYBusqueda() {
+    const grid = document.getElementById('opportunities-grid');
+    
+    // Filtrar el gran arreglo en memoria basándonos en las reglas elegidas
+    const vacantesFiltradas = todasLasVacantesDescargadas.filter(empleo => {
+        
+        // Regla A: Coincidencia de Texto (Título)
+        const tituloMatch = palabraBusqueda === "" || 
+                            (empleo.titulo && empleo.titulo.toLowerCase().includes(palabraBusqueda));
+        
+        // Regla B: Coincidencia de Tipo de Puesto (Si no hay selección, pasan todos)
+        const tipoPuestoActual = empleo.tipo_puesto || empleo.tipoPuesto || "";
+        const puestoMatch = filtrosSeleccionados.tipoPuesto.length === 0 || 
+                            filtrosSeleccionados.tipoPuesto.includes(tipoPuestoActual);
+                            
+        // Regla C: Coincidencia de Modalidad (Si no hay selección, pasan todos)
+        const modalidadActual = empleo.tipo_modalidad || empleo.tipoModalidad || "";
+        const modalidadMatch = filtrosSeleccionados.modalidad.length === 0 || 
+                               filtrosSeleccionados.modalidad.includes(modalidadActual);
+
+        // El registro debe cumplir obligatoriamente las tres condiciones concurrentes
+        return tituloMatch && puestoMatch && modalidadMatch;
+    });
+
+    // 4. Renderizado del resultado filtrado
+    if (vacantesFiltradas.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748B; padding: 20px;">No se encontraron vacantes con los criterios seleccionados.</p>';
+        return;
+    }
+
+    const htmlCards = vacantesFiltradas.map(empleo => {
+        const nombreEmpresa = empleo.empresa?.nombre || empleo.nombreEmpresa || "Empresa Aliada";
+        const inicialesLogo = nombreEmpresa.substring(0, 2).toUpperCase();
+
+        const sueldoMin = empleo.sueldoMin || empleo.sueldo_min;
+        const sueldoMax = empleo.sueldoMax || empleo.sueldo_max;
+        let textoSueldo = "Consultar";
+
+        if (sueldoMin && sueldoMax) {
+            textoSueldo = `S/. ${sueldoMin} - S/. ${sueldoMax}`;
+        } else if (sueldoMin || sueldoMax) {
+            textoSueldo = `S/. ${sueldoMin || sueldoMax}`;
+        }
+
+        const modalidad = empleo.tipo_modalidad || empleo.tipoModalidad || "No especificado";
+
+        return `
+            <div class="job-card" onclick="verDetailVacante(${empleo.id})" style="cursor: pointer;">
+                <div class="bookmark-icon">🔖</div>
+                <div class="company-logo" style="background: #0052EA; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px;">
+                    ${inicialesLogo}
+                </div>
+                <div class="job-badge" style="background: #E0FFF9; color: #00D1B2;">Junior Real</div>
+                <div class="job-title" title="${empleo.titulo}">${empleo.titulo}</div>
+                <div class="company-name">${nombreEmpresa}</div>
+                <div class="job-meta" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <span>📍 ${empleo.ubicacion || 'Perú'}</span>
+                    <span>💻 ${modalidad}</span>
+                    <span>💵 ${textoSueldo}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    grid.innerHTML = htmlCards;
 }
 
 function verDetalleVacante(id) {
