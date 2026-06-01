@@ -30,6 +30,9 @@ public class Postante {
 
     private Boolean egresado;
 
+    @Column(columnDefinition = "TEXT")
+    private String descripcion;
+
     @Column(length = 100)
     private String institucion;
 

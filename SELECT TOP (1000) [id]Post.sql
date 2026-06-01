@@ -9,6 +9,7 @@ SELECT TOP (1000) [id]
       ,[password]
       ,[telefono]
       ,[username]
+      ,[descripcion]
   FROM [dbo].[postantes]
 
 
@@ -52,6 +53,16 @@ SELECT TOP (1000) [id]
       ,[ubicacion]
   FROM [dbo].[postulaciones]
 
+SELECT TOP (1000) [id]
+      ,[estado]
+      ,[fecha_actualizacion]
+      ,[fecha_postulacion]
+      ,[motivo]
+      ,[postante_id]
+      ,[postulacion_id]
+  FROM [dbo].[postulacion_estado]
+
+
 DBCC CHECKIDENT ('postulaciones', RESEED);
 
 DELETE FROM dbo.postulaciones 
@@ -60,3 +71,24 @@ WHERE id IN (7);
 TRUNCATE TABLE dbo.postulaciones;
 DBCC CHECKIDENT ('dbo.postulaciones', RESEED, 0);
 
+SELECT TOP (1000) [id]
+      ,[nombre]
+      ,[tipo_habilidad]
+      ,[verificada]
+      ,[postante_id]
+  FROM [dbo].[habilidades]
+
+SELECT TOP (1000) [id]
+      ,[cargo_institucion]
+      ,[comentario_aval]
+      ,[contacto_email]
+      ,[nombre_avalador]
+      ,[postante_id]
+  FROM [dbo].[avales_academicos]
+
+SELECT TOP (1000) [id]
+      ,[fecha_emision]
+      ,[institucion_emisora]
+      ,[nombre_curso]
+      ,[postante_id]
+  FROM [dbo].[certificaciones]

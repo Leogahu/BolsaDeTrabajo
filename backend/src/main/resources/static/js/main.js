@@ -779,11 +779,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 let currentPage = 0;
 const JOBS_PER_PAGE = 16;
 
-// Estructuras de control globales
 let todasLasVacantesDescargadas = []; 
 let filtrosSeleccionados = {
-    tipoPuesto: [],  // Ej: ['Empleo Junior', 'Practicas Profesionales']
-    modalidad: []    // Ej: ['Presencial']
+    tipoPuesto: [],  
+    modalidad: []   
 };
 let palabraBusqueda = "";
 
@@ -807,38 +806,31 @@ function verDetailVacante(id) {
     window.location.href = 'Cvacantes.html';
 }
 
-// 1. Configuración de Listeners para Tags y Barra de Búsqueda
 function configurarEventosFiltros() {
-    // Evento para los Tags de Filtro
     const tags = document.querySelectorAll('.filter-tag');
     tags.forEach(tag => {
-        tag.style.cursor = 'pointer'; // Asegurar feedback visual
+        tag.style.cursor = 'pointer';
         
         tag.addEventListener('click', () => {
             const tipo = tag.getAttribute('data-filter-type');
             const valor = tag.getAttribute('data-value');
-            
-            // Alternar estado en la estructura de datos
             if (filtrosSeleccionados[tipo].includes(valor)) {
                 filtrosSeleccionados[tipo] = filtrosSeleccionados[tipo].filter(v => v !== valor);
-                // Restaurar estilo visual apagado
+
                 tag.style.background = '';
                 tag.style.color = '';
                 tag.style.borderColor = '';
             } else {
                 filtrosSeleccionados[tipo].push(valor);
-                // Aplicar estilo visual encendido (azul corporativo de ChapaTuChamba)
                 tag.style.background = '#2563EB';
                 tag.style.color = '#FFFFFF';
                 tag.style.borderColor = '#2563EB';
             }
             
-            // Ejecutar el motor de filtrado
             aplicarFiltrosYBusqueda();
         });
     });
 
-    // Evento para el Botón Buscar
     const btnSearch = document.getElementById('btn-search');
     const inputSearch = document.getElementById('search-input');
     
@@ -848,7 +840,6 @@ function configurarEventosFiltros() {
             aplicarFiltrosYBusqueda();
         });
 
-        // Soporte para ejecutar la búsqueda al pulsar la tecla "Enter"
         inputSearch.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') {
                 palabraBusqueda = inputSearch.value.trim().toLowerCase();
@@ -858,7 +849,6 @@ function configurarEventosFiltros() {
     }
 }
 
-// 2. Carga Inicial y Paginación desde la API de Postulaciones
 async function cargarEmpleos() {
     const btnLoadMore = document.getElementById('btnLoadMore');
 
@@ -869,15 +859,11 @@ async function cargarEmpleos() {
         const data = await response.json(); 
         const nuevosEmpleos = data.content;
 
-        // Concatenamos las nuevas vacantes al repositorio global en memoria
         todasLasVacantesDescargadas = todasLasVacantesDescargadas.concat(nuevosEmpleos);
 
-        // Control del botón de cargar más
         if (btnLoadMore) {
             btnLoadMore.style.display = data.last ? 'none' : 'block';
         }
-
-        // Renderizamos procesando los filtros activos actuales
         aplicarFiltrosYBusqueda();
 
     } catch (error) {
@@ -885,32 +871,24 @@ async function cargarEmpleos() {
     }
 }
 
-// 3. El Motor de Filtrado Multicriterio (Puesto + Modalidad + Búsqueda de Texto)
 function aplicarFiltrosYBusqueda() {
     const grid = document.getElementById('opportunities-grid');
     
-    // Filtrar el gran arreglo en memoria basándonos en las reglas elegidas
     const vacantesFiltradas = todasLasVacantesDescargadas.filter(empleo => {
-        
-        // Regla A: Coincidencia de Texto (Título)
+
         const tituloMatch = palabraBusqueda === "" || 
                             (empleo.titulo && empleo.titulo.toLowerCase().includes(palabraBusqueda));
         
-        // Regla B: Coincidencia de Tipo de Puesto (Si no hay selección, pasan todos)
         const tipoPuestoActual = empleo.tipo_puesto || empleo.tipoPuesto || "";
         const puestoMatch = filtrosSeleccionados.tipoPuesto.length === 0 || 
                             filtrosSeleccionados.tipoPuesto.includes(tipoPuestoActual);
                             
-        // Regla C: Coincidencia de Modalidad (Si no hay selección, pasan todos)
         const modalidadActual = empleo.tipo_modalidad || empleo.tipoModalidad || "";
         const modalidadMatch = filtrosSeleccionados.modalidad.length === 0 || 
                                filtrosSeleccionados.modalidad.includes(modalidadActual);
 
-        // El registro debe cumplir obligatoriamente las tres condiciones concurrentes
         return tituloMatch && puestoMatch && modalidadMatch;
     });
-
-    // 4. Renderizado del resultado filtrado
     if (vacantesFiltradas.length === 0) {
         grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748B; padding: 20px;">No se encontraron vacantes con los criterios seleccionados.</p>';
         return;
@@ -938,7 +916,7 @@ function aplicarFiltrosYBusqueda() {
                 <div class="company-logo" style="background: #0052EA; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px;">
                     ${inicialesLogo}
                 </div>
-                <div class="job-badge" style="background: #E0FFF9; color: #00D1B2;">Junior Real</div>
+                <div class="job-badge" style="background: #E0FFF9; color: #00D1B2;">${empleo.tipo_puesto}</div>
                 <div class="job-title" title="${empleo.titulo}">${empleo.titulo}</div>
                 <div class="company-name">${nombreEmpresa}</div>
                 <div class="job-meta" style="display: flex; flex-wrap: wrap; gap: 8px;">
@@ -1120,22 +1098,27 @@ async function ejecutarPostulacion(idVacante) {
     
     if (!session || !session.user) {
         alert('Debes iniciar sesión como candidato para poder postularte.');
-        window.location.href = ROUTES.login;
+        if (typeof ROUTES !== 'undefined' && ROUTES.login) {
+            window.location.href = ROUTES.login;
+        } else {
+            window.location.href = 'login.html'; 
+        }
         return;
     }
 
     try {
-        const response = await fetch(`/api/vacantes/${idVacante}/postular`, {
+        const response = await fetch(`/api/postulaciones/${idVacante}/postular`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ candidatoId: session.user.id })
+            body: JSON.stringify({ postanteId: session.user.id })
         });
 
         if (response.ok) {
             alert('¡Te has postulado con éxito a esta vacante!');
         } else {
             const errData = await response.json();
-            alert(`Hubo un problema: ${errData.message || 'No se pudo procesar la postulación.'}`);
+            const mensajeError = errData.error || errData.message || 'No se pudo procesar la postulación.';
+            alert(`Hubo un problema: ${mensajeError}`);
         }
     } catch (error) {
         console.error("Error al postular:", error);
@@ -1144,53 +1127,229 @@ async function ejecutarPostulacion(idVacante) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('CeditarPerfil.html')) {
-        cargarDatosPerfil();
-        document.getElementById('btn-guardar-perfil').addEventListener('click', actualizarDatosPerfil);
+    const pathname = window.location.pathname.toLowerCase();
+    const paginasLibres = [
+        ROUTES.landing.toLowerCase(),
+        ROUTES.login.toLowerCase(),
+        ROUTES.cregistro.toLowerCase(),
+        ROUTES.rregistro.toLowerCase()
+    ];
+
+    const esPaginaLibre = paginasLibres.some(pagina => pathname.includes(pagina));
+    const sessionRaw = localStorage.getItem('userSession');
+    let session = null;
+
+    if (sessionRaw) {
+        try {
+            session = JSON.parse(sessionRaw);
+        } catch (e) {
+            console.error("Error al procesar la sesión corrupta:", e);
+        }
+    }
+
+    const tieneSesionValida = session && session.user && session.user.id;
+    if (!tieneSesionValida) {
+        if (!esPaginaLibre) {
+            console.warn("Acceso denegado: Usuario no autenticado.");
+            localStorage.removeItem('userSession'); 
+            alert('Esta sección es privada. Por favor, inicia sesión para continuar.');
+            window.location.replace("../../" + ROUTES.login);
+            return;
+        }
+        console.log("Navegando de manera pública.");
+        return; 
+    }
+    if (tieneSesionValida) {
+        const esRutaReclutador = pathname.includes('/reclutador/');
+        const esRutaCandidato = pathname.includes('/candidatos/');
+
+        if (session.userType === 'Candidato' && esRutaReclutador) {
+            alert('Acceso denegado: Esta zona es exclusiva para Reclutadores.');
+            window.location.replace(ROUTES.cdashboard);
+            return;
+        }
+        
+        if (session.userType === 'Reclutador' && esRutaCandidato) {
+            alert('Acceso denegado: Esta zona es exclusiva para Candidatos.');
+            window.location.replace(ROUTES.rdashboard);
+            return;
+        }
+    }
+    if (session.userType === 'Candidato' && (pathname.includes('cperfil.html') || pathname.includes('ceditarperfil.html'))) {
+        if (typeof cargarDatosPerfil === 'function') {
+            cargarDatosPerfil(session.user.id);
+        }
+    }
+
+    // Si la página tiene un elemento para mostrar el nombre del usuario, lo pintamos al instante
+    const nombreHeader = document.getElementById('user-name-display');
+    if (nombreHeader) {
+        nombreHeader.textContent = session.user.nombreCompleto;
     }
 });
 
-async function cargarDatosPerfil() {
+async function cargarDatosPerfil(userId) {
+    try {
+        const response = await fetch(`/api/postantes/${userId}`);
+        if (!response.ok) throw new Error("No se pudo obtener el perfil del servidor.");
+        
+        const postante = await response.json();
+
+        // 1. Cabecera del Perfil (Header Card)
+        document.querySelector('.profile-details h1').innerText = postante.nombreCompleto || 'Usuario de ChapaTuChamba';
+        
+        const tagline = postante.carrera ? `${postante.carrera} | Perfil Profesional` : 'Añade tu carrera o título profesional';
+        document.querySelector('.profile-tagline').innerText = tagline;
+        
+        // Foto de Perfil Dinámica
+        if (postante.fotoPerfil) {
+            const photoDiv = document.querySelector('.profile-photo');
+            photoDiv.innerHTML = `<img src="${postante.fotoPerfil}" alt="Foto Perfil" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">`;
+        }
+
+        // 2. Sección: Resumen Profesional (Descripción)
+        const resumenElement = document.querySelector('.info-card .card-text');
+        if (postante.descripcion && postante.descripcion.trim() !== "") {
+            resumenElement.innerText = postante.descripcion;
+        } else {
+            resumenElement.innerHTML = `<span style="color:#94A3B8; font-style:italic;">Aún no has agregado un resumen profesional. Haz clic en "Editar Perfil" para describirte.</span>`;
+        }
+
+        // 3. Sección: Proyectos Destacados (Proyectos Académicos)
+        const projectsContainer = document.querySelector('.projects-container');
+        if (postante.proyectosAcademicos && postante.proyectosAcademicos.length > 0) {
+            projectsContainer.innerHTML = postante.proyectosAcademicos.map(proj => `
+                <div class="project-item">
+                    <div class="project-header">
+                        <h4>${proj.titulo}</h4>
+                        ${proj.urlEvidencia ? `<a href="${proj.urlEvidencia}" target="_blank" class="icon-link" style="text-decoration:none;">🔗</a>` : ''}
+                    </div>
+                    <p class="project-desc">${proj.descripcion || 'Sin descripción de proyecto.'}</p>
+                </div>
+            `).join('');
+        } else {
+            projectsContainer.innerHTML = `<p style="color:#94A3B8; font-style:italic; padding:10px 0;">No registras proyectos académicos aún.</p>`;
+        }
+
+        // 4. Sección: Educación
+        const educationSection = document.querySelector('.info-card:nth-of-type(3)');
+        if (postante.institucion || postante.carrera) {
+            const estadoEgresado = postante.egresado ? 'Graduado / Egresado' : 'En curso';
+            educationSection.innerHTML = `
+                <div class="card-title">
+                    <span class="icon-small">🎓</span>
+                    <h3>Educación</h3>
+                </div>
+                <div class="education-item">
+                    <div class="edu-dot"></div>
+                    <div class="edu-info">
+                        <h4>${postante.carrera || 'Estudios'}</h4>
+                        <p>${postante.institucion || 'Institución no especificada'}</p>
+                        <span class="edu-date" style="background:#F1F5F9; padding:2px 8px; border-radius:4px; font-size:12px;">${estadoEgresado}</span>
+                    </div>
+                </div>
+            `;
+        } else {
+            educationSection.innerHTML = `
+                <div class="card-title"><span class="icon-small">🎓</span><h3>Educación</h3></div>
+                <p style="color:#94A3B8; font-style:italic; padding-top:10px;">Información académica no registrada.</p>
+            `;
+        }
+
+        // 5. Sección: Skills Técnicos e Habilidades Blandas
+        // Buscamos la primera info-card del grid derecho
+        const skillsContainer = document.querySelector('.grid-right .info-card:nth-of-type(1)');
+        const softSkillsContainer = document.querySelector('.soft-skills-container');
+        
+        if (postante.habilidades && postante.habilidades.length > 0) {
+            // Filtrar habilidades técnicas
+            const tecnicas = postante.habilidades.filter(h => h.tipoHabilidad !== 'Blanda');
+            // Filtrar habilidades blandas
+            const blandas = postante.habilidades.filter(h => h.tipoHabilidad === 'Blanda');
+
+            // Renderizar Técnicas con barras estéticas fijas
+            if (tecnicas.length > 0) {
+                let htmlTecnico = `<div class="card-title"><span class="icon-small">⟨/⟩</span><h3>Skills Técnicos</h3></div>`;
+                tecnicas.forEach(h => {
+                    htmlTecnico += `
+                        <div class="skill-meter" style="margin-bottom:12px;">
+                            <div class="meter-header">
+                                <span>${h.nombre}</span> 
+                                <span>${h.verificada ? '✅ Verificada' : '⚙️'}</span>
+                            </div>
+                            <div class="meter-bar"><div class="meter-fill" style="width: 80%;"></div></div>
+                        </div>`;
+                });
+                skillsContainer.innerHTML = htmlTecnico;
+            } else {
+                skillsContainer.innerHTML = `<div class="card-title"><span class="icon-small">⟨/⟩</span><h3>Skills Técnicos</h3></div><p style="color:#94A3B8; font-style:italic;">Sin habilidades técnicas registradas.</p>`;
+            }
+
+            // Renderizar Blandas como chips
+            if (blandas.length > 0) {
+                softSkillsContainer.innerHTML = blandas.map(b => `<span class="soft-skill-tag">${b.nombre}</span>`).join('');
+            } else {
+                softSkillsContainer.innerHTML = `<span style="color:#94A3B8; font-style:italic;">Sin habilidades blandas.</span>`;
+            }
+        } else {
+            skillsContainer.innerHTML = `<div class="card-title"><span class="icon-small">⟨/⟩</span><h3>Skills Técnicos</h3></div><p style="color:#94A3B8; font-style:italic;">Usa el editor para mapear tus aptitudes.</p>`;
+            softSkillsContainer.innerHTML = `<span style="color:#94A3B8; font-style:italic;">Sin habilidades blandas.</span>`;
+        }
+
+    } catch (error) {
+        console.error("Error cargando el perfil:", error);
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const btnGuardar = document.getElementById('btn-guardar-perfil');
+    if (btnGuardar) {
+        btnGuardar.addEventListener('click', enviarFormularioPerfil);
+    }
+});
+
+async function enviarFormularioPerfil() {
     const session = JSON.parse(localStorage.getItem('userSession'));
     if (!session || !session.user) return;
 
-    try {
-        const response = await fetch(`/api/candidatos/${session.user.id}`);
-        if (response.ok) {
-            const data = await response.json();
-            document.getElementById('input-nombres').value = data.nombres || '';
-            document.getElementById('input-apellidos').value = data.apellidos || '';
-        }
-    } catch (error) {
-        console.error("Error:", error);
+    const id = session.user.id;
+    
+    // Obtenemos los valores de los elementos del DOM
+    const nombres = document.getElementById('input-nombres').value;
+    const apellidos = document.getElementById('input-apellidos').value;
+    const nombreCompleto = `${nombres} ${apellidos}`.trim();
+    
+    const descripcion = document.querySelector('textarea').value;
+    const carrera = document.querySelector('input[value="Ingeniería de Software"]').value;
+    
+    // Elemento File del PDF
+    const cvInput = document.getElementById('input-cv-file');
+    
+    // Como procesamos un archivo binario (PDF) NO usamos JSON.stringify, usamos FormData obligatorio.
+    const formData = new FormData();
+    formData.append("nombreCompleto", nombreCompleto);
+    formData.append("descripcion", descripcion);
+    formData.append("carrera", carrera);
+    
+    if (cvInput && cvInput.files[0]) {
+        formData.append("cvFile", cvInput.files[0]);
     }
-}
-
-async function actualizarDatosPerfil() {
-    const session = JSON.parse(localStorage.getItem('userSession'));
-    const nuevosNombres = document.getElementById('input-nombres').value;
-    const nuevosApellidos = document.getElementById('input-apellidos').value;
 
     try {
-        const response = await fetch(`/api/candidatos/${session.user.id}/actualizar-datos`, {
+        const response = await fetch(`/api/postantes/${id}/completo`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nombres: nuevosNombres,
-                apellidos: nuevosApellidos
-            })
+            body: formData 
+            // IMPORTANTE: Al usar FormData, omitir la cabecera 'Content-Type'. El navegador la inyecta automáticamente.
         });
 
         if (response.ok) {
-            alert("Perfil actualizado correctamente");
-            
-            session.user.nombres = nuevosNombres;
-            session.user.apellidos = nuevosApellidos;
-            localStorage.setItem('userSession', JSON.stringify(session));
+            alert("¡Cambios del perfil y CV guardados correctamente en la Base de Datos!");
+            window.location.href = 'Cperfil.html';
         } else {
-            alert("Error al actualizar");
+            const err = await response.json();
+            alert("Error: " + (err.error || "No se pudo actualizar el perfil"));
         }
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error en la conexión:", error);
+        alert("Error de red al intentar salvar el perfil.");
     }
 }
