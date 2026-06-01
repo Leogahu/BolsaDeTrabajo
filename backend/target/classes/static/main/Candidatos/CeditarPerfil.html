@@ -812,133 +812,135 @@
     </div>
 
     <div class="main-content">
-        <div class="profile-header">
-            <h2>Edita tu Perfil Profesional</h2>
-            <p class="text-muted">Completa tu información para destacar ante las mejores empresas. Cada detalle suma a tu marca personal.</p>
-        </div>
+    <div class="profile-header">
+        <h2>Edita tu Perfil Profesional</h2>
+        <p class="text-muted">Completa tu información para destacar ante las mejores empresas. Cada detalle suma a tu marca personal.</p>
+    </div>
 
-        <div class="profile-grid">
-            <div class="profile-card full-width">
-                <div class="section-title">
-                    <span class="icon-section">👤</span>
-                    <h3>Datos Personales</h3>
-                </div>
-                <div class="personal-data-flex">
-                    <div class="avatar-upload">
-                        <div class="avatar-placeholder">
-                            <img src="https://img.icons8.com/color/96/test-account.png" alt="User Icon">
-                        </div>
-                        <a href="#" class="link-ver">Cambiar Foto</a>
+    <div class="profile-grid">
+        <div class="profile-card full-width">
+            <div class="section-title">
+                <span class="icon-section">👤</span>
+                <h3>Datos Personales</h3>
+            </div>
+            <div class="personal-data-flex">
+                <div class="avatar-upload">
+                    <div class="avatar-placeholder">
+                        <img src="https://img.icons8.com/color/96/test-account.png" alt="User Icon">
                     </div>
-                    <div class="form-inputs">
-                        <div class="input-row">
-                            <div class="input-group">
-                                <label>NOMBRES</label>
-                                <input type="text" id="input-nombres" placeholder="Tus nombres">
-                            </div>
-                            <div class="input-group">
-                                <label>APELLIDOS</label>
-                                <input type="text" id="input-apellidos" placeholder="Tus apellidos">
-                            </div>
+                    <a href="#" class="link-ver">Cambiar Foto</a>
+                </div>
+                <div class="form-inputs">
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>NOMBRES</label>
+                            <input type="text" id="input-nombres" placeholder="Tus nombres">
                         </div>
                         <div class="input-group">
-                            <label>RESUMEN PROFESIONAL (BIO)</label>
-                            <textarea placeholder="Cuenta un poco sobre ti, qué buscas y qué te apasiona..."></textarea>
+                            <label>APELLIDOS</label>
+                            <input type="text" id="input-apellidos" placeholder="Tus apellidos">
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="profile-card">
-                <div class="section-title">
-                    <span class="icon-section">🎓</span>
-                    <h3>Educación</h3>
-                </div>
-                <div class="input-group">
-                    <label>UNIVERSIDAD / INSTITUTO</label>
-                    <select>
-                        <option>Universidad Nacional Mayor de San Marcos</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>GRADO ACADÉMICO</label>
-                    <select>
-                        <option>Bachiller</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>CARRERA</label>
-                    <input type="text" value="Ingeniería de Software">
-                </div>
-            </div>
-
-            <div class="profile-card">
-                <div class="section-title">
-                    <span class="icon-section">💡</span>
-                    <h3>Habilidades</h3>
-                </div>
-                <div class="input-group">
-                    <label>HABILIDADES TÉCNICAS</label>
-                    <div class="chips-container">
-                        <span class="skill-chip">Python ✕</span>
-                        <span class="skill-chip">React ✕</span>
-                        <span class="skill-chip">SQL ✕</span>
-                    </div>
-                    <div class="add-skill">
-                        <input type="text" placeholder="Ej. JavaScript, Figma, Excel...">
-                        <button class="btn-add">+</button>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>HABILIDADES BLANDAS</label>
-                    <div class="chips-container">
-                        <span class="skill-chip">Trabajo en equipo ✕</span>
-                        <span class="skill-chip">Comunicación ✕</span>
-                    </div>
-                    <div class="add-skill">
-                        <input type="text" placeholder="Ej. Liderazgo, Empatía...">
-                        <button class="btn-add">+</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="profile-card full-width">
-                <div class="section-title">
-                    <span class="icon-section">🗺️</span>
-                    <h3>Preferencias Laborales</h3>
-                </div>
-                <div class="input-row">
                     <div class="input-group">
-                        <label>MODALIDAD DE TRABAJO</label>
-                        <select><option>Remoto</option></select>
-                    </div>
-                    <div class="input-group">
-                        <label>EXPECTATIVA SALARIAL (MENSUAL)</label>
-                        <input type="text" placeholder="S/ 0.00">
+                        <label>RESUMEN PROFESIONAL (BIO)</label>
+                        <textarea id="input-descripcion" placeholder="Cuenta un poco sobre ti, qué buscas y qué te apasiona..."></textarea>
                     </div>
                 </div>
-            </div>
-            <div class="profile-card full-width">
-                <div class="section-title">
-                    <span class="icon-section">📂</span>
-                    <h3>Currículum Vitae (CV)</h3>
-                </div>
-                <div class="input-group">
-                    <label>SUBIR CURRÍCULUM (FORMATO PDF)</label>
-                    <input type="file" id="input-cv-file" accept=".pdf" style="padding: 10px 0;">
-                    <small style="color:#64748B; display:block; margin-top:4px;">Adjunta tu archivo actualizado para que los reclutadores lo descarguen.</small>
-                </div>
-            </div>
-            <div class="button-container">
-                <button type="button" class="btn-cancel" onclick="window.location.href='Cperfil.html'">
-                    Cancelar
-                </button>
-                <button id="btn-guardar-perfil" class="btn-save">
-                    Guardar Cambios
-                </button>
             </div>
         </div>
+
+        <div class="profile-card">
+            <div class="section-title">
+                <span class="icon-section">🎓</span>
+                <h3>Educación</h3>
+            </div>
+            <div class="input-group">
+                <label>UNIVERSIDAD / INSTITUTO</label>
+                <select id="select-institucion">
+                    <option value="Universidad Nacional Mayor de San Marcos">Universidad Nacional Mayor de San Marcos</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>GRADO ACADÉMICO</label>
+                <select id="select-grado">
+                    <option value="Bachiller">Bachiller</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>CARRERA</label>
+                <input type="text" id="input-carrera" placeholder="Tu carrera profesional">
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div class="section-title">
+                <span class="icon-section">💡</span>
+                <h3>Habilidades</h3>
+            </div>
+            <div class="input-group">
+                <label>HABILIDADES TÉCNICAS</label>
+                <div class="chips-container">
+                    <span class="skill-chip">Python ✕</span>
+                    <span class="skill-chip">React ✕</span>
+                    <span class="skill-chip">SQL ✕</span>
+                </div>
+                <div class="add-skill">
+                    <input type="text" placeholder="Ej. JavaScript, Figma, Excel...">
+                    <button type="button" class="btn-add">+</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>HABILIDADES BLANDAS</label>
+                <div class="chips-container">
+                    <span class="skill-chip">Trabajo en equipo ✕</span>
+                    <span class="skill-chip">Comunicación ✕</span>
+                </div>
+                <div class="add-skill">
+                    <input type="text" placeholder="Ej. Liderazgo, Empatía...">
+                    <button type="button" class="btn-add">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card full-width">
+            <div class="section-title">
+                <span class="icon-section">🗺️</span>
+                <h3>Preferencias Laborales</h3>
+            </div>
+            <div class="input-row">
+                <div class="input-group">
+                    <label>MODALIDAD DE TRABAJO</label>
+                    <select><option>Remoto</option></select>
+                </div>
+                <div class="input-group">
+                    <label>EXPECTATIVA SALARIAL (MENSUAL)</label>
+                    <input type="text" placeholder="S/ 0.00">
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card full-width">
+            <div class="section-title">
+                <span class="icon-section">📂</span>
+                <h3>Currículum Vitae (CV)</h3>
+            </div>
+            <div class="input-group">
+                <label>SUBIR CURRÍCULUM (FORMATO PDF)</label>
+                <input type="file" id="input-cv-file" accept=".pdf" style="padding: 10px 0;">
+                <small style="color:#64748B; display:block; margin-top:4px;">Adjunta tu archivo actualizado para que los reclutadores lo descarguen.</small>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button type="button" class="btn-cancel" onclick="window.location.href='Cperfil.html'">
+                Cancelar
+            </button>
+            <button type="button" id="btn-guardar-perfil" class="btn-save">
+                Guardar Cambios
+            </button>
+        </div>
     </div>
+</div>
 
 </div>
     <script src="../../js/main.js"></script>

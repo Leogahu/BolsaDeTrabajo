@@ -5,7 +5,8 @@ SELECT TOP (1000) [id]
       ,[foto_perfil]
       ,[institucion]
       ,[egresado]
-      ,[nombre_completo]
+      ,[nombres]
+      ,[apellidos]
       ,[password]
       ,[telefono]
       ,[username]
@@ -35,7 +36,8 @@ DBCC CHECKIDENT ('dbo.postantes', RESEED, 0);
 SELECT TOP (1000) [id]
       ,[email]
       ,[empresa]
-      ,[nombre_completo]
+      ,[nombres]
+      ,[apellidos]
       ,[password]
       ,[username]
   FROM [dbo].[reclutadores]
@@ -92,3 +94,12 @@ SELECT TOP (1000) [id]
       ,[nombre_curso]
       ,[postante_id]
   FROM [dbo].[certificaciones]
+
+DROP TABLE IF EXISTS habilidades;
+DROP TABLE IF EXISTS avales_academicos;
+DROP TABLE IF EXISTS certificaciones;
+DROP TABLE IF EXISTS proyectos_academicos;
+DROP TABLE IF EXISTS postantes;
+DROP TABLE IF EXISTS postulaciones;
+DROP TABLE IF EXISTS postulacion_estado;
+DROP TABLE IF EXISTS reclutadores;

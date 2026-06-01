@@ -28,12 +28,23 @@ function navigateTo(page) {
 }
 
 function setSession(userData, type) {
+    let nombresSeparados = "";
+    let apellidosSeparados = "";
+    
+    if (userData.nombreCompleto) {
+        const partes = userData.nombreCompleto.trim().split(" ");
+        nombresSeparados = partes[0] || "";
+        apellidosSeparados = partes.slice(1).join(" ") || "";
+    }
+
     const session = {
         isLogged: true,
         userType: type,
         user: {
             id: userData.id,
-            nombreCompleto: userData.nombreCompleto,
+            nombres: userData.nombres || nombresSeparados,
+            apellidos: userData.apellidos || apellidosSeparados,
+            nombreCompleto: userData.nombreCompleto || `${userData.nombres} ${userData.apellidos}`.trim(),
             email: userData.email,
             username: userData.username
         }
@@ -75,7 +86,11 @@ function cargarDatosUsuario() {
     const nombreElemento = document.getElementById('user-name-display');
     
     if (session.isLogged && session.user && nombreElemento) {
-        nombreElemento.textContent = session.user.nombreCompleto;
+        if (session.user.nombres && session.user.apellidos) {
+            nombreElemento.textContent = `${session.user.nombres} ${session.user.apellidos}`;
+        } else {
+            nombreElemento.textContent = session.user.nombreCompleto || "Usuario";
+        }
     }
 }
 function initNavegacion() {
@@ -287,14 +302,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function handleRegisterPostante(event) {
     event.preventDefault();
-
     const postanteData = {
         username: document.getElementById('username').value, 
-        nombreCompleto: document.getElementById('nombre').value,
+        nombres: document.getElementById('nombres').value,     
+        apellidos: document.getElementById('apellidos').value, 
         email: document.getElementById('email').value,
         password: document.getElementById('contrasena').value,
     };
+    
     console.log("Enviando datos de registro:", postanteData);
+    
     try {
         const response = await fetch('/api/auth/postante/register', {
             method: 'POST',
@@ -308,7 +325,7 @@ async function handleRegisterPostante(event) {
             window.location.href = '../../login.html';
         } else {
             const error = await response.json();
-            alert("Error: " + (error.error || "Datos invalidos"));
+            alert("Error: " + (error.error || "Datos inválidos"));
         }
     } catch (e) {
         console.error("Error de red:", e);
@@ -318,12 +335,13 @@ async function handleRegisterPostante(event) {
 async function handleRegisterReclutador(event) {
     if (event) event.preventDefault(); 
     
-    const nombreCompleto = document.getElementById('nombreCompleto')?.value;
+    const nombres = document.getElementById('nombres')?.value;
+    const apellidos = document.getElementById('apellidos')?.value;
     const empresa = document.getElementById('empresa')?.value;
     const email = document.getElementById('email')?.value;
     const password = document.getElementById('contrasena')?.value;
 
-    if (!nombreCompleto || !empresa || !email || !password) {
+    if (!nombres || !apellidos || !empresa || !email || !password) {
         alert('Por favor, completa todos los campos obligatorios');
         return;
     }
@@ -331,7 +349,8 @@ async function handleRegisterReclutador(event) {
     const reclutadorData = {
         username: email,        
         password: password,
-        nombreCompleto: nombreCompleto,
+        nombres: nombres,   
+        apellidos: apellidos,   
         email: email,
         empresa: empresa
     };
@@ -410,13 +429,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', () => {
     const session = JSON.parse(localStorage.getItem('userSession'));
-    if (session && session.isLogged) {
-        const title = document.getElementById('welcome-title');
-        if (title) title.textContent = `¡Hola, ${session.user.nombreCompleto}`;
-        
-        const avatar = document.getElementById('user-avatar');
-        if (avatar) avatar.src = `https://ui-avatars.com/api/?name=${session.user.nombreCompleto}&background=0052EA&color=fff`;
+
+if (session && session.isLogged && session.user) {
+    const nombreParaMostrar = session.user.nombres 
+        ? `${session.user.nombres} ${session.user.apellidos}`.trim()
+        : (session.user.nombreCompleto || "Usuario");
+    const title = document.getElementById('welcome-title');
+    if (title) {
+        title.textContent = `¡Hola, ${nombreParaMostrar}!`;
     }
+    const avatar = document.getElementById('user-avatar');
+    if (avatar) {
+        const nombreCodificado = encodeURIComponent(nombreParaMostrar);
+        avatar.src = `https://ui-avatars.com/api/?name=${nombreCodificado}&background=0052EA&color=fff`;
+    }
+}
 
     const setup = (triggerId, menuId) => {
         const trigger = document.getElementById(triggerId);
@@ -701,32 +728,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnConfirmar = document.getElementById('confirmDelete');
     const btnCancelar = document.getElementById('cancelDelete');
     const modal = document.getElementById('deleteModal');
-
-    btnCancelar.onclick = () => {
-        modal.style.display = 'none';
-        idAEliminar = null;
-    };
-    btnConfirmar.onclick = async () => {
-        if (!idAEliminar) return;
-
-        try {
-            const response = await fetch(`/api/postulaciones/${idAEliminar}`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' }
-            });
-
-            if (response.ok) {
-                modal.style.display = 'none'; 
-                cargarVacantesReclutador();   
-            } else {
-                alert("Error al eliminar");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        } finally {
+    if (btnCancelar && modal) {
+        btnCancelar.onclick = () => {
+            modal.style.display = 'none';
             idAEliminar = null;
-        }
-    };
+        };
+    }
+
+    if (btnConfirmar && modal) {
+        btnConfirmar.onclick = async () => {
+            if (!idAEliminar) return;
+
+            try {
+                const response = await fetch(`/api/postulaciones/${idAEliminar}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    modal.style.display = 'none'; 
+                    if (typeof cargarVacantesReclutador === 'function') {
+                        cargarVacantesReclutador();   
+                    }
+                } else {
+                    alert("Error al eliminar");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            } finally {
+                idAEliminar = null;
+            }
+        };
+    }
 });
 function editarVacante(id) {
     localStorage.setItem('editPostulacionId', id);
@@ -1156,9 +1189,9 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.replace("../../" + ROUTES.login);
             return;
         }
-        console.log("Navegando de manera pública.");
         return; 
     }
+
     if (tieneSesionValida) {
         const esRutaReclutador = pathname.includes('/reclutador/');
         const esRutaCandidato = pathname.includes('/candidatos/');
@@ -1175,16 +1208,58 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
     }
-    if (session.userType === 'Candidato' && (pathname.includes('cperfil.html') || pathname.includes('ceditarperfil.html'))) {
-        if (typeof cargarDatosPerfil === 'function') {
-            cargarDatosPerfil(session.user.id);
-        }
+
+    // CONTROL DE CARGA: Carga los datos dinámicos de la BD
+    if (pathname.includes('cperfil.html') || pathname.includes('ceditarperfil.html')) {
+        cargarDatosPerfil(session.user.id);
     }
 
-    // Si la página tiene un elemento para mostrar el nombre del usuario, lo pintamos al instante
+    // Renderizar el Header superior de forma segura
     const nombreHeader = document.getElementById('user-name-display');
-    if (nombreHeader) {
-        nombreHeader.textContent = session.user.nombreCompleto;
+    if (nombreHeader && session.user) {
+        nombreHeader.textContent = session.user.nombres 
+            ? `${session.user.nombres} ${session.user.apellidos}`.trim()
+            : (session.user.nombreCompleto || "Usuario");
+    }
+
+    // Escuchador para el botón Guardar Cambios
+    const btnGuardar = document.getElementById('btn-guardar-perfil');
+    if (btnGuardar) {
+        btnGuardar.addEventListener('click', enviarFormularioPerfil);
+    }
+
+    // SOLUCIÓN AL ERROR CRÍTICO DEL MODAL (Evita que se congele el archivo js)
+    const btnConfirmar = document.getElementById('confirmDelete');
+    const btnCancelar = document.getElementById('cancelDelete');
+    const modal = document.getElementById('deleteModal');
+
+    if (btnCancelar && modal) {
+        btnCancelar.onclick = () => {
+            modal.style.display = 'none';
+            if (typeof idAEliminar !== 'undefined') idAEliminar = null;
+        };
+    }
+
+    if (btnConfirmar && modal) {
+        btnConfirmar.onclick = async () => {
+            if (typeof idAEliminar === 'undefined' || !idAEliminar) return;
+            try {
+                const response = await fetch(`/api/postulaciones/${idAEliminar}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (response.ok) {
+                    modal.style.display = 'none'; 
+                    if (typeof cargarVacantesReclutador === 'function') cargarVacantesReclutador();   
+                } else {
+                    alert("Error al eliminar");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            } finally {
+                idAEliminar = null;
+            }
+        };
     }
 });
 
@@ -1195,138 +1270,114 @@ async function cargarDatosPerfil(userId) {
         
         const postante = await response.json();
 
-        // 1. Cabecera del Perfil (Header Card)
-        document.querySelector('.profile-details h1').innerText = postante.nombreCompleto || 'Usuario de ChapaTuChamba';
+        // 1. Reemplazar Nombre y Título Profesional en la Cabecera
+        const nombreCompletoValido = (postante.nombres || postante.apellidos)
+            ? `${postante.nombres || ''} ${postante.apellidos || ''}`.trim()
+            : 'Usuario de ChapaTuChamba';
+
+        const titleElement = document.querySelector('.profile-details h1');
+        if (titleElement) titleElement.innerText = nombreCompletoValido;
         
-        const tagline = postante.carrera ? `${postante.carrera} | Perfil Profesional` : 'Añade tu carrera o título profesional';
-        document.querySelector('.profile-tagline').innerText = tagline;
+        const taglineElement = document.querySelector('.profile-tagline');
+        if (taglineElement) {
+            taglineElement.innerText = postante.carrera 
+                ? `${postante.carrera} | Perfil Profesional` 
+                : 'Añade tu carrera o título profesional';
+        }
         
-        // Foto de Perfil Dinámica
-        if (postante.fotoPerfil) {
-            const photoDiv = document.querySelector('.profile-photo');
-            photoDiv.innerHTML = `<img src="${postante.fotoPerfil}" alt="Foto Perfil" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">`;
+        // 2. Auto-relleno de Inputs si se encuentra en la vista 'CeditarPerfil.html'
+        const inputNombres = document.getElementById('input-nombres');
+        const inputApellidos = document.getElementById('input-apellidos');
+        const inputCarrera = document.getElementById('input-carrera');
+        const txtDescripcion = document.getElementById('input-descripcion') || document.querySelector('textarea');
+
+        if (inputNombres) inputNombres.value = postante.nombres || "";
+        if (inputApellidos) inputApellidos.value = postante.apellidos || "";
+        if (inputCarrera) inputCarrera.value = postante.carrera || "";
+        if (txtDescripcion) txtDescripcion.value = postante.descripcion || "";
+
+        // 3. Reemplazar Resumen Profesional
+        const resumenElement = document.querySelector('.card-text');
+        if (resumenElement) {
+            resumenElement.innerText = (postante.descripcion && postante.descripcion.trim() !== "") 
+                ? postante.descripcion 
+                : 'Aún no has agregado un resumen profesional. Haz clic en "Editar Perfil" para describirte.';
         }
 
-        // 2. Sección: Resumen Profesional (Descripción)
-        const resumenElement = document.querySelector('.info-card .card-text');
-        if (postante.descripcion && postante.descripcion.trim() !== "") {
-            resumenElement.innerText = postante.descripcion;
-        } else {
-            resumenElement.innerHTML = `<span style="color:#94A3B8; font-style:italic;">Aún no has agregado un resumen profesional. Haz clic en "Editar Perfil" para describirte.</span>`;
+        // 4. Reemplazar Educación Dinámicamente de forma limpia
+        const eduContainer = document.getElementById('educacion-dinamica-lista');
+        if (eduContainer) {
+            if (postante.carrera || postante.institucion) {
+                const estadoEgresado = postante.egresado ? 'Graduado / Egresado' : 'En curso';
+                eduContainer.innerHTML = `
+                    <div class="education-item">
+                        <div class="edu-dot"></div>
+                        <div class="edu-info">
+                            <h4>${postante.carrera || 'Estudios sin especificar'}</h4>
+                            <p>${postante.institucion || 'Institución no especificada'}</p>
+                            <span class="edu-date">${estadoEgresado}</span>
+                        </div>
+                    </div>`;
+            } else {
+                eduContainer.innerHTML = `<p style="color:#94A3B8; font-style:italic; padding-left:15px;">Información académica no registrada aún.</p>`;
+            }
         }
 
-        // 3. Sección: Proyectos Destacados (Proyectos Académicos)
-        const projectsContainer = document.querySelector('.projects-container');
-        if (postante.proyectosAcademicos && postante.proyectosAcademicos.length > 0) {
-            projectsContainer.innerHTML = postante.proyectosAcademicos.map(proj => `
-                <div class="project-item">
-                    <div class="project-header">
-                        <h4>${proj.titulo}</h4>
-                        ${proj.urlEvidencia ? `<a href="${proj.urlEvidencia}" target="_blank" class="icon-link" style="text-decoration:none;">🔗</a>` : ''}
-                    </div>
-                    <p class="project-desc">${proj.descripcion || 'Sin descripción de proyecto.'}</p>
-                </div>
-            `).join('');
-        } else {
-            projectsContainer.innerHTML = `<p style="color:#94A3B8; font-style:italic; padding:10px 0;">No registras proyectos académicos aún.</p>`;
-        }
+        // 5. Inyección de Habilidades (Skills Técnicos y Blandas)
+        const contenedorTecnico = document.getElementById('skills-tecnicos-lista');
+        const contenedorBlando = document.getElementById('skills-blandas-lista');
 
-        // 4. Sección: Educación
-        const educationSection = document.querySelector('.info-card:nth-of-type(3)');
-        if (postante.institucion || postante.carrera) {
-            const estadoEgresado = postante.egresado ? 'Graduado / Egresado' : 'En curso';
-            educationSection.innerHTML = `
-                <div class="card-title">
-                    <span class="icon-small">🎓</span>
-                    <h3>Educación</h3>
-                </div>
-                <div class="education-item">
-                    <div class="edu-dot"></div>
-                    <div class="edu-info">
-                        <h4>${postante.carrera || 'Estudios'}</h4>
-                        <p>${postante.institucion || 'Institución no especificada'}</p>
-                        <span class="edu-date" style="background:#F1F5F9; padding:2px 8px; border-radius:4px; font-size:12px;">${estadoEgresado}</span>
-                    </div>
-                </div>
-            `;
-        } else {
-            educationSection.innerHTML = `
-                <div class="card-title"><span class="icon-small">🎓</span><h3>Educación</h3></div>
-                <p style="color:#94A3B8; font-style:italic; padding-top:10px;">Información académica no registrada.</p>
-            `;
-        }
-
-        // 5. Sección: Skills Técnicos e Habilidades Blandas
-        // Buscamos la primera info-card del grid derecho
-        const skillsContainer = document.querySelector('.grid-right .info-card:nth-of-type(1)');
-        const softSkillsContainer = document.querySelector('.soft-skills-container');
-        
         if (postante.habilidades && postante.habilidades.length > 0) {
-            // Filtrar habilidades técnicas
             const tecnicas = postante.habilidades.filter(h => h.tipoHabilidad !== 'Blanda');
-            // Filtrar habilidades blandas
             const blandas = postante.habilidades.filter(h => h.tipoHabilidad === 'Blanda');
 
-            // Renderizar Técnicas con barras estéticas fijas
-            if (tecnicas.length > 0) {
-                let htmlTecnico = `<div class="card-title"><span class="icon-small">⟨/⟩</span><h3>Skills Técnicos</h3></div>`;
-                tecnicas.forEach(h => {
-                    htmlTecnico += `
-                        <div class="skill-meter" style="margin-bottom:12px;">
-                            <div class="meter-header">
-                                <span>${h.nombre}</span> 
-                                <span>${h.verificada ? '✅ Verificada' : '⚙️'}</span>
-                            </div>
-                            <div class="meter-bar"><div class="meter-fill" style="width: 80%;"></div></div>
-                        </div>`;
-                });
-                skillsContainer.innerHTML = htmlTecnico;
-            } else {
-                skillsContainer.innerHTML = `<div class="card-title"><span class="icon-small">⟨/⟩</span><h3>Skills Técnicos</h3></div><p style="color:#94A3B8; font-style:italic;">Sin habilidades técnicas registradas.</p>`;
+            if (contenedorTecnico && tecnicas.length > 0) {
+                contenedorTecnico.innerHTML = tecnicas.map(h => `
+                    <div class="skill-meter" style="margin-bottom:12px;">
+                        <div class="meter-header">
+                            <span>${h.nombre}</span> 
+                            <span>${h.verificada ? '✅ Verificada' : '⚙️'}</span>
+                        </div>
+                        <div class="meter-bar"><div class="meter-fill" style="width: 80%;"></div></div>
+                    </div>
+                `).join('');
             }
 
-            // Renderizar Blandas como chips
-            if (blandas.length > 0) {
-                softSkillsContainer.innerHTML = blandas.map(b => `<span class="soft-skill-tag">${b.nombre}</span>`).join('');
-            } else {
-                softSkillsContainer.innerHTML = `<span style="color:#94A3B8; font-style:italic;">Sin habilidades blandas.</span>`;
+            if (contenedorBlando && blandas.length > 0) {
+                contenedorBlando.innerHTML = blandas.map(b => `
+                    <span class="soft-skill-tag">${b.nombre}</span>
+                `).join('');
             }
-        } else {
-            skillsContainer.innerHTML = `<div class="card-title"><span class="icon-small">⟨/⟩</span><h3>Skills Técnicos</h3></div><p style="color:#94A3B8; font-style:italic;">Usa el editor para mapear tus aptitudes.</p>`;
-            softSkillsContainer.innerHTML = `<span style="color:#94A3B8; font-style:italic;">Sin habilidades blandas.</span>`;
         }
 
     } catch (error) {
-        console.error("Error cargando el perfil:", error);
+        console.error("Error cargando los datos en la vista de perfil:", error);
     }
 }
-document.addEventListener('DOMContentLoaded', () => {
-    const btnGuardar = document.getElementById('btn-guardar-perfil');
-    if (btnGuardar) {
-        btnGuardar.addEventListener('click', enviarFormularioPerfil);
-    }
-});
 
 async function enviarFormularioPerfil() {
     const session = JSON.parse(localStorage.getItem('userSession'));
-    if (!session || !session.user) return;
+    if (!session || !session.user) {
+        alert("Sesión expirada. Por favor inicia sesión nuevamente.");
+        return;
+    }
 
     const id = session.user.id;
-    
-    // Obtenemos los valores de los elementos del DOM
-    const nombres = document.getElementById('input-nombres').value;
-    const apellidos = document.getElementById('input-apellidos').value;
-    const nombreCompleto = `${nombres} ${apellidos}`.trim();
-    
-    const descripcion = document.querySelector('textarea').value;
-    const carrera = document.querySelector('input[value="Ingeniería de Software"]').value;
-    
-    // Elemento File del PDF
+    const nombres = document.getElementById('input-nombres')?.value.trim() || "";
+    const apellidos = document.getElementById('input-apellidos')?.value.trim() || "";
+    const txtArea = document.getElementById('input-descripcion') || document.querySelector('textarea');
+    const descripcion = txtArea ? txtArea.value.trim() : "";
+    const carrera = document.getElementById('input-carrera')?.value.trim() || "";
     const cvInput = document.getElementById('input-cv-file');
-    
-    // Como procesamos un archivo binario (PDF) NO usamos JSON.stringify, usamos FormData obligatorio.
+
+    if (!nombres || !apellidos) {
+        alert("Los campos Nombres y Apellidos son obligatorios.");
+        return;
+    }
+
     const formData = new FormData();
-    formData.append("nombreCompleto", nombreCompleto);
+    formData.append("nombres", nombres);       
+    formData.append("apellidos", apellidos);   
     formData.append("descripcion", descripcion);
     formData.append("carrera", carrera);
     
@@ -1337,19 +1388,22 @@ async function enviarFormularioPerfil() {
     try {
         const response = await fetch(`/api/postantes/${id}/completo`, {
             method: 'PUT',
-            body: formData 
-            // IMPORTANTE: Al usar FormData, omitir la cabecera 'Content-Type'. El navegador la inyecta automáticamente.
+            body: formData
         });
 
         if (response.ok) {
-            alert("¡Cambios del perfil y CV guardados correctamente en la Base de Datos!");
+            session.user.nombres = nombres;
+            session.user.apellidos = apellidos;
+            session.user.nombreCompleto = `${nombres} ${apellidos}`.trim();
+            localStorage.setItem('userSession', JSON.stringify(session));
+
+            alert("¡Perfil actualizado con éxito!");
             window.location.href = 'Cperfil.html';
         } else {
-            const err = await response.json();
-            alert("Error: " + (err.error || "No se pudo actualizar el perfil"));
+            alert("Error al procesar el guardado en el servidor.");
         }
     } catch (error) {
-        console.error("Error en la conexión:", error);
-        alert("Error de red al intentar salvar el perfil.");
+        console.error("Error en la petición:", error);
+        alert("Hubo un error de red al intentar conectar.");
     }
 }

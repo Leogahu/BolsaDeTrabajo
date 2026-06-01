@@ -84,14 +84,16 @@ public class PostanteController {
     @PutMapping(value = "/{id}/completo", consumes = {"multipart/form-data"})
     public ResponseEntity<?> actualizarPerfilCompleto(
             @PathVariable Long id,
-            @RequestParam("nombreCompleto") String nombreCompleto,
+            @RequestParam("nombres") String nombres,      
+            @RequestParam("apellidos") String apellidos,  
             @RequestParam("descripcion") String descripcion,
             @RequestParam("carrera") String carrera,
             @RequestParam(value = "cvFile", required = false) MultipartFile cvFile) {
         
         return postanteRepository.findById(id)
                 .map(postante -> {
-                    postante.setNombreCompleto(nombreCompleto);
+                    postante.setNombres(nombres);
+                    postante.setApellidos(apellidos);
                     postante.setDescripcion(descripcion);
                     postante.setCarrera(carrera);
                     

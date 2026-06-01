@@ -18,8 +18,11 @@ public class Postante {
     @Column(nullable = false)
     private String password;
     
-    @Column(nullable = false)
-    private String nombreCompleto;
+    @Column(nullable = false, length = 100)
+    private String nombres;
+
+    @Column(nullable = false, length = 100)
+    private String apellidos;
     
     @Column(nullable = false, unique = true)
     private String email;

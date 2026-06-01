@@ -60,7 +60,9 @@ public class AuthController {
             Map<String, Object> response = new HashMap<>();
             response.put("id", p.getId());
             response.put("username", p.getUsername());
-            response.put("nombreCompleto", p.getNombreCompleto());
+            String nombreCompletoDinamico = (p.getNombres() + " " + p.getApellidos()).trim();
+            response.put("nombreCompleto", nombreCompletoDinamico);
+            
             response.put("email", p.getEmail());
             response.put("tipo", "postante"); 
             return ResponseEntity.ok(response);
@@ -72,7 +74,8 @@ public class AuthController {
             Map<String, Object> response = new HashMap<>();
             response.put("id", r.getId());
             response.put("username", r.getUsername());
-            response.put("nombreCompleto", r.getNombreCompleto());
+            String nombreCompletoDinamico = (r.getNombres() + " " + r.getApellidos()).trim();
+            response.put("nombreCompleto", nombreCompletoDinamico);
             response.put("email", r.getEmail());
             response.put("empresa", r.getEmpresa());
             response.put("tipo", "reclutador");
@@ -86,13 +89,15 @@ public class AuthController {
     public ResponseEntity<?> actualizarPostante(@PathVariable Long id, @RequestBody Map<String, String> datos) {
         return postanteRepository.findById(id)
             .map(postante -> {
-                if (datos.containsKey("nombreCompleto")) postante.setNombreCompleto(datos.get("nombreCompleto"));
+                if (datos.containsKey("nombres")) postante.setNombres(datos.get("nombres"));
+                if (datos.containsKey("apellidos")) postante.setApellidos(datos.get("apellidos"));
                 if (datos.containsKey("email")) postante.setEmail(datos.get("email"));
                 if (datos.containsKey("telefono")) postante.setTelefono(datos.get("telefono"));
                 if (datos.containsKey("carrera")) postante.setCarrera(datos.get("carrera"));
                 if (datos.containsKey("password") && !datos.get("password").isEmpty()) {
                     postante.setPassword(datos.get("password"));
                 }
+                
                 postanteRepository.save(postante);
                 return ResponseEntity.ok(Map.of("mensaje", "Perfil de postulante actualizado"));
             })
@@ -103,7 +108,8 @@ public class AuthController {
     public ResponseEntity<?> actualizarReclutador(@PathVariable Long id, @RequestBody Map<String, String> datos) {
         return reclutadorRepository.findById(id)
             .map(reclutador -> {
-                if (datos.containsKey("nombreCompleto")) reclutador.setNombreCompleto(datos.get("nombreCompleto"));
+                if (datos.containsKey("nombres")) reclutador.setNombres(datos.get("nombres"));
+                if (datos.containsKey("apellidos")) reclutador.setApellidos(datos.get("apellidos"));
                 if (datos.containsKey("email")) reclutador.setEmail(datos.get("email"));
                 if (datos.containsKey("empresa")) reclutador.setEmpresa(datos.get("empresa"));
                 if (datos.containsKey("password") && !datos.get("password").isEmpty()) {
