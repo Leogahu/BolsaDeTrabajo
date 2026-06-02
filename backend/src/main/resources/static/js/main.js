@@ -1316,6 +1316,9 @@ async function cargarDatosPerfil(userId) {
     if (document.getElementById('input-apellidos')) document.getElementById('input-apellidos').value = postante.apellidos || "";
     if (document.getElementById('input-carrera')) document.getElementById('input-carrera').value = postante.carrera || "";
     if (document.getElementById('input-institucion')) document.getElementById('input-institucion').value = postante.institucion || "";
+    if (document.getElementById('input-telefono')) {
+        document.getElementById('input-telefono').value = postante.telefono || "";
+        }
     if (document.getElementById('select-egresado')) {
         document.getElementById('select-egresado').value = postante.egresado !== null ? String(postante.egresado) : "false";
         }
@@ -1338,6 +1341,32 @@ async function cargarDatosPerfil(userId) {
                 </div>`;
         } else {
             eduContainer.innerHTML = `<p style="color:#94A3B8; font-size:14px; font-style:italic; padding: 5px 0;">No has añadido información sobre tu educación académica.</p>`;
+        }
+    }
+    const cvContainer = document.getElementById('cv-dinamico-contenedor');
+    if (cvContainer) {
+        if (postante.cvPath && postante.cvPath.trim() !== "") {
+            cvContainer.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between; background: #F8FAFC; padding: 12px 16px; border-radius: 8px; border: 1px solid #E2E8F0;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 20px;">✅</span>
+                        <div>
+                            <p style="margin: 0; font-size: 14px; font-weight: 600; color: #0F172A;">CV Subido Correctamente</p>
+                            <p style="margin: 2px 0 0 0; font-size: 12px; color: #64748B;">Documento PDF listo para postulación</p>
+                        </div>
+                    </div>
+                    <a href="${postante.cvPath}" target="_blank" title="Visualizar CV" style="display: flex; align-items: center; justify-content: center; background: #FFFFFF; border: 1px solid #CBD5E1; color: #334155; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.2s;">
+                         <span style="font-size:13px;">Verificar CV</span>
+                    </a>
+                </div>
+            `;
+        } else {
+            cvContainer.innerHTML = `
+                <div style="background: #FFFBEB; border: 1px solid #FDE68A; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 18px;">⚠️</span>
+                    <p style="margin: 0; font-size: 14px; color: #B45309; font-style: italic;">Aún no has subido tu Currículum Vitae (PDF). Por favor ve a editar tu perfil para añadirlo.</p>
+                </div>
+            `;
         }
     }
     const projectsContainer = document.getElementById('projects-container-dinamico');
@@ -1382,6 +1411,7 @@ async function enviarFormularioPerfil() {
     const carrera = document.getElementById('input-carrera')?.value.trim() || "";
     const institucion = document.getElementById('input-institucion')?.value.trim() || "";
     const egresado = document.getElementById('select-egresado')?.value || "false";
+    const telefono = document.getElementById('input-telefono')?.value.trim() || "";
 
     const cvInput = document.getElementById('input-cv-file');
     const fotoInput = document.getElementById('input-foto-file');
@@ -1396,9 +1426,10 @@ async function enviarFormularioPerfil() {
     formData.append("apellidos", apellidos);   
     formData.append("descripcion", descripcion);
     formData.append("carrera", carrera);
-    formData.append("institucion", institucion); 
-    formData.append("egresado", egresado);      
-    
+    formData.append("institucion", institucion);
+    formData.append("egresado", egresado);
+    formData.append("telefono", telefono); 
+
     if (cvInput && cvInput.files[0]) {
         formData.append("cvFile", cvInput.files[0]);
     }
@@ -1417,8 +1448,6 @@ async function enviarFormularioPerfil() {
             session.user.apellidos = apellidos;
             session.user.nombreCompleto = `${nombres} ${apellidos}`.trim();
             localStorage.setItem('userSession', JSON.stringify(session));
-
-            alert("¡Perfil y datos académicos actualizados con éxito!");
             window.location.href = 'Cperfil.html';
         } else {
             alert("Error al procesar el guardado en el servidor.");
@@ -1426,66 +1455,6 @@ async function enviarFormularioPerfil() {
     } catch (error) {
         console.error("Error en la petición:", error);
         alert("Hubo un error de red al intentar conectar.");
-    }
-}
-
-const btnAgregarProyecto = document.getElementById('btn-agregar-proyecto');
-if (btnAgregarProyecto) {
-    btnAgregarProyecto.addEventListener('click', enviarNuevoProyecto);
-}
-
-async function enviarNuevoProyecto() {
-    const session = JSON.parse(localStorage.getItem('userSession'));
-    if (!session || !session.user) {
-        alert("Sesión inválida.");
-        return;
-    }
-
-    const postanteId = session.user.id;
-    const inputTitulo = document.getElementById('proj-titulo');
-    const inputUrl = document.getElementById('proj-url');
-    const txtDesc = document.getElementById('proj-descripcion');
-
-    const titulo = inputTitulo ? inputTitulo.value.trim() : "";
-    const urlEvidencia = inputUrl ? inputUrl.value.trim() : "";
-    const descripcion = txtDesc ? txtDesc.value.trim() : "";
-
-    if (!titulo) {
-        alert("El título del proyecto es completamente obligatorio.");
-        return;
-    }
-
-    
-    const proyectoPayload = {
-        titulo: titulo,
-        descripcion: descripcion,
-        urlEvidencia: urlEvidencia
-    };
-
-    try {
-        const response = await fetch(`/api/proyectos/postante/${postanteId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(proyectoPayload)
-        });
-
-        if (response.ok) {
-            alert("¡Proyecto académico anexado exitosamente!");
-            
-            if (inputTitulo) inputTitulo.value = "";
-            if (inputUrl) inputUrl.value = "";
-            if (txtDesc) txtDesc.value = "";
-            
-            
-            window.location.href = 'Cperfil.html';
-        } else {
-            alert("Error al intentar registrar el proyecto en el servidor.");
-        }
-    } catch (error) {
-        console.error("Error de red:", error);
-        alert("Ocurrió un error al conectar con el backend.");
     }
 }
 
@@ -1497,7 +1466,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnGuardar.addEventListener('click', enviarFormularioPerfil);
     }
 
-    
     const linkCambiarFoto = document.getElementById('link-cambiar-foto');
     const inputFotoFile = document.getElementById('input-foto-file');
     if (linkCambiarFoto && inputFotoFile) {
@@ -1518,7 +1486,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    
     const btnAbrirModal = document.getElementById('btn-abrir-config-proyectos');
     const btnCerrarModal = document.getElementById('btn-cerrar-modal-proj');
     const modalConfig = document.getElementById('modal-config-proyectos');
@@ -1539,7 +1506,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    
     const btnAgregarProyecto = document.getElementById('btn-agregar-proyecto');
     if (btnAgregarProyecto) {
         btnAgregarProyecto.addEventListener('click', procesarGuardarProyecto);
@@ -1554,7 +1520,10 @@ document.addEventListener('DOMContentLoaded', () => {
 async function procesarGuardarProyecto() {
     const session = JSON.parse(localStorage.getItem('userSession'));
     const postanteId = session?.user?.id;
-    if (!postanteId) return;
+    if (!postanteId) {
+        alert("Sesión inválida.");
+        return;
+    }
 
     const idEdicion = document.getElementById('proj-id-edicion').value;
     const titulo = document.getElementById('proj-titulo').value.trim();
@@ -1578,17 +1547,19 @@ async function procesarGuardarProyecto() {
         });
 
         if (response.ok) {
-            alert(idEdicion ? "¡Proyecto actualizado!" : "¡Proyecto guardado en el perfil!");
             limpiarFormularioProyecto();
             
-            if (document.getElementById('modal-config-proyectos').style.display === 'flex') {
+            if (document.getElementById('modal-config-proyectos') && document.getElementById('modal-config-proyectos').style.display === 'flex') {
                 renderizarConfiguracionProyectos(postanteId);
+            } else {
+                window.location.href = 'Cperfil.html';
             }
         } else {
             alert("Error al guardar el proyecto en el servidor.");
         }
     } catch (error) {
         console.error("Error:", error);
+        alert("Ocurrió un error al conectar con el backend.");
     }
 }
 
@@ -1625,14 +1596,9 @@ function prepararEdicionDesdeModal(id, titulo, url, descripcion) {
     document.getElementById('proj-titulo').value = titulo;
     document.getElementById('proj-url').value = url === "null" ? "" : url;
     document.getElementById('proj-descripcion').value = descripcion === "null" ? "" : descripcion;
-    
     document.getElementById('btn-agregar-proyecto').innerText = "Actualizar Cambios";
     document.getElementById('btn-cancelar-edicion-proj').style.display = "inline-block";
-    
-    
     document.getElementById('modal-config-proyectos').style.display = 'none';
-    
-    
     document.getElementById('proj-titulo').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -1641,7 +1607,6 @@ async function eliminarProyectoDesdeModal(id, userId) {
     try {
         const response = await fetch(`/api/proyectos/${id}`, { method: 'DELETE' });
         if (response.ok) {
-            alert("Proyecto removido.");
             limpiarFormularioProyecto();
             renderizarConfiguracionProyectos(userId);
         }

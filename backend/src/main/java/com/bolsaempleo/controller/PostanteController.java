@@ -92,8 +92,9 @@ public class PostanteController {
             @RequestParam("apellidos") String apellidos,  
             @RequestParam("descripcion") String descripcion,
             @RequestParam("carrera") String carrera,
-            @RequestParam("institucion") String institucion, 
-            @RequestParam("egresado") Boolean egresado,   
+            @RequestParam("institucion") String institucion,
+            @RequestParam("egresado") Boolean egresado,     
+            @RequestParam("telefono") String telefono,     
             @RequestParam(value = "cvFile", required = false) MultipartFile cvFile,
             @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile) { 
         
@@ -104,8 +105,9 @@ public class PostanteController {
                         postante.setApellidos(apellidos);
                         postante.setDescripcion(descripcion);
                         postante.setCarrera(carrera);
-                        postante.setInstitucion(institucion); 
-                        postante.setEgresado(egresado);      
+                        postante.setInstitucion(institucion);
+                        postante.setEgresado(egresado);
+                        postante.setTelefono(telefono);   
 
                         if (cvFile != null && !cvFile.isEmpty()) {
                             Path directorioCvs = Paths.get("uploads/cvs");
