@@ -251,76 +251,57 @@
             opacity: 1;
             visibility: visible;
         }
+        .dropdown-header { 
+            font-weight: 700; 
+            font-size: 14px; 
+            margin-bottom: 10px; 
+            color: #1E293B; 
+            border-bottom: 1px solid #F1F5F9; 
+            padding-bottom: 5px; }
 
-        .dropdown-header {
-            font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: #1E293B;
-            border-bottom: 1px solid #F1F5F9;
-            padding-bottom: 5px;
-        }
-
-        .chat-item {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            padding: 8px;
-            border-radius: 6px;
-        }
-
-        .chat-item img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-        }
-
-        .chat-info p {
-            font-size: 11px;
-            color: #64748B;
-        }
-
-        .drop-item {
-            display: block;
-            padding: 8px;
-            text-decoration: none;
-            color: #1E293B;
-            font-size: 13px;
-        }
-
-        .drop-item:hover {
-            background: #F1F5F9;
-        }
-
-        #notif-list {
-            list-style: none;
-        }
-
+        #notif-list { 
+            list-style: none; }
         #notif-list li {
-            display: flex;
-            justify-content: space-between;
+            display: flex; 
+            justify-content: space-between; 
             align-items: center;
-            background: #F8FAFC;
-            padding: 8px;
-            border-radius: 6px;
-            margin-bottom: 6px;
-            font-size: 12px;
+            background: #F8FAFC; padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 12px;
         }
+        #notif-list li button { 
+            border: none; 
+            background: transparent; 
+            cursor: pointer; 
+            color: #94A3B8; 
+            font-size: 16px; }
 
-        #notif-list li button {
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            color: #94A3B8;
-            font-size: 16px;
-        }
+        .chat-item { 
+            display: flex; 
+            gap: 10px; align-items: center; 
+            padding: 8px; 
+            border-radius: 6px; }
+        .chat-item img { 
+            width: 32px; 
+            height: 32px;
+            border-radius: 50%; }
+        .chat-info p { 
+            font-size: 11px; 
+            color: #64748B; }
 
-        .logout {
-            color: #DC2626 !important;
-        }
+        .small-dropdown { 
+            width: 180px; }
+        .drop-item { 
+            display: block; 
+            padding: 8px; 
+            text-decoration: none; 
+            color: #1E293B; 
+            font-size: 13px; }
+        .drop-item:hover { 
+            background: #F1F5F9; }
+        .logout { color: #DC2626 !important; }
 
-        
-        .stats-grid {
+        .show { display: block !important; }
+
+.stats-grid {
             display: flex;
             gap: 24px;
             margin-top: 8px;
@@ -866,14 +847,16 @@
     <main class="main-content">
         <div class="profile-header-card">
             <div class="profile-info-main">
-                <div class="profile-photo size-120"><span>120x120</span></div>
+                <div class="profile-avatar-container">
+                    <img id="profile-avatar-view" src="https://img.icons8.com/color/96/test-account.png" alt="Foto de Perfil" style="width:120px; height:120px; border-radius:50%; object-fit:cover;">
+                </div>
                 <div class="profile-details">
-                    <h1>Alex Rivera</h1>
-                    <p class="profile-tagline">Desarrollador Full Stack Jr. | Apasionado por UX/UI</p>
+                    <h1>Cargando...</h1>
+                    <p class="profile-tagline">Cargando...</p>
                     <div class="profile-meta">
-                        <span>📍 Lima, Perú</span>
                         <span class="status-dot">•</span>
-                        <span>💼 Buscando oportunidades</span>
+                        <span> Lima, Perú</span>
+
                     </div>
                 </div>
             </div>
@@ -888,46 +871,18 @@
                         <h3>Resumen Profesional</h3>
                     </div>
                     <p class="card-text">
-                        Recién graduado en Ingeniería de Software con un enfoque en el desarrollo web moderno. Experiencia práctica construyendo aplicaciones SPA con React y Node.js durante proyectos académicos y prácticas pre-profesionales. Me motiva crear interfaces accesibles y eficientes. Busco un entorno colaborativo donde pueda aportar valor mientras continúo creciendo técnicamente.
+                        Cargando...
                     </p>
                 </section>
-
                 <section class="info-card">
                     <div class="card-title-header">
                         <div class="card-title">
                             <span class="icon-small">🚀</span>
                             <h3>Proyectos Destacados</h3>
                         </div>
-                        <button class="btn-add">+</button>
                     </div>
-                    <div class="projects-container">
-                        <div class="project-item">
-                            <div class="project-header">
-                                <h4>EcoTrack Dashboard</h4>
-                                <span class="icon-link">🔗</span>
-                            </div>
-                            <p class="project-desc">Dashboard analítico para monitorear el consumo de energía en oficinas, construido con React y Recharts.</p>
-                            <div class="project-tags">
-                                <span>React</span>
-                                <span>Tailwind</span>
-                                <span>Node.js</span>
-                            </div>
-                        </div>
-                        <div class="project-item">
-                            <div class="project-header">
-                                <h4>API de Gestión de Tareas</h4>
-                                <span class="icon-link">🔗</span>
-                            </div>
-                            <p class="project-desc">API RESTful completa con autenticación JWT, tests unitarios y documentación en Swagger.</p>
-                            <div class="project-tags">
-                                <span>Express</span>
-                                <span>MongoDB</span>
-                                <span>Jest</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="projects-container-dinamico"></div>
                 </section>
-
                 <section class="info-card">
                     <div class="card-title">
                         <span class="icon-small">🎓</span>
@@ -937,9 +892,9 @@
                         <div class="education-item">
                             <div class="edu-dot"></div>
                             <div class="edu-info">
-                                <h4>Ingeniería de Software</h4>
-                                <p>Universidad Nacional de Ingeniería</p>
-                                <span class="edu-date">Mar 2019 - Dic 2023</span>
+                                <h4>Cargando...</h4>
+                                <p>Cargando...</p>
+                                <span class="edu-date">Cargando...</span>
                             </div>
                         </div>
                     </div>

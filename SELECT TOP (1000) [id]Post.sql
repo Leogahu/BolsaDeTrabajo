@@ -95,6 +95,13 @@ SELECT TOP (1000) [id]
       ,[postante_id]
   FROM [dbo].[certificaciones]
 
+SELECT TOP (1000) [id]
+      ,[postante_id]
+      ,[descripcion]
+      ,[titulo]
+      ,[url_evidencia]
+  FROM [dbo].[proyectos_academicos]
+
 DROP TABLE IF EXISTS habilidades;
 DROP TABLE IF EXISTS avales_academicos;
 DROP TABLE IF EXISTS certificaciones;

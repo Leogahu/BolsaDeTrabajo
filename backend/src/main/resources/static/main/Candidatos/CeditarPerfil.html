@@ -254,7 +254,6 @@
             background: #BA1A1A;
             border-radius: 9999px;
         }
-
         .avatar-img {
             width: 32px;
             height: 32px;
@@ -291,59 +290,58 @@
             opacity: 1;
             visibility: visible;
         }
+        .small-dropdown { 
+            width: 180px; }
+            
+        .dropdown-header { 
+            font-weight: 700; 
+            font-size: 14px; 
+            margin-bottom: 10px; 
+            color: #1E293B; 
+            border-bottom: 1px solid #F1F5F9; 
+            padding-bottom: 5px; }
 
-        .dropdown-header {
-            font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: #1E293B;
-            border-bottom: 1px solid #F1F5F9;
-            padding-bottom: 5px;
-        }
-
-        .chat-item {
-            display: flex;
-            gap: 10px;
+        #notif-list { 
+            list-style: none; }
+        #notif-list li {
+            display: flex; 
+            justify-content: space-between; 
             align-items: center;
-            padding: 8px;
-            border-radius: 10px;
-            background: #F8FAFC;
+            background: #F8FAFC; padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 12px;
         }
+        #notif-list li button { 
+            border: none; 
+            background: transparent; 
+            cursor: pointer; 
+            color: #94A3B8; 
+            font-size: 16px; }
 
-        .chat-item img {
-            width: 36px;
-            height: 36px;
-            border-radius: 9999px;
-            object-fit: cover;
-            border: 1px solid #E2E8F0;
-        }
+        .chat-item { 
+            display: flex; 
+            gap: 10px; align-items: center; 
+            padding: 8px; 
+            border-radius: 6px; }
+        .chat-item img { 
+            width: 32px; 
+            height: 32px;
+            border-radius: 50%; }
+        .chat-info p { 
+            font-size: 11px; 
+            color: #64748B; }
 
-        .chat-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+        .drop-item { 
+            display: block; 
+            padding: 8px; 
+            text-decoration: none; 
+            color: #1E293B; 
+            font-size: 13px; }
+        .drop-item:hover { 
+            background: #F1F5F9; }
+        .logout { color: #DC2626 !important; }
 
-        .drop-item {
-            width: 100%;
-            display: block;
-            padding: 10px 12px;
-            color: #1E293B;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background 0.2s ease;
-        }
+        .show { display: block !important; }
 
-        .drop-item:hover {
-            background: #F8FAFC;
-        }
-
-        .drop-item.logout {
-            color: #BA1A1A;
-        }
-
-        
-        .stats-grid {
+.stats-grid {
             display: flex;
             gap: 24px;
             margin-top: 8px;
@@ -392,7 +390,87 @@
             color: #434655;
             letter-spacing: 0.14px;
         }
+        .custom-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.6); /* Fondo oscuro translúcido */
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
 
+        .modal-content-wrapper {
+            background-color: #FFFFFF;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 24px;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E2E8F0;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .modal-header-wrapper h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #1E293B;
+        }
+
+        .close-modal-icon {
+            font-size: 24px;
+            color: #94A3B8;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal-icon:hover {
+            color: #475569;
+        }
+
+        .modal-instruction-text {
+            color: #64748B;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .modal-project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        /* Items individuales dentro del modal */
+        .modal-project-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F8FAFC;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
         .stat-number {
             font-size: 36px;
             font-weight: 700;
@@ -826,9 +904,10 @@
             <div class="personal-data-flex">
                 <div class="avatar-upload">
                     <div class="avatar-placeholder">
-                        <img src="https://img.icons8.com/color/96/test-account.png" alt="User Icon">
+                        <img id="img-avatar-preview" src="https://img.icons8.com/color/96/test-account.png" alt="User Icon" style="width:96px; height:96px; border-radius:50%; object-fit:cover;">
                     </div>
-                    <a href="#" class="link-ver">Cambiar Foto</a>
+                    <a href="#" id="link-cambiar-foto" class="link-ver">Cambiar Foto</a>
+                    <input type="file" id="input-foto-file" accept="image/*" style="display: none;">
                 </div>
                 <div class="form-inputs">
                     <div class="input-row">
@@ -851,54 +930,74 @@
 
         <div class="profile-card">
             <div class="section-title">
-                <span class="icon-section">🎓</span>
-                <h3>Educación</h3>
+                <span class="icon-section">🚀</span>
+                <h3>Añadir Proyecto Destacado</h3>
             </div>
+            
+            <input type="hidden" id="proj-id-edicion" value="">
+
             <div class="input-group">
-                <label>UNIVERSIDAD / INSTITUTO</label>
-                <select id="select-institucion">
-                    <option value="Universidad Nacional Mayor de San Marcos">Universidad Nacional Mayor de San Marcos</option>
-                </select>
+                <label>TÍTULO DEL PROYECTO *</label>
+                <input type="text" id="proj-titulo" placeholder="Ej: EcoTrack Dashboard">
             </div>
+            
             <div class="input-group">
-                <label>GRADO ACADÉMICO</label>
-                <select id="select-grado">
-                    <option value="Bachiller">Bachiller</option>
-                </select>
+                <label>ENLACE DE EVIDENCIA (GITHUB / LIVE DEMO)</label>
+                <input type="url" id="proj-url" placeholder="https://github.com/tu-usuario/proyecto">
             </div>
+
             <div class="input-group">
-                <label>CARRERA</label>
-                <input type="text" id="input-carrera" placeholder="Tu carrera profesional">
+                <label>DESCRIPCIÓN DEL PROYECTO</label>
+                <textarea id="proj-descripcion" rows="3" placeholder="Describe brevemente el alcance de tu proyecto..."></textarea>
+            </div>
+
+            <div style="display:flex; gap:12px; margin-top:15px; flex-wrap: wrap;">
+                <button type="button" id="btn-agregar-proyecto" class="btn-save" style="flex: 1; min-width: 200px; margin: 0; background: #2563EB;">
+                    ＋ Guardar Proyecto en mi Perfil
+                </button>
+                <button type="button" id="btn-cancelar-edicion-proj" class="btn-cancel" style="display:none; margin:0; padding: 0 20px;">
+                    Cancelar Edición
+                </button>
+                <button type="button" id="btn-abrir-config-proyectos" class="btn-save" style="flex: 1; min-width: 200px; margin: 0; background: #707c96;">
+                    ⚙️ Configurar Proyectos
+                </button>
             </div>
         </div>
 
+        <div id="modal-config-proyectos" class="custom-modal" style="display: none;">
+            <div class="modal-content-wrapper">
+                <div class="modal-header-wrapper">
+                    <h3>⚙️ Configurar mis Proyectos</h3>
+                    <span id="btn-cerrar-modal-proj" class="close-modal-icon">&times;</span>
+                </div>
+                <p class="modal-instruction-text">Aquí puedes visualizar, editar o eliminar de forma definitiva tus proyectos académicos guardados:</p>
+                
+                <div id="lista-configurar-proyectos" class="modal-project-list">
+                    </div>
+            </div>
+        </div>
         <div class="profile-card">
             <div class="section-title">
-                <span class="icon-section">💡</span>
-                <h3>Habilidades</h3>
+                <span class="icon-section">🎓</span>
+                <h3>Educación</h3>
             </div>
+            
             <div class="input-group">
-                <label>HABILIDADES TÉCNICAS</label>
-                <div class="chips-container">
-                    <span class="skill-chip">Python ✕</span>
-                    <span class="skill-chip">React ✕</span>
-                    <span class="skill-chip">SQL ✕</span>
-                </div>
-                <div class="add-skill">
-                    <input type="text" placeholder="Ej. JavaScript, Figma, Excel...">
-                    <button type="button" class="btn-add">+</button>
-                </div>
+                <label>UNIVERSIDAD / INSTITUTO</label>
+                <input type="text" id="input-institucion" placeholder="Ej: Universidad Nacional Mayor de San Marcos">
             </div>
+            
             <div class="input-group">
-                <label>HABILIDADES BLANDAS</label>
-                <div class="chips-container">
-                    <span class="skill-chip">Trabajo en equipo ✕</span>
-                    <span class="skill-chip">Comunicación ✕</span>
-                </div>
-                <div class="add-skill">
-                    <input type="text" placeholder="Ej. Liderazgo, Empatía...">
-                    <button type="button" class="btn-add">+</button>
-                </div>
+                <label>ESTADO ACADÉMICO</label>
+                <select id="select-egresado">
+                    <option value="false">Estudiante</option>
+                    <option value="true">Egresado</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>CARRERA</label>
+                <input type="text" id="input-carrera" placeholder="Tu carrera profesional">
             </div>
         </div>
 
@@ -910,11 +1009,15 @@
             <div class="input-row">
                 <div class="input-group">
                     <label>MODALIDAD DE TRABAJO</label>
-                    <select><option>Remoto</option></select>
+                    <select>
+                        <option>Remoto</option>
+                        <option>Presencial</option>
+                        <option>Hibrido</option>
+                    </select>
                 </div>
                 <div class="input-group">
-                    <label>EXPECTATIVA SALARIAL (MENSUAL)</label>
-                    <input type="text" placeholder="S/ 0.00">
+                    <label>DISPONIBILIDAD</label>
+                    <input type="text" placeholder="8am - 2pm (GMT-5)">
                 </div>
             </div>
         </div>

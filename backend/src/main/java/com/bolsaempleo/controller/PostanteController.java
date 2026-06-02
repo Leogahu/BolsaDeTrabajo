@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @RestController
 @RequestMapping("/api/postantes")
@@ -81,33 +85,53 @@ public class PostanteController {
     public ResponseEntity<?> obtenerPostulaciones(@PathVariable Long id) {
         return ResponseEntity.ok(postanteService.obtenerPostulaciones(id));
     }
-    @PutMapping(value = "/{id}/completo", consumes = {"multipart/form-data"})
+    @PutMapping("/{id}/completo")
     public ResponseEntity<?> actualizarPerfilCompleto(
             @PathVariable Long id,
             @RequestParam("nombres") String nombres,      
             @RequestParam("apellidos") String apellidos,  
             @RequestParam("descripcion") String descripcion,
             @RequestParam("carrera") String carrera,
-            @RequestParam(value = "cvFile", required = false) MultipartFile cvFile) {
+            @RequestParam("institucion") String institucion, 
+            @RequestParam("egresado") Boolean egresado,   
+            @RequestParam(value = "cvFile", required = false) MultipartFile cvFile,
+            @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile) { 
         
         return postanteRepository.findById(id)
                 .map(postante -> {
-                    postante.setNombres(nombres);
-                    postante.setApellidos(apellidos);
-                    postante.setDescripcion(descripcion);
-                    postante.setCarrera(carrera);
-                    
-                    if (cvFile != null && !cvFile.isEmpty()) {
-                        try {
-                            String nombreArchivo = "cv_" + id + "_" + cvFile.getOriginalFilename();
+                    try {
+                        postante.setNombres(nombres);
+                        postante.setApellidos(apellidos);
+                        postante.setDescripcion(descripcion);
+                        postante.setCarrera(carrera);
+                        postante.setInstitucion(institucion); 
+                        postante.setEgresado(egresado);      
+
+                        if (cvFile != null && !cvFile.isEmpty()) {
+                            Path directorioCvs = Paths.get("uploads/cvs");
+                            if (!Files.exists(directorioCvs)) Files.createDirectories(directorioCvs);
+                            String nombreArchivo = "cv_" + id + "_" + cvFile.getOriginalFilename().replaceAll("\\s+", "_");
+                            Path rutaDestinoCv = directorioCvs.resolve(nombreArchivo);
+                            Files.copy(cvFile.getInputStream(), rutaDestinoCv, StandardCopyOption.REPLACE_EXISTING);
                             postante.setCvPath("/uploads/cvs/" + nombreArchivo);
-                        } catch (Exception e) {
-                            return ResponseEntity.internalServerError().body("Error al procesar el PDF");
                         }
+
+                        if (fotoFile != null && !fotoFile.isEmpty()) {
+                            Path directorioFotos = Paths.get("uploads/fotos");
+                            if (!Files.exists(directorioFotos)) Files.createDirectories(directorioFotos);
+                            String nombreFoto = "foto_" + id + "_" + fotoFile.getOriginalFilename().replaceAll("\\s+", "_");
+                            Path rutaDestinoFoto = directorioFotos.resolve(nombreFoto);
+                            Files.copy(fotoFile.getInputStream(), rutaDestinoFoto, StandardCopyOption.REPLACE_EXISTING);
+                            postante.setFotoPerfil("/uploads/fotos/" + nombreFoto);
+                        }
+                        
+                        postanteRepository.save(postante);
+                        return ResponseEntity.ok(Map.of("message", "Perfil actualizado con éxito"));
+
+                    } catch (Exception e) {
+                        System.err.println("Error procesando archivos físicos: " + e.getMessage());
+                        return ResponseEntity.internalServerError().body(Map.of("error", "Error al escribir los archivos en el servidor."));
                     }
-                    
-                    postanteRepository.save(postante);
-                    return ResponseEntity.ok(Map.of("message", "Perfil actualizado integralmente de forma exitosa"));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }

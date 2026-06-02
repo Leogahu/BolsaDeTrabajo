@@ -3,6 +3,7 @@ package com.bolsaempleo.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "postantes")
@@ -41,18 +42,22 @@ public class Postante {
 
     @Column(length = 1000)
     private String cvPath;
-    
-    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL)
-    private List<Habilidad> habilidades;
 
-    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL)
+    private String fotoPerfil;
+    
+    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference 
     private List<Proyectos> proyectosAcademicos;
 
-    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference 
+    private List<Habilidad> habilidades;
+    
+    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference 
     private List<Certificados> certificaciones;
 
-    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "postante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference 
     private List<Avales> avalesAcademicos;
-    
-    private String fotoPerfil;
 }

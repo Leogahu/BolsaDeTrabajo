@@ -70,9 +70,9 @@ function handleLogout() {
     logout();
 }
 
-// ============================================
-// INICIALIZACIÓN
-// ============================================
+
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
     initNavegacion();
@@ -183,9 +183,9 @@ function initSidebar(elementId, targetPage) {
     }
 }
 
-// ============================================
-// FORMULARIOS
-// ============================================
+
+
+
 
 function initFormularios() {
     const loginForm = document.getElementById('login-form');
@@ -242,9 +242,9 @@ function initToggleRegistroUnificado() {
 }
 
 
-// ============================================
-// HANDLERS
-// ============================================
+
+
+
 
 async function handleResponse(response) {
     if (!response.ok) {
@@ -373,9 +373,9 @@ async function handleRegisterReclutador(event) {
         alert('No se pudo conectar con el servidor');
     }
 }
-// ============================================
-// POSTULACIONES
-// ============================================
+
+
+
 
 async function applyToJob(jobId) {
     const session = getSession();
@@ -575,7 +575,7 @@ function actualizarBotonesNavegacion() {
     }
 }
 
-// --- LÓGICA DE NEGOCIO Y API ---
+
 
 function validarPaso(step) {
     if (step === 1) {
@@ -1209,12 +1209,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // CONTROL DE CARGA: Carga los datos dinámicos de la BD
+    
     if (pathname.includes('cperfil.html') || pathname.includes('ceditarperfil.html')) {
         cargarDatosPerfil(session.user.id);
     }
 
-    // Renderizar el Header superior de forma segura
+    
     const nombreHeader = document.getElementById('user-name-display');
     if (nombreHeader && session.user) {
         nombreHeader.textContent = session.user.nombres 
@@ -1222,13 +1222,13 @@ document.addEventListener('DOMContentLoaded', () => {
             : (session.user.nombreCompleto || "Usuario");
     }
 
-    // Escuchador para el botón Guardar Cambios
+    
     const btnGuardar = document.getElementById('btn-guardar-perfil');
     if (btnGuardar) {
         btnGuardar.addEventListener('click', enviarFormularioPerfil);
     }
 
-    // SOLUCIÓN AL ERROR CRÍTICO DEL MODAL (Evita que se congele el archivo js)
+    
     const btnConfirmar = document.getElementById('confirmDelete');
     const btnCancelar = document.getElementById('cancelDelete');
     const modal = document.getElementById('deleteModal');
@@ -1264,94 +1264,106 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function cargarDatosPerfil(userId) {
+    let postante = null;
+
     try {
         const response = await fetch(`/api/postantes/${userId}`);
-        if (!response.ok) throw new Error("No se pudo obtener el perfil del servidor.");
+        if (!response.ok) throw new Error("No se pudo obtener el perfil.");
         
-        const postante = await response.json();
-
-        // 1. Reemplazar Nombre y Título Profesional en la Cabecera
-        const nombreCompletoValido = (postante.nombres || postante.apellidos)
-            ? `${postante.nombres || ''} ${postante.apellidos || ''}`.trim()
-            : 'Usuario de ChapaTuChamba';
-
-        const titleElement = document.querySelector('.profile-details h1');
-        if (titleElement) titleElement.innerText = nombreCompletoValido;
-        
-        const taglineElement = document.querySelector('.profile-tagline');
-        if (taglineElement) {
-            taglineElement.innerText = postante.carrera 
-                ? `${postante.carrera} | Perfil Profesional` 
-                : 'Añade tu carrera o título profesional';
+        const textoPlano = await response.text();
+        if (textoPlano.includes('":]') || textoPlano.trim().endsWith(']')) {
+            throw new SyntaxError("JSON truncado detectado.");
         }
-        
-        // 2. Auto-relleno de Inputs si se encuentra en la vista 'CeditarPerfil.html'
-        const inputNombres = document.getElementById('input-nombres');
-        const inputApellidos = document.getElementById('input-apellidos');
-        const inputCarrera = document.getElementById('input-carrera');
-        const txtDescripcion = document.getElementById('input-descripcion') || document.querySelector('textarea');
-
-        if (inputNombres) inputNombres.value = postante.nombres || "";
-        if (inputApellidos) inputApellidos.value = postante.apellidos || "";
-        if (inputCarrera) inputCarrera.value = postante.carrera || "";
-        if (txtDescripcion) txtDescripcion.value = postante.descripcion || "";
-
-        // 3. Reemplazar Resumen Profesional
-        const resumenElement = document.querySelector('.card-text');
-        if (resumenElement) {
-            resumenElement.innerText = (postante.descripcion && postante.descripcion.trim() !== "") 
-                ? postante.descripcion 
-                : 'Aún no has agregado un resumen profesional. Haz clic en "Editar Perfil" para describirte.';
-        }
-
-        // 4. Reemplazar Educación Dinámicamente de forma limpia
-        const eduContainer = document.getElementById('educacion-dinamica-lista');
-        if (eduContainer) {
-            if (postante.carrera || postante.institucion) {
-                const estadoEgresado = postante.egresado ? 'Graduado / Egresado' : 'En curso';
-                eduContainer.innerHTML = `
-                    <div class="education-item">
-                        <div class="edu-dot"></div>
-                        <div class="edu-info">
-                            <h4>${postante.carrera || 'Estudios sin especificar'}</h4>
-                            <p>${postante.institucion || 'Institución no especificada'}</p>
-                            <span class="edu-date">${estadoEgresado}</span>
-                        </div>
-                    </div>`;
-            } else {
-                eduContainer.innerHTML = `<p style="color:#94A3B8; font-style:italic; padding-left:15px;">Información académica no registrada aún.</p>`;
-            }
-        }
-
-        // 5. Inyección de Habilidades (Skills Técnicos y Blandas)
-        const contenedorTecnico = document.getElementById('skills-tecnicos-lista');
-        const contenedorBlando = document.getElementById('skills-blandas-lista');
-
-        if (postante.habilidades && postante.habilidades.length > 0) {
-            const tecnicas = postante.habilidades.filter(h => h.tipoHabilidad !== 'Blanda');
-            const blandas = postante.habilidades.filter(h => h.tipoHabilidad === 'Blanda');
-
-            if (contenedorTecnico && tecnicas.length > 0) {
-                contenedorTecnico.innerHTML = tecnicas.map(h => `
-                    <div class="skill-meter" style="margin-bottom:12px;">
-                        <div class="meter-header">
-                            <span>${h.nombre}</span> 
-                            <span>${h.verificada ? '✅ Verificada' : '⚙️'}</span>
-                        </div>
-                        <div class="meter-bar"><div class="meter-fill" style="width: 80%;"></div></div>
-                    </div>
-                `).join('');
-            }
-
-            if (contenedorBlando && blandas.length > 0) {
-                contenedorBlando.innerHTML = blandas.map(b => `
-                    <span class="soft-skill-tag">${b.nombre}</span>
-                `).join('');
-            }
-        }
-
+        postante = JSON.parse(textoPlano);
     } catch (error) {
-        console.error("Error cargando los datos en la vista de perfil:", error);
+        console.error("Error crítico leyendo el JSON del postante:", error);
+        postante = { nombres: "Usuario", apellidos: "", carrera: "", descripcion: "", fotoPerfil: null };
+    }
+
+    const fotoPorDefecto = "https://img.icons8.com/color/96/test-account.png";
+    const rutaFotoFinal = (postante.fotoPerfil && postante.fotoPerfil.trim() !== "") 
+        ? postante.fotoPerfil 
+        : fotoPorDefecto;
+    const vistaAvatar = document.getElementById('profile-avatar-view');
+    if (vistaAvatar) {
+        vistaAvatar.src = rutaFotoFinal;
+    }
+    const edicionAvatar = document.getElementById('img-avatar-preview');
+    if (edicionAvatar) {
+        edicionAvatar.src = rutaFotoFinal;
+    }
+    const nombreCompletoValido = (postante.nombres || postante.apellidos)
+        ? `${postante.nombres || ''} ${postante.apellidos || ''}`.trim()
+        : 'Usuario de ChapaTuChamba';
+
+    const titleElement = document.querySelector('.profile-details h1');
+    if (titleElement) titleElement.innerText = nombreCompletoValido;
+    
+    const taglineElement = document.querySelector('.profile-tagline');
+    if (taglineElement) {
+        taglineElement.innerText = postante.carrera 
+            ? `${postante.carrera} | Perfil Profesional` 
+            : 'Añade tu carrera o título profesional';
+    }
+    
+    const resumenElement = document.querySelector('.card-text');
+    if (resumenElement) {
+        resumenElement.innerText = (postante.descripcion && postante.descripcion.trim() !== "") 
+            ? postante.descripcion 
+            : 'Aún no has agregado un resumen profesional.';
+    }
+    if (document.getElementById('input-nombres')) document.getElementById('input-nombres').value = postante.nombres || "";
+    if (document.getElementById('input-apellidos')) document.getElementById('input-apellidos').value = postante.apellidos || "";
+    if (document.getElementById('input-carrera')) document.getElementById('input-carrera').value = postante.carrera || "";
+    if (document.getElementById('input-institucion')) document.getElementById('input-institucion').value = postante.institucion || "";
+    if (document.getElementById('select-egresado')) {
+        document.getElementById('select-egresado').value = postante.egresado !== null ? String(postante.egresado) : "false";
+        }
+    const txtArea = document.getElementById('input-descripcion') || document.querySelector('textarea');
+    if (txtArea && postante.descripcion) txtArea.value = postante.descripcion;
+
+    const eduContainer = document.getElementById('educacion-dinamica-lista');
+    if (eduContainer) {
+        if (postante.carrera || postante.institucion) {
+            const estadoEstudios = postante.egresado === true ? 'Egresado' : 'Estudiante';
+            
+            eduContainer.innerHTML = `
+                <div class="education-item">
+                    <div class="edu-dot"></div>
+                    <div class="edu-info">
+                        <h4>${postante.carrera || 'Carrera Profesional'}</h4>
+                        <p>${postante.institucion || 'Institución Universitaria / Técnica'}</p>
+                        <span class="edu-date">${estadoEstudios}</span>
+                    </div>
+                </div>`;
+        } else {
+            eduContainer.innerHTML = `<p style="color:#94A3B8; font-size:14px; font-style:italic; padding: 5px 0;">No has añadido información sobre tu educación académica.</p>`;
+        }
+    }
+    const projectsContainer = document.getElementById('projects-container-dinamico');
+    if (projectsContainer) {
+        try {
+            const resProj = await fetch(`/api/proyectos/postante/${userId}`);
+            if (resProj.ok) {
+                const listaProyectos = await resProj.json();
+                if (listaProyectos && listaProyectos.length > 0) {
+                    projectsContainer.innerHTML = listaProyectos.map(proj => `
+                        <div class="project-item" style="margin-bottom: 20px; border-bottom: 1px solid #F1F5F9; padding-bottom: 15px;">
+                            <div class="project-header" style="display:flex; justify-content:space-between; align-items:center;">
+                                <h4 style="margin:0; font-size:16px; color:#1E293B;">${proj.titulo}</h4>
+                                ${proj.urlEvidencia ? `<a href="${proj.urlEvidencia}" target="_blank">🔗</a>` : ''}
+                            </div>
+                            <p style="color:#64748B; font-size:14px; margin: 8px 0 0 0;">${proj.descripcion || ''}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    projectsContainer.innerHTML = '';
+                }
+            }
+        } catch (errProj) {
+            console.error("Error aislado cargando proyectos:", errProj);
+            projectsContainer.innerHTML = '';
+        }
     }
 }
 
@@ -1368,7 +1380,11 @@ async function enviarFormularioPerfil() {
     const txtArea = document.getElementById('input-descripcion') || document.querySelector('textarea');
     const descripcion = txtArea ? txtArea.value.trim() : "";
     const carrera = document.getElementById('input-carrera')?.value.trim() || "";
+    const institucion = document.getElementById('input-institucion')?.value.trim() || "";
+    const egresado = document.getElementById('select-egresado')?.value || "false";
+
     const cvInput = document.getElementById('input-cv-file');
+    const fotoInput = document.getElementById('input-foto-file');
 
     if (!nombres || !apellidos) {
         alert("Los campos Nombres y Apellidos son obligatorios.");
@@ -1380,9 +1396,14 @@ async function enviarFormularioPerfil() {
     formData.append("apellidos", apellidos);   
     formData.append("descripcion", descripcion);
     formData.append("carrera", carrera);
+    formData.append("institucion", institucion); 
+    formData.append("egresado", egresado);      
     
     if (cvInput && cvInput.files[0]) {
         formData.append("cvFile", cvInput.files[0]);
+    }
+    if (fotoInput && fotoInput.files[0]) {
+        formData.append("fotoFile", fotoInput.files[0]);
     }
 
     try {
@@ -1397,7 +1418,7 @@ async function enviarFormularioPerfil() {
             session.user.nombreCompleto = `${nombres} ${apellidos}`.trim();
             localStorage.setItem('userSession', JSON.stringify(session));
 
-            alert("¡Perfil actualizado con éxito!");
+            alert("¡Perfil y datos académicos actualizados con éxito!");
             window.location.href = 'Cperfil.html';
         } else {
             alert("Error al procesar el guardado en el servidor.");
@@ -1406,4 +1427,239 @@ async function enviarFormularioPerfil() {
         console.error("Error en la petición:", error);
         alert("Hubo un error de red al intentar conectar.");
     }
+}
+
+const btnAgregarProyecto = document.getElementById('btn-agregar-proyecto');
+if (btnAgregarProyecto) {
+    btnAgregarProyecto.addEventListener('click', enviarNuevoProyecto);
+}
+
+async function enviarNuevoProyecto() {
+    const session = JSON.parse(localStorage.getItem('userSession'));
+    if (!session || !session.user) {
+        alert("Sesión inválida.");
+        return;
+    }
+
+    const postanteId = session.user.id;
+    const inputTitulo = document.getElementById('proj-titulo');
+    const inputUrl = document.getElementById('proj-url');
+    const txtDesc = document.getElementById('proj-descripcion');
+
+    const titulo = inputTitulo ? inputTitulo.value.trim() : "";
+    const urlEvidencia = inputUrl ? inputUrl.value.trim() : "";
+    const descripcion = txtDesc ? txtDesc.value.trim() : "";
+
+    if (!titulo) {
+        alert("El título del proyecto es completamente obligatorio.");
+        return;
+    }
+
+    
+    const proyectoPayload = {
+        titulo: titulo,
+        descripcion: descripcion,
+        urlEvidencia: urlEvidencia
+    };
+
+    try {
+        const response = await fetch(`/api/proyectos/postante/${postanteId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(proyectoPayload)
+        });
+
+        if (response.ok) {
+            alert("¡Proyecto académico anexado exitosamente!");
+            
+            if (inputTitulo) inputTitulo.value = "";
+            if (inputUrl) inputUrl.value = "";
+            if (txtDesc) txtDesc.value = "";
+            
+            
+            window.location.href = 'Cperfil.html';
+        } else {
+            alert("Error al intentar registrar el proyecto en el servidor.");
+        }
+    } catch (error) {
+        console.error("Error de red:", error);
+        alert("Ocurrió un error al conectar con el backend.");
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const btnGuardar = document.getElementById('btn-guardar-perfil');
+    if (btnGuardar) {
+        btnGuardar.addEventListener('click', enviarFormularioPerfil);
+    }
+
+    
+    const linkCambiarFoto = document.getElementById('link-cambiar-foto');
+    const inputFotoFile = document.getElementById('input-foto-file');
+    if (linkCambiarFoto && inputFotoFile) {
+        linkCambiarFoto.addEventListener('click', (e) => {
+            e.preventDefault();
+            inputFotoFile.click();
+        });
+
+        inputFotoFile.addEventListener('change', () => {
+            if (inputFotoFile.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('img-avatar-preview');
+                    if (preview) preview.src = e.target.result;
+                };
+                reader.readAsDataURL(inputFotoFile.files[0]);
+            }
+        });
+    }
+
+    
+    const btnAbrirModal = document.getElementById('btn-abrir-config-proyectos');
+    const btnCerrarModal = document.getElementById('btn-cerrar-modal-proj');
+    const modalConfig = document.getElementById('modal-config-proyectos');
+
+    if (btnAbrirModal && modalConfig) {
+        btnAbrirModal.addEventListener('click', () => {
+            const session = JSON.parse(localStorage.getItem('userSession'));
+            if (session?.user?.id) {
+                renderizarConfiguracionProyectos(session.user.id);
+                modalConfig.style.display = 'flex';
+            }
+        });
+    }
+
+    if (btnCerrarModal && modalConfig) {
+        btnCerrarModal.addEventListener('click', () => {
+            modalConfig.style.display = 'none';
+        });
+    }
+
+    
+    const btnAgregarProyecto = document.getElementById('btn-agregar-proyecto');
+    if (btnAgregarProyecto) {
+        btnAgregarProyecto.addEventListener('click', procesarGuardarProyecto);
+    }
+
+    const btnCancelProj = document.getElementById('btn-cancelar-edicion-proj');
+    if (btnCancelProj) {
+        btnCancelProj.addEventListener('click', limpiarFormularioProyecto);
+    }
+});
+
+async function procesarGuardarProyecto() {
+    const session = JSON.parse(localStorage.getItem('userSession'));
+    const postanteId = session?.user?.id;
+    if (!postanteId) return;
+
+    const idEdicion = document.getElementById('proj-id-edicion').value;
+    const titulo = document.getElementById('proj-titulo').value.trim();
+    const urlEvidencia = document.getElementById('proj-url').value.trim();
+    const descripcion = document.getElementById('proj-descripcion').value.trim();
+
+    if (!titulo) {
+        alert("El título del proyecto es obligatorio.");
+        return;
+    }
+
+    const payload = { titulo, descripcion, urlEvidencia };
+    const url = idEdicion ? `/api/proyectos/${idEdicion}` : `/api/proyectos/postante/${postanteId}`;
+    const metodo = idEdicion ? 'PUT' : 'POST';
+
+    try {
+        const response = await fetch(url, {
+            method: metodo,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            alert(idEdicion ? "¡Proyecto actualizado!" : "¡Proyecto guardado en el perfil!");
+            limpiarFormularioProyecto();
+            
+            if (document.getElementById('modal-config-proyectos').style.display === 'flex') {
+                renderizarConfiguracionProyectos(postanteId);
+            }
+        } else {
+            alert("Error al guardar el proyecto en el servidor.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+async function renderizarConfiguracionProyectos(userId) {
+    const contenedor = document.getElementById('lista-configurar-proyectos');
+    if (!contenedor) return;
+
+    try {
+        const response = await fetch(`/api/proyectos/postante/${userId}`);
+        if (!response.ok) return;
+        const proyectos = await response.json();
+
+        if (proyectos.length === 0) {
+            contenedor.innerHTML = `<p style="color:#94A3B8; font-size:14px; font-style:italic; text-align:center; padding:10px;">No registras proyectos activos.</p>`;
+            return;
+        }
+
+        contenedor.innerHTML = proyectos.map(p => `
+            <div class="modal-project-item">
+                <span style="font-weight:500; font-size:14px; color:#334155; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px;">${p.titulo}</span>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" onclick="prepararEdicionDesdeModal(${p.id}, '${escapeJS(p.titulo)}', '${escapeJS(p.urlEvidencia)}', '${escapeJS(p.descripcion)}')" style="background:#2563EB; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600;">Editar</button>
+                    <button type="button" onclick="eliminarProyectoDesdeModal(${p.id}, ${userId})" style="background:#FEE2E2; color:#DC2626; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600;">Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    } catch (e) {
+        console.error("Error cargando configuración:", e);
+    }
+}
+
+function prepararEdicionDesdeModal(id, titulo, url, descripcion) {
+    document.getElementById('proj-id-edicion').value = id;
+    document.getElementById('proj-titulo').value = titulo;
+    document.getElementById('proj-url').value = url === "null" ? "" : url;
+    document.getElementById('proj-descripcion').value = descripcion === "null" ? "" : descripcion;
+    
+    document.getElementById('btn-agregar-proyecto').innerText = "Actualizar Cambios";
+    document.getElementById('btn-cancelar-edicion-proj').style.display = "inline-block";
+    
+    
+    document.getElementById('modal-config-proyectos').style.display = 'none';
+    
+    
+    document.getElementById('proj-titulo').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function eliminarProyectoDesdeModal(id, userId) {
+    if (!confirm("¿Deseas eliminar permanentemente este proyecto de tu portafolio académico?")) return;
+    try {
+        const response = await fetch(`/api/proyectos/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+            alert("Proyecto removido.");
+            limpiarFormularioProyecto();
+            renderizarConfiguracionProyectos(userId);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function limpiarFormularioProyecto() {
+    document.getElementById('proj-id-edicion').value = "";
+    document.getElementById('proj-titulo').value = "";
+    document.getElementById('proj-url').value = "";
+    document.getElementById('proj-descripcion').value = "";
+    document.getElementById('btn-agregar-proyecto').innerText = "＋ Guardar Proyecto en mi Perfil";
+    document.getElementById('btn-cancelar-edicion-proj').style.display = "none";
+}
+
+function escapeJS(str) {
+    if (!str || str === "null") return '';
+    return str.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
 }

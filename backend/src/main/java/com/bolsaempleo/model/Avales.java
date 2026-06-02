@@ -1,4 +1,5 @@
 package com.bolsaempleo.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,9 +12,9 @@ public class Avales {
     private Long id;
     
     @Column(nullable = false)
-    private String nombreAvalador; // Nombre del profesor o mentor
+    private String nombreAvalador;
     
-    private String cargoInstitucion; // Docente de Ingenieria de Software en UPC
+    private String cargoInstitucion; 
     
     @Column(columnDefinition = "TEXT")
     private String comentarioAval;
@@ -22,5 +23,6 @@ public class Avales {
     
     @ManyToOne
     @JoinColumn(name = "postante_id", nullable = false)
+    @JsonBackReference
     private Postante postante;
 }

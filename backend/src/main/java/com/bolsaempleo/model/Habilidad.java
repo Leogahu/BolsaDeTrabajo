@@ -1,5 +1,5 @@
 package com.bolsaempleo.model;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,5 +21,6 @@ public class Habilidad {
     
     @ManyToOne
     @JoinColumn(name = "postante_id", nullable = false)
+    @JsonBackReference
     private Postante postante;
 }

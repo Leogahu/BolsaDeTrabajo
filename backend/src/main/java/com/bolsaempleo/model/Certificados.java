@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "certificaciones")
@@ -21,6 +22,7 @@ public class Certificados {
     
     @ManyToOne
     @JoinColumn(name = "postante_id", nullable = false)
+    @JsonBackReference
     private Postante postante;
 }
 
