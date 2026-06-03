@@ -3,15 +3,12 @@ package com.bolsaempleo.controller;
 import com.bolsaempleo.model.Postante;
 import com.bolsaempleo.repository.PostanteRepository;
 import com.bolsaempleo.service.PostanteService;
+import com.bolsaempleo.service.ArchivoService; 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 @RestController
 @RequestMapping("/api/postantes")
@@ -20,10 +17,14 @@ public class PostanteController {
     
     private final PostanteService postanteService;
     private final PostanteRepository postanteRepository;
+    private final ArchivoService archivoService; 
     
-    public PostanteController(PostanteService postanteService, PostanteRepository postanteRepository) {
+    public PostanteController(PostanteService postanteService, 
+                              PostanteRepository postanteRepository, 
+                              ArchivoService archivoService) { 
         this.postanteService = postanteService;
         this.postanteRepository = postanteRepository;
+        this.archivoService = archivoService;
     }
     
     @PostMapping("/register")
@@ -54,6 +55,7 @@ public class PostanteController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
+
     @PutMapping("/{id}/descripcion")
     public ResponseEntity<?> actualizarDescripcion(@PathVariable Long id, @RequestBody Map<String, String> body) {
         return postanteRepository.findById(id)
@@ -61,11 +63,11 @@ public class PostanteController {
                     String nuevaDescripcion = body.get("descripcion");
                     postante.setDescripcion(nuevaDescripcion);
                     postanteRepository.save(postante); 
-                    
                     return ResponseEntity.ok(Map.of("message", "Descripción actualizada con éxito"));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
     @GetMapping("/{id}/habilidades")
     public ResponseEntity<?> obtenerHabilidades(@PathVariable Long id) {
         return ResponseEntity.ok(postanteService.obtenerHabilidades(id));
@@ -85,6 +87,7 @@ public class PostanteController {
     public ResponseEntity<?> obtenerPostulaciones(@PathVariable Long id) {
         return ResponseEntity.ok(postanteService.obtenerPostulaciones(id));
     }
+
     @PutMapping("/{id}/completo")
     public ResponseEntity<?> actualizarPerfilCompleto(
             @PathVariable Long id,
@@ -110,29 +113,21 @@ public class PostanteController {
                         postante.setTelefono(telefono);   
 
                         if (cvFile != null && !cvFile.isEmpty()) {
-                            Path directorioCvs = Paths.get("uploads/cvs");
-                            if (!Files.exists(directorioCvs)) Files.createDirectories(directorioCvs);
-                            String nombreArchivo = "cv_" + id + "_" + cvFile.getOriginalFilename().replaceAll("\\s+", "_");
-                            Path rutaDestinoCv = directorioCvs.resolve(nombreArchivo);
-                            Files.copy(cvFile.getInputStream(), rutaDestinoCv, StandardCopyOption.REPLACE_EXISTING);
-                            postante.setCvPath("/uploads/cvs/" + nombreArchivo);
+                            String urlCv = archivoService.subirArchivo(cvFile, "cv_" + id);
+                            postante.setCvPath(urlCv);
                         }
 
                         if (fotoFile != null && !fotoFile.isEmpty()) {
-                            Path directorioFotos = Paths.get("uploads/fotos");
-                            if (!Files.exists(directorioFotos)) Files.createDirectories(directorioFotos);
-                            String nombreFoto = "foto_" + id + "_" + fotoFile.getOriginalFilename().replaceAll("\\s+", "_");
-                            Path rutaDestinoFoto = directorioFotos.resolve(nombreFoto);
-                            Files.copy(fotoFile.getInputStream(), rutaDestinoFoto, StandardCopyOption.REPLACE_EXISTING);
-                            postante.setFotoPerfil("/uploads/fotos/" + nombreFoto);
+                            String urlFoto = archivoService.subirArchivo(fotoFile, "foto_" + id);
+                            postante.setFotoPerfil(urlFoto);
                         }
                         
                         postanteRepository.save(postante);
                         return ResponseEntity.ok(Map.of("message", "Perfil actualizado con éxito"));
 
                     } catch (Exception e) {
-                        System.err.println("Error procesando archivos físicos: " + e.getMessage());
-                        return ResponseEntity.internalServerError().body(Map.of("error", "Error al escribir los archivos en el servidor."));
+                        System.err.println("Error procesando archivos en Azure Storage: " + e.getMessage());
+                        return ResponseEntity.internalServerError().body(Map.of("error", "Error al procesar el guardado en la nube de Azure."));
                     }
                 })
                 .orElse(ResponseEntity.notFound().build());

@@ -6,10 +6,8 @@ import com.bolsaempleo.model.PostulacionEstado;
 import com.bolsaempleo.repository.HabilidadRepository;
 import com.bolsaempleo.repository.PostanteRepository;
 import com.bolsaempleo.repository.PostulacionEstadoRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -20,33 +18,29 @@ public class PostanteService {
     private final PostanteRepository postanteRepository;
     private final HabilidadRepository habilidadRepository;
     private final PostulacionEstadoRepository postulacionEstadoRepository;
-    
-    @Value("${upload.directory}")
-    private String uploadDirectory;
+    private final ArchivoService archivoService; 
     
     public PostanteService(PostanteRepository postanteRepository,
-                            HabilidadRepository habilidadRepository,
-                            PostulacionEstadoRepository postulacionEstadoRepository) {
+                           HabilidadRepository habilidadRepository,
+                           PostulacionEstadoRepository postulacionEstadoRepository,
+                           ArchivoService archivoService) { 
         this.postanteRepository = postanteRepository;
         this.habilidadRepository = habilidadRepository;
         this.postulacionEstadoRepository = postulacionEstadoRepository;
+        this.archivoService = archivoService;
     }
     
     public Postante registrar(Postante postante, MultipartFile cvFile) throws IOException {
-    if (postanteRepository.existsByUsername(postante.getUsername())) {
-        throw new RuntimeException("El nombre de usuario ya existe");
-    }
+        if (postanteRepository.existsByUsername(postante.getUsername())) {
+            throw new RuntimeException("El nombre de usuario ya existe");
+        }
 
-    if (cvFile != null && !cvFile.isEmpty()) {
-        File directory = new File(uploadDirectory);
-        if (!directory.exists()) directory.mkdirs();
+        if (cvFile != null && !cvFile.isEmpty()) {
+            String urlCvAzure = archivoService.subirArchivo(cvFile, "cv");
+            postante.setCvPath(urlCvAzure); 
+        }
         
-        String fileName = System.currentTimeMillis() + "_" + cvFile.getOriginalFilename();
-        String filePath = uploadDirectory + File.separator + fileName;
-        cvFile.transferTo(new File(filePath));
-        postante.setCvPath(filePath);
-    }
-    return postanteRepository.save(postante);
+        return postanteRepository.save(postante);
     }
     
     public Optional<Postante> buscarPorEmail(String email) {
