@@ -1,0 +1,100 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.score {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.progress-container {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #2563eb;
+}
+
+.muted {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.actions-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.actions-row a {
+  text-decoration: none;
+  text-align: center;
+}
+
+.section-title {
+  margin: 24px 0 12px;
+}
+
+.quick-list {
+  padding-left: 18px;
+  color: #334155;
+  display: grid;
+  gap: 8px;
+}
+
+.quick-list a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.status-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  display: grid;
+  gap: 10px;
+}
+
+.status-list li {
+  display: flex;
+  justify-content: space-between;
+}
+
+.link-inline {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.feedback-box {
+  margin-top: 12px;
+}
+
+.quote {
+  font-style: italic;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

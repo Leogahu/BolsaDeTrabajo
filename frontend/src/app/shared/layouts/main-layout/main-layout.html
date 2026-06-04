@@ -1,0 +1,110 @@
+<div class="dashboard-container" [class.recruiter-panel]="isRecruiter()">
+  <aside class="sidebar" [class.open]="sidebarOpen()">
+    @if (isRecruiter()) {
+      <div class="sidebar-header">
+        <div class="sidebar-logo">ChapaTuChamba</div>
+        <div class="sidebar-subtitle">Panel de Control</div>
+      </div>
+    }
+
+    <nav class="sidebar-nav">
+      @for (item of navItems(); track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="nav-item"
+          (click)="sidebarOpen.set(false)">
+          <span class="material-symbols-outlined nav-icon">{{ item.icon }}</span>
+          <span class="nav-text">{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <button type="button" class="nav-item logout-btn" (click)="logout()">
+        <span class="material-symbols-outlined nav-icon">logout</span>
+        <span class="nav-text">Cerrar sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <header class="top-navbar">
+    <div class="navbar-left">
+      <button type="button" class="sidebar-toggle" (click)="toggleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <div class="logo-area">
+        <div class="logo-text">ChapaTuChamba</div>
+        <div class="panel-text">Panel de Control</div>
+      </div>
+    </div>
+
+    <div class="search-wrapper">
+      <input type="text" class="search-input" placeholder="Buscar candidatos, vacantes...">
+      <span class="material-symbols-outlined search-icon">search</span>
+    </div>
+
+    <div class="header-actions">
+      <div class="dropdown-container">
+        <button type="button" class="icon-btn" (click)="toggleNotif($event)">
+          <span class="material-symbols-outlined">notifications</span>
+          @if (notifications().length) {
+            <span class="notif-dot"></span>
+          }
+        </button>
+        @if (notifOpen()) {
+          <div class="dropdown-menu" (click)="$event.stopPropagation()">
+            <div class="dropdown-header">Notificaciones</div>
+            @if (notifications().length === 0) {
+              <p class="empty-dropdown">Sin notificaciones</p>
+            } @else {
+              <ul class="notif-list">
+                @for (notif of notifications(); track $index) {
+                  <li>
+                    <span>{{ notif }}</span>
+                    <button type="button" (click)="removeNotif($index)">×</button>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="dropdown-container">
+        <button type="button" class="icon-btn" (click)="toggleMsg($event)">
+          <span class="material-symbols-outlined">mail</span>
+        </button>
+        @if (msgOpen()) {
+          <div class="dropdown-menu" (click)="$event.stopPropagation()">
+            <div class="dropdown-header">Mensajes Recientes</div>
+            <div class="chat-item">
+              <img [src]="auth.avatarUrl('Ana Recruiter')" alt="Avatar">
+              <div class="chat-info">
+                <strong>Ana de TechCorp</strong>
+                <p>¿Tienes disponibilidad mañana?</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="dropdown-container">
+        <button type="button" class="profile-trigger" (click)="toggleProfile($event)">
+          <img class="avatar-img" [src]="avatarUrl()" alt="avatar">
+        </button>
+        @if (profileOpen()) {
+          <div class="dropdown-menu small-dropdown" (click)="$event.stopPropagation()">
+            <button type="button" class="drop-item" (click)="goToProfileSettings()">Configurar perfil</button>
+            <hr>
+            <button type="button" class="drop-item logout" (click)="logout()">Cerrar sesión</button>
+          </div>
+        }
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
+</div>

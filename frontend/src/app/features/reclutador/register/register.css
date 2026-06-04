@@ -1,0 +1,6 @@
+@import '../../candidato/register/register.css';
+
+.hero-side {
+  background-image: linear-gradient(rgba(0, 82, 234, 0.85), rgba(0, 60, 171, 0.92)),
+    url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1000&q=80');
+}

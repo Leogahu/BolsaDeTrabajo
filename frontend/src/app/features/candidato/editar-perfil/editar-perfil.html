@@ -1,0 +1,87 @@
+<div class="page-content">
+  <a routerLink="/candidato/perfil" class="back-link">← Volver al perfil</a>
+  <h1>Editar perfil</h1>
+  <p class="lead">Actualiza tu información profesional, CV y proyectos.</p>
+
+  @if (message()) {
+    <div class="alert-error">{{ message() }}</div>
+  }
+
+  <div class="card form-card">
+    <div class="avatar-edit">
+      <img [src]="avatarPreview() || auth.avatarUrl()" alt="Avatar">
+      <label class="link-btn">
+        Cambiar foto
+        <input #photoInput type="file" accept="image/*" hidden (change)="onPhotoSelected($event)">
+      </label>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="saveProfile(cvInput, photoInput)">
+      <div class="grid-2">
+        <div class="input-group">
+          <label>Nombres</label>
+          <input formControlName="nombres">
+        </div>
+        <div class="input-group">
+          <label>Apellidos</label>
+          <input formControlName="apellidos">
+        </div>
+        <div class="input-group">
+          <label>Carrera</label>
+          <input formControlName="carrera">
+        </div>
+        <div class="input-group">
+          <label>Institución</label>
+          <input formControlName="institucion">
+        </div>
+        <div class="input-group">
+          <label>Teléfono</label>
+          <input formControlName="telefono">
+        </div>
+        <div class="input-group">
+          <label>Estado académico</label>
+          <select formControlName="egresado">
+            <option value="false">Estudiante</option>
+            <option value="true">Egresado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Descripción</label>
+        <textarea rows="4" formControlName="descripcion"></textarea>
+      </div>
+
+      <div class="input-group">
+        <label>CV (PDF)</label>
+        <input #cvInput type="file" accept=".pdf,application/pdf">
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="saving()">
+        {{ saving() ? 'Guardando...' : 'Guardar perfil' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="card form-card">
+    <h2>Proyectos</h2>
+    <form [formGroup]="projectForm" (ngSubmit)="saveProject()" class="project-form">
+      <input formControlName="titulo" placeholder="Título del proyecto">
+      <input formControlName="urlEvidencia" placeholder="URL de evidencia">
+      <textarea rows="3" formControlName="descripcion" placeholder="Descripción"></textarea>
+      <button type="submit" class="btn-secondary">
+        {{ projectForm.value.id ? 'Actualizar proyecto' : 'Guardar proyecto' }}
+      </button>
+    </form>
+
+    @for (project of projects(); track project.id) {
+      <div class="project-row">
+        <span>{{ project.titulo }}</span>
+        <div class="row-actions">
+          <button type="button" (click)="editProject(project)">Editar</button>
+          <button type="button" (click)="deleteProject(project.id)">Eliminar</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

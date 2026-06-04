@@ -1,71 +1,123 @@
 package com.bolsaempleo.service;
 
+import com.bolsaempleo.dto.ReclutadorUpdate;
+import com.bolsaempleo.dto.Request.AvisoRequest;
+import com.bolsaempleo.dto.Response.AvisoResponse;
+import com.bolsaempleo.dto.Response.ReclutadorResponse;
+import com.bolsaempleo.exception.DuplicateResourceException;
+import com.bolsaempleo.exception.ResourceNotFoundException;
+import com.bolsaempleo.mapper.ReclutadorMapper;
 import com.bolsaempleo.model.Postulacion;
 import com.bolsaempleo.model.Reclutador;
 import com.bolsaempleo.repository.PostulacionRepository;
 import com.bolsaempleo.repository.ReclutadorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ReclutadorService {
     
     private final ReclutadorRepository reclutadorRepository;
     private final PostulacionRepository postulacionRepository;
+    private final com.bolsaempleo.repository.PostulacionEstadoRepository postulacionEstadoRepository;
+    private final ReclutadorMapper reclutadorMapper;
+    private final PasswordEncoder passwordEncoder;
     
-    public ReclutadorService(ReclutadorRepository reclutadorRepository,
-                            PostulacionRepository postulacionRepository) {
-        this.reclutadorRepository = reclutadorRepository;
-        this.postulacionRepository = postulacionRepository;
-    }
-    
-    public Reclutador registrar(Reclutador reclutador) {
+    @Transactional(rollbackFor = Exception.class)
+    public ReclutadorResponse registrar(Reclutador reclutador) {
         if (reclutadorRepository.existsByUsername(reclutador.getUsername())) {
-            throw new RuntimeException("El nombre de usuario ya existe");
+            throw new DuplicateResourceException("El nombre de usuario ya existe.");
         }
         if (reclutadorRepository.existsByEmail(reclutador.getEmail())) {
-            throw new RuntimeException("El email ya está registrado");
+            throw new DuplicateResourceException("El email ya está registrado.");
         }
-        return reclutadorRepository.save(reclutador);
+        if (reclutador.getPassword() != null && !reclutador.getPassword().isBlank()) {
+            reclutador.setPassword(passwordEncoder.encode(reclutador.getPassword()));
+        }
+        return reclutadorMapper.toResponse(reclutadorRepository.save(reclutador));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ReclutadorResponse actualizar(Long id, ReclutadorUpdate dto) {
+        Reclutador reclutador = reclutadorRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Reclutador", id));
+
+        if (dto.nombres() != null) reclutador.setNombres(dto.nombres());
+        if (dto.apellidos() != null) reclutador.setApellidos(dto.apellidos());
+        if (dto.email() != null) reclutador.setEmail(dto.email());
+        if (dto.empresa() != null) reclutador.setEmpresa(dto.empresa());
+        if (dto.password() != null && !dto.password().isBlank()) {
+            reclutador.setPassword(passwordEncoder.encode(dto.password()));
+        }
+
+        return reclutadorMapper.toResponse(reclutadorRepository.save(reclutador));
     }
     
-    public Optional<Reclutador> buscarPorEmail(String email) {
-        return reclutadorRepository.findByEmail(email);
+    @Transactional(readOnly = true)
+    public ReclutadorResponse buscarPorId(Long id) {
+        return  reclutadorRepository.findById(id)
+                .map(reclutadorMapper::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Reclutador", id));
     }
     
-    public Optional<Reclutador> buscarPorId(Long id) {
-        return reclutadorRepository.findById(id);
-    }
-    
-    public Postulacion crearPostulacion(Long reclutadorId, Postulacion postulacion) {
+    @Transactional(rollbackFor = Exception.class)
+    public AvisoResponse crearPostulacion(Long reclutadorId, AvisoRequest dto) {
         Reclutador reclutador = reclutadorRepository.findById(reclutadorId)
-            .orElseThrow(() -> new RuntimeException("Reclutador no encontrado"));
+            .orElseThrow(() -> new ResourceNotFoundException("Reclutador", reclutadorId));
         
+        Postulacion postulacion = reclutadorMapper.toEntity(dto);
         postulacion.setReclutador(reclutador);
         postulacion.setFechaPublicacion(LocalDateTime.now());
-        return postulacionRepository.save(postulacion);
+        
+        return reclutadorMapper.toAvisoResponse(postulacionRepository.save(postulacion));
     }
     
-    public Page<Postulacion> obtenerPostulaciones(int pagina, String keyword) {
+    @Transactional(readOnly = true)
+    public List<AvisoResponse> obtenerMisPostulaciones(Long reclutadorId) {
+        if (!reclutadorRepository.existsById(reclutadorId)) {
+            throw new ResourceNotFoundException("Reclutador", reclutadorId);
+        }
+        return postulacionRepository.findByReclutadorId(reclutadorId)
+            .stream()
+            .map(p -> {
+                AvisoResponse base = reclutadorMapper.toAvisoResponse(p);
+                int count = (int) postulacionEstadoRepository.countByPostulacionId(p.getId());
+                return new AvisoResponse(
+                    base.id(), base.titulo(), base.descripcion(), base.requisitos(),
+                    base.ubicacion(), base.fechaPublicacion(), base.sueldoMin(), base.sueldoMax(),
+                    base.tipoModalidad(), base.tipoPuesto(), base.empresa(), count
+                );
+            })
+            .toList();
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<AvisoResponse> obtenerPostulaciones(int pagina, String keyword) {
         Pageable pageable = PageRequest.of(pagina, 10);
+        Page<Postulacion> resultado;
         
         if (keyword == null || keyword.trim().isEmpty()) {
-            return postulacionRepository.findAll(pageable);
+            resultado = postulacionRepository.findAll(pageable);
+        } else {
+            resultado = postulacionRepository.findByKeyword(keyword, pageable);
         }
         
-        return postulacionRepository.findByKeyword(keyword, pageable);
+        return resultado.map(reclutadorMapper::toAvisoResponse);
     }
     
-    public List<Postulacion> obtenerMisPostulaciones(Long reclutadorId) {
-        return postulacionRepository.findByReclutadorId(reclutadorId);
-    }
-    
-    public Optional<Postulacion> buscarPostulacionPorId(Long id) {
-        return postulacionRepository.findById(id);
+    @Transactional(readOnly = true)
+    public AvisoResponse buscarPostulacionPorId(Long id) {
+        return postulacionRepository.findById(id)
+            .map(reclutadorMapper::toAvisoResponse)
+            .orElseThrow(() -> new ResourceNotFoundException("Postulacion (Aviso)", id));
     }
 }

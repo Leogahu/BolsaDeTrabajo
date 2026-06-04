@@ -1,0 +1,70 @@
+<div class="page-content">
+  <div class="search-hero">
+    <h1>Explora tu próxima aventura</h1>
+    <p class="lead">Encuentra roles diseñados para tu etapa profesional.</p>
+  </div>
+
+  <div class="search-main-bar">
+    <input
+      type="text"
+      class="search-main-input"
+      placeholder="Ej. Analista de Datos, Frontend Developer..."
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="onSearchInput($event)">
+    <button type="button" class="btn-search">Buscar</button>
+  </div>
+
+  <div class="filters-row">
+    <span class="filter-label">Tipo Puesto:</span>
+    @for (type of jobTypeFilters; track type) {
+      <button
+        type="button"
+        class="filter-tag"
+        [class.active]="isFilterActive('type', type)"
+        (click)="toggleFilter('type', type)">
+        {{ type }}
+      </button>
+    }
+
+    <div class="filter-divider"></div>
+
+    <span class="filter-label">Modalidad:</span>
+    @for (modality of modalityFilters; track modality) {
+      <button
+        type="button"
+        class="filter-tag"
+        [class.active]="isFilterActive('modality', modality)"
+        (click)="toggleFilter('modality', modality)">
+        {{ modality }}
+      </button>
+    }
+  </div>
+
+  @if (filteredJobs().length === 0 && !loading()) {
+    <p class="empty-state">No se encontraron vacantes con los criterios seleccionados.</p>
+  } @else {
+    <div class="opportunities-grid">
+      @for (job of filteredJobs(); track job.id) {
+        <a class="job-card" [routerLink]="['/candidato/vacante', job.id]">
+          <div class="company-logo">{{ companyInitials(job) }}</div>
+          <div class="job-badge">{{ job.tipoPuesto }}</div>
+          <div class="job-title">{{ job.titulo }}</div>
+          <div class="company-name">{{ companyName(job) }}</div>
+          <div class="job-meta">
+            <span>📍 {{ job.ubicacion || 'Perú' }}</span>
+            <span>💻 {{ job.tipoModalidad || 'No especificado' }}</span>
+            <span>💵 {{ salaryLabel(job) }}</span>
+          </div>
+        </a>
+      }
+    </div>
+  }
+
+  @if (!isLastPage()) {
+    <div class="load-more-container">
+      <button type="button" class="btn-load-more" (click)="loadMoreJobs()" [disabled]="loading()">
+        {{ loading() ? 'Cargando...' : 'Cargar más oportunidades' }}
+      </button>
+    </div>
+  }
+</div>

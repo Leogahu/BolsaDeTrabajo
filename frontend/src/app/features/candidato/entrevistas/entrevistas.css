@@ -1,0 +1,30 @@
+.simulator-card {
+  margin-bottom: 24px;
+}
+
+.progress {
+  color: #2563eb;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.simulator-card textarea {
+  width: 100%;
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.tips ul {
+  padding-left: 18px;
+  color: #475569;
+  display: grid;
+  gap: 8px;
+}

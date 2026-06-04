@@ -1,0 +1,61 @@
+<div class="signup-container">
+  <section class="hero-side">
+    <a routerLink="/" class="logo">
+      <img src="assets/logo.png" alt="Logo" class="logo-img">
+      <span class="logo-text">ChapaTuChamba</span>
+    </a>
+    <div class="hero-content">
+      <h1>Encuentra talento junior.</h1>
+      <p>Publica vacantes, gestiona candidatos y construye equipos con potencial real.</p>
+    </div>
+  </section>
+
+  <section class="form-side">
+    <div class="form-wrapper">
+      <h2>Registro de empresa</h2>
+      <p class="subtitle">Crea tu cuenta de reclutador para publicar ofertas.</p>
+
+      <div class="user-selector">
+        <button type="button" class="selector-btn" routerLink="/candidato/register">Postulante</button>
+        <button type="button" class="selector-btn active">Empresa</button>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="alert-error">{{ errorMessage() }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="input-group">
+          <label>Nombres</label>
+          <input type="text" formControlName="nombres">
+        </div>
+        <div class="input-group">
+          <label>Apellidos</label>
+          <input type="text" formControlName="apellidos">
+        </div>
+        <div class="input-group">
+          <label>Empresa</label>
+          <input type="text" formControlName="empresa">
+        </div>
+        <div class="input-group">
+          <label>Correo electrónico</label>
+          <input type="email" formControlName="email">
+        </div>
+        <div class="input-group">
+          <label>Contraseña</label>
+          <div class="input-group-password">
+            <input [type]="hidePassword() ? 'password' : 'text'" formControlName="password">
+            <span class="material-symbols-outlined toggle-icon" (click)="togglePassword()">
+              {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+            </span>
+          </div>
+        </div>
+        <button type="submit" class="btn-submit" [disabled]="form.invalid || loading()">
+          {{ loading() ? 'Registrando...' : 'Crear cuenta de empresa →' }}
+        </button>
+      </form>
+
+      <p class="login-link">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,66 @@
+<div class="page-content">
+  <h1>Gestión de candidatos</h1>
+  <p class="lead">Revisa postulantes y actualiza el estado de cada proceso.</p>
+
+  @if (message()) {
+    <div class="alert-success">{{ message() }}</div>
+  }
+
+  <div class="layout-grid">
+    <aside class="card jobs-list">
+      <h3>Vacantes</h3>
+      @for (job of jobs(); track job.id) {
+        <button
+          type="button"
+          class="job-item"
+          [class.active]="selectedJobId() === job.id"
+          (click)="selectJob(job.id!)">
+          {{ job.titulo }}
+          @if (job.cantidadCandidatos != null) {
+            <span class="badge-count">{{ job.cantidadCandidatos }}</span>
+          }
+        </button>
+      } @empty {
+        <p class="muted">No tienes vacantes publicadas.</p>
+      }
+    </aside>
+
+    <section class="card candidates-panel">
+      <div class="panel-header">
+        <h3>Candidatos</h3>
+        <div class="status-actions">
+          @for (opt of statusOptions; track opt.value) {
+            <button type="button" class="btn-secondary" (click)="updateStatus(opt.value)">
+              {{ opt.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (candidates().length === 0) {
+        <p class="muted">No hay candidatos para esta vacante.</p>
+      } @else {
+        @for (candidate of candidates(); track candidate.id) {
+          <article
+            class="candidate-item"
+            [class.selected]="selectedCandidateId() === candidate.id"
+            (click)="selectCandidate(candidate.id)">
+            <div class="candidate-info">
+              <strong>{{ candidateName(candidate) }}</strong>
+              <span class="muted">{{ candidate.postante?.email }}</span>
+              @if (candidate.postante?.carrera) {
+                <span class="muted">{{ candidate.postante?.carrera }}</span>
+              }
+            </div>
+            <div class="candidate-meta">
+              <span class="status-badge">{{ statusLabel(candidate.estado) }}</span>
+              @if (candidate.postante?.cvPath) {
+                <a [href]="candidate.postante!.cvPath!" target="_blank" class="btn-link" (click)="$event.stopPropagation()">Ver CV</a>
+              }
+            </div>
+          </article>
+        }
+      }
+    </section>
+  </div>
+</div>

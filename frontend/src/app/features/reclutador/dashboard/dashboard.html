@@ -1,0 +1,25 @@
+<div class="page-content">
+  <h1>Dashboard de reclutador</h1>
+  <p class="lead">Bienvenido, {{ userName() }}. Gestiona tus vacantes y el pipeline de candidatos.</p>
+
+  <div class="metrics-grid">
+    <article class="card metric-card">
+      <span class="metric-label">Vacantes activas</span>
+      <strong>{{ totalVacancies() }}</strong>
+    </article>
+    <article class="card metric-card">
+      <span class="metric-label">Postulantes totales</span>
+      <strong>{{ totalApplicants() }}</strong>
+    </article>
+    <article class="card metric-card">
+      <span class="metric-label">Entrevistas pendientes</span>
+      <strong>3</strong>
+    </article>
+  </div>
+
+  <div class="actions-grid">
+    <a routerLink="/reclutador/publicar-oferta" class="card action-card">Publicar nueva vacante</a>
+    <a routerLink="/reclutador/vacantes" class="card action-card">Ver mis vacantes</a>
+    <a routerLink="/reclutador/gestion-candidatos" class="card action-card">Gestionar candidatos</a>
+  </div>
+</div>

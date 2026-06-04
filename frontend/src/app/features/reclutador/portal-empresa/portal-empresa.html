@@ -1,0 +1,41 @@
+<div class="page-content">
+  <h1>Portal de empresa</h1>
+  <p class="lead">Configura la información de tu organización en la plataforma.</p>
+
+  @if (message()) {
+    <div class="alert-success">{{ message() }}</div>
+  }
+
+  <div class="card profile-card">
+    <div class="avatar">{{ companyName().substring(0, 2).toUpperCase() }}</div>
+    <div>
+      <h2>{{ companyName() }}</h2>
+      <p>Representante: {{ recruiterName() }}</p>
+    </div>
+  </div>
+
+  <form class="card form-card" (ngSubmit)="save()">
+    <h3>Datos del reclutador y empresa</h3>
+    <div class="form-grid">
+      <label>
+        Nombres
+        <input type="text" [ngModel]="nombres()" (ngModelChange)="nombres.set($event)" name="nombres">
+      </label>
+      <label>
+        Apellidos
+        <input type="text" [ngModel]="apellidos()" (ngModelChange)="apellidos.set($event)" name="apellidos">
+      </label>
+      <label>
+        Correo electrónico
+        <input type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email">
+      </label>
+      <label>
+        Nombre de la empresa
+        <input type="text" [ngModel]="companyName()" (ngModelChange)="companyName.set($event)" name="empresa">
+      </label>
+    </div>
+    <button type="submit" class="btn-primary" [disabled]="saving()">
+      {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
+    </button>
+  </form>
+</div>

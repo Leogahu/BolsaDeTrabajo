@@ -1,0 +1,58 @@
+<div class="page-content">
+  <h1>Pruebas de habilidades</h1>
+  <p class="lead">Valida tus competencias para destacar frente a los reclutadores.</p>
+
+  <div class="card add-skill-box">
+    <input
+      type="text"
+      placeholder="Ej. JavaScript, Figma, SQL..."
+      [ngModel]="newSkill()"
+      (ngModelChange)="newSkill.set($event)">
+    <button type="button" class="btn-primary" (click)="addSkill()">Agregar habilidad</button>
+  </div>
+
+  @if (activeQuiz(); as quizData) {
+    <div class="card quiz-card">
+      <h3>Prueba: {{ quizData.skill.nombre }}</h3>
+      <p>{{ quizData.quiz.question }}</p>
+      <div class="quiz-options">
+        @for (option of quizData.quiz.options; track $index) {
+          <label class="quiz-option">
+            <input
+              type="radio"
+              name="quizAnswer"
+              [value]="$index"
+              [checked]="selectedAnswer() === $index"
+              (change)="selectedAnswer.set($index)">
+            {{ option }}
+          </label>
+        }
+      </div>
+      @if (quizResult()) {
+        <p [class]="quizResult()?.includes('Aprobaste') ? 'alert-success' : 'alert-error'">{{ quizResult() }}</p>
+      }
+      <div class="quiz-actions">
+        <button type="button" class="btn-secondary" (click)="cancelTest()">Cancelar</button>
+        <button type="button" class="btn-primary" (click)="submitTest()" [disabled]="selectedAnswer() === null || testing()">
+          {{ testing() ? 'Verificando...' : 'Enviar respuesta' }}
+        </button>
+      </div>
+    </div>
+  }
+
+  <div class="skills-grid">
+    @for (skill of skills(); track skill.id) {
+      <article class="card skill-card">
+        <h3>{{ skill.nombre }}</h3>
+        <span class="badge" [class.verified]="skill.verificada">
+          {{ skill.verificada ? 'Verificada' : 'Pendiente' }}
+        </span>
+        @if (!skill.verificada) {
+          <button type="button" class="btn-secondary" (click)="startTest(skill)">Tomar prueba</button>
+        }
+      </article>
+    } @empty {
+      <p class="muted">Aún no registras habilidades. Agrega la primera arriba.</p>
+    }
+  </div>
+</div>

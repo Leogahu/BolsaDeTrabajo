@@ -18,6 +18,7 @@ public class Reclutador {
     private String username;
     
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
     
     @Column(nullable = false, length = 100)

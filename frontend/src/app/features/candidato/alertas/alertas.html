@@ -1,0 +1,60 @@
+<div class="page-content alerts-layout">
+  <div class="main-column">
+    <h1>Alertas de empleo</h1>
+    <p class="lead">Recibe notificaciones cuando aparezcan vacantes que coincidan con tus preferencias.</p>
+
+    <div class="cards-grid">
+      @for (alert of alerts(); track $index; let i = $index) {
+        <article class="card alert-card">
+          <h2>{{ alert.title }}</h2>
+          <p>{{ alert.keyword }} · {{ alert.modality }}</p>
+          <span class="frequency">{{ alert.frequency }}</span>
+          <button type="button" class="btn-secondary" (click)="removeAlert(i)">Eliminar</button>
+        </article>
+      } @empty {
+        <p class="muted">No tienes alertas configuradas. Crea una desde el panel lateral.</p>
+      }
+    </div>
+
+    <h3>Vacantes que coinciden</h3>
+    @if (loading()) {
+      <p class="muted">Buscando vacantes...</p>
+    } @else if (matches().length === 0) {
+      <p class="muted">No hay vacantes que coincidan con tus alertas actuales.</p>
+    } @else {
+      <div class="cards-grid">
+        @for (job of matches(); track job.id) {
+          <article class="card alert-card">
+            <h2>{{ job.titulo }}</h2>
+            <p>{{ companyName(job) }}</p>
+            <span class="frequency">{{ job.tipoModalidad }}</span>
+          </article>
+        }
+      </div>
+    }
+  </div>
+
+  <aside class="card filters-panel">
+    <h3>Preferencias</h3>
+    <div class="input-group">
+      <label>Palabra clave</label>
+      <input [ngModel]="keyword()" (ngModelChange)="keyword.set($event)">
+    </div>
+    <div class="input-group">
+      <label>Modalidad</label>
+      <select [ngModel]="modality()" (ngModelChange)="modality.set($event)">
+        <option>Remoto</option>
+        <option>Presencial</option>
+        <option>Hibrido</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Frecuencia</label>
+      <select [ngModel]="frequency()" (ngModelChange)="frequency.set($event)">
+        <option>Diaria</option>
+        <option>Semanal</option>
+      </select>
+    </div>
+    <button type="button" class="btn-primary" (click)="saveAlert()">Guardar alerta</button>
+  </aside>
+</div>

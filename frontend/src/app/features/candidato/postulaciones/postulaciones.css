@@ -1,0 +1,31 @@
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.item-card h2 {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.status {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.empty-card {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+
+.muted {
+  color: #64748b;
+}

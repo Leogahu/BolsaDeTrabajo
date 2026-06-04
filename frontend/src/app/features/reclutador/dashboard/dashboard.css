@@ -1,0 +1,38 @@
+.metrics-grid,
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  display: grid;
+  gap: 8px;
+}
+
+.metric-label {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.metric-card strong {
+  font-size: 32px;
+  color: #0f172a;
+}
+
+.action-card {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+}
+
+.action-card:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}

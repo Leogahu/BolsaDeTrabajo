@@ -1,0 +1,57 @@
+<div class="page-content">
+  <div class="page-header">
+    <div>
+      <h1>Mis vacantes</h1>
+      <p class="lead">Administra tus procesos de selección activos.</p>
+    </div>
+    <button type="button" class="btn-primary" (click)="goToPublish()">+ Publicar vacante</button>
+  </div>
+
+  <div class="promo-card card">
+    <span>Total vacantes</span>
+    <strong>{{ jobs().length }}</strong>
+    <small>Procesos activos actualmente</small>
+  </div>
+
+  <div class="jobs-grid">
+    @for (job of jobs(); track job.id) {
+      <article class="card job-card">
+        <div class="job-card-header">
+          <div>
+            <h2>{{ job.titulo }}</h2>
+            <span class="status-badge">Activa</span>
+          </div>
+          <div class="card-actions">
+            <button type="button" (click)="editJob(job.id)">Editar</button>
+            <button type="button" (click)="confirmDelete(job.id)">Eliminar</button>
+          </div>
+        </div>
+        <div class="metrics-row">
+          <div>
+            <span class="label">Ubicación</span>
+            <span>{{ job.ubicacion }}</span>
+          </div>
+          <div>
+            <span class="label">Postulantes</span>
+            <span>{{ job.cantidadCandidatos ?? 0 }}</span>
+          </div>
+        </div>
+      </article>
+    } @empty {
+      <p class="muted">Aún no has publicado vacantes.</p>
+    }
+  </div>
+
+  @if (showDeleteModal()) {
+    <div class="modal-overlay">
+      <div class="modal-content card">
+        <h3>¿Eliminar vacante?</h3>
+        <p>Esta acción no se puede deshacer.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="showDeleteModal.set(false)">Cancelar</button>
+          <button type="button" class="btn-primary danger" (click)="deleteJob()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

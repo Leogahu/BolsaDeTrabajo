@@ -1,0 +1,81 @@
+<div class="page-content">
+  @if (profile(); as p) {
+    <div class="profile-header-card card">
+      <img [src]="avatarUrl()" alt="Avatar" class="profile-avatar">
+      <div class="profile-details">
+        <h1>{{ fullName() }}</h1>
+        <p class="profile-tagline">
+          {{ p.carrera ? p.carrera + ' | Perfil Profesional' : 'Añade tu carrera o título profesional' }}
+        </p>
+        <a routerLink="/candidato/perfil/editar" class="btn-primary">Editar Perfil</a>
+      </div>
+    </div>
+
+    <div class="sections-grid">
+      <section class="card">
+        <h2>Resumen profesional</h2>
+        <p>{{ p.descripcion || 'Aún no has agregado un resumen profesional.' }}</p>
+      </section>
+
+      <section class="card">
+        <h2>Educación</h2>
+        @if (p.carrera || p.institucion) {
+          <div class="education-item">
+            <h4>{{ p.carrera || 'Carrera Profesional' }}</h4>
+            <p>{{ p.institucion || 'Institución' }}</p>
+            <span class="edu-date">{{ p.egresado ? 'Egresado' : 'Estudiante' }}</span>
+          </div>
+        } @else {
+          <p class="muted">No has añadido información académica.</p>
+        }
+      </section>
+
+      <section class="card">
+        <h2>Currículum Vitae</h2>
+        @if (p.cvPath) {
+          <a [href]="p.cvPath" target="_blank" class="btn-secondary">Verificar CV</a>
+        } @else {
+          <p class="warning">Aún no has subido tu CV. Ve a editar perfil para añadirlo.</p>
+        }
+      </section>
+
+      <section class="card">
+        <h2>Certificaciones</h2>
+        @if (certificados().length === 0) {
+          <p class="muted">Completa pruebas de habilidades para obtener certificados.</p>
+        } @else {
+          @for (cert of certificados(); track cert.id) {
+            <div class="project-item">
+              <h4>{{ cert.nombreCurso }}</h4>
+              <p>{{ cert.institucionEmisora }}</p>
+              @if (cert.fechaEmision) {
+                <span class="edu-date">{{ cert.fechaEmision }}</span>
+              }
+            </div>
+          }
+        }
+      </section>
+
+      <section class="card">
+        <h2>Proyectos</h2>
+        @if (projects().length === 0) {
+          <p class="muted">No registras proyectos en tu portafolio.</p>
+        } @else {
+          @for (proj of projects(); track proj.id) {
+            <div class="project-item">
+              <div class="project-header">
+                <h4>{{ proj.titulo }}</h4>
+                @if (proj.urlEvidencia) {
+                  <a [href]="proj.urlEvidencia" target="_blank">🔗</a>
+                }
+              </div>
+              <p>{{ proj.descripcion }}</p>
+            </div>
+          }
+        }
+      </section>
+    </div>
+  } @else {
+    <p class="muted">Cargando perfil...</p>
+  }
+</div>

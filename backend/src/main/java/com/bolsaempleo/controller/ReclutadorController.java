@@ -1,77 +1,66 @@
 package com.bolsaempleo.controller;
 
-import java.util.Map;
-
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.bolsaempleo.model.Postulacion;
+import com.bolsaempleo.dto.ReclutadorUpdate;
+import com.bolsaempleo.dto.Request.AvisoRequest;
+import com.bolsaempleo.dto.Response.AvisoResponse;
+import com.bolsaempleo.dto.Response.ReclutadorResponse;
 import com.bolsaempleo.model.Reclutador;
 import com.bolsaempleo.service.ReclutadorService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/reclutadores")
+@RequestMapping("/api/v1/reclutadores")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class ReclutadorController {
     
     private final ReclutadorService reclutadorService;
     
-    public ReclutadorController(ReclutadorService reclutadorService) {
-        this.reclutadorService = reclutadorService;
-    }
-    
     @PostMapping("/register")
-    public ResponseEntity<?> registrar(@RequestBody Reclutador reclutador) {
-        try {
-            Reclutador nuevo = reclutadorService.registrar(reclutador);
-            return ResponseEntity.ok(nuevo);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<ReclutadorResponse> registrar(@Valid @RequestBody Reclutador reclutador) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(reclutadorService.registrar(reclutador));
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerPorId(@PathVariable Long id) {
-        return reclutadorService.buscarPorId(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ReclutadorResponse> obtenerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(reclutadorService.buscarPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ReclutadorResponse> actualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody ReclutadorUpdate dto) {
+        return ResponseEntity.ok(reclutadorService.actualizar(id, dto));
     }
     
     @PostMapping("/{id}/postulaciones")
-    public ResponseEntity<?> crearPostulacion(@PathVariable Long id, @RequestBody Postulacion postulacion) {
-        try {
-            Postulacion nueva = reclutadorService.crearPostulacion(id, postulacion);
-            return ResponseEntity.ok(nueva);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<AvisoResponse> crearPostulacion(
+            @PathVariable Long id, 
+            @Valid @RequestBody AvisoRequest dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(reclutadorService.crearPostulacion(id, dto));
     }
     
     @GetMapping("/{id}/postulaciones")
-    public ResponseEntity<?> obtenerMisPostulaciones(@PathVariable Long id) {
+    public ResponseEntity<List<AvisoResponse>> obtenerMisPostulaciones(@PathVariable Long id) {
         return ResponseEntity.ok(reclutadorService.obtenerMisPostulaciones(id));
     }
     
     @GetMapping("/postulaciones")
-    public ResponseEntity<?> obtenerPostulaciones(
+    public ResponseEntity<Page<AvisoResponse>> obtenerPostulaciones(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String keyword) {
-        Page<Postulacion> postulaciones = reclutadorService.obtenerPostulaciones(page, keyword);
-        return ResponseEntity.ok(postulaciones);
+        return ResponseEntity.ok(reclutadorService.obtenerPostulaciones(page, keyword));
     }
     
     @GetMapping("/postulaciones/{id}")
-    public ResponseEntity<?> obtenerPostulacionPorId(@PathVariable Long id) {
-        return reclutadorService.buscarPostulacionPorId(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<AvisoResponse> obtenerPostulacionPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(reclutadorService.buscarPostulacionPorId(id));
     }
 }

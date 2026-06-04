@@ -1,53 +1,48 @@
 package com.bolsaempleo.controller;
 
-import com.bolsaempleo.model.Proyectos;
+import com.bolsaempleo.dto.Request.ProyectoRequest;
+import com.bolsaempleo.dto.Response.MensajeResponse;
+import com.bolsaempleo.dto.Response.ProyectoResponse;
 import com.bolsaempleo.service.ProyectoService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/proyectos")
+@RequestMapping("/api/v1/proyectos")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class ProyectoController {
 
     private final ProyectoService proyectoService;
 
-    public ProyectoController(ProyectoService proyectoService) {
-        this.proyectoService = proyectoService;
-    }
-
     @GetMapping("/postante/{postanteId}")
-    public ResponseEntity<?> obtenerProyectos(@PathVariable Long postanteId) {
+    public ResponseEntity<List<ProyectoResponse>> obtenerProyectos(@PathVariable Long postanteId) {
         return ResponseEntity.ok(proyectoService.obtenerPorPostante(postanteId));
     }
 
     @PostMapping("/postante/{postanteId}")
-    public ResponseEntity<?> agregarProyecto(@PathVariable Long postanteId, @RequestBody Proyectos proyecto) {
-        try {
-            return ResponseEntity.ok(proyectoService.guardarProyecto(postanteId, proyecto));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<ProyectoResponse> agregarProyecto(
+            @PathVariable Long postanteId, 
+            @Valid @RequestBody ProyectoRequest dto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(proyectoService.guardarProyecto(postanteId, dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizarProyecto(@PathVariable Long id, @RequestBody Proyectos proyectoDatos) {
-        try {
-            Proyectos actualizado = proyectoService.actualizarProyecto(id, proyectoDatos);
-            return ResponseEntity.ok(actualizado);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<ProyectoResponse> actualizarProyecto(
+            @PathVariable Long id, 
+            @Valid @RequestBody ProyectoRequest dto) {
+        return ResponseEntity.ok(proyectoService.actualizarProyecto(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarProyecto(@PathVariable Long id) {
-        try {
-            proyectoService.eliminarProyecto(id);
-            return ResponseEntity.ok(Map.of("message", "Proyecto eliminado con éxito"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<MensajeResponse> eliminarProyecto(@PathVariable Long id) {
+        proyectoService.eliminarProyecto(id);
+        return ResponseEntity.ok(new MensajeResponse("Proyecto eliminado con éxito"));
     }
 }

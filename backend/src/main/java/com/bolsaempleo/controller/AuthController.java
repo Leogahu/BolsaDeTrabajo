@@ -1,123 +1,47 @@
 package com.bolsaempleo.controller;
 
+import com.bolsaempleo.dto.Request.LoginRequest;
+import com.bolsaempleo.dto.PostanteUpdate;
+import com.bolsaempleo.dto.Response.AuthResponse;
+import com.bolsaempleo.dto.Response.MensajeResponse;
+import com.bolsaempleo.dto.Response.PostanteResponse;
 import com.bolsaempleo.model.Postante;
-import com.bolsaempleo.model.Reclutador;
-import com.bolsaempleo.repository.PostanteRepository;
-import com.bolsaempleo.repository.ReclutadorRepository;
+import com.bolsaempleo.service.AuthService;
+import com.bolsaempleo.service.PostanteService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.bolsaempleo.service.PostanteService;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.http.MediaType;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class AuthController {
     
-    private final PostanteRepository postanteRepository;
-    private final ReclutadorRepository reclutadorRepository;
-    private final PostanteService postanteService; 
+    private final AuthService authService;
+    private final PostanteService postanteService;
 
-    public AuthController(PostanteRepository postanteRepository, 
-                          ReclutadorRepository reclutadorRepository,
-                          PostanteService postanteService) { 
-        this.postanteRepository = postanteRepository;
-        this.reclutadorRepository = reclutadorRepository;
-        this.postanteService = postanteService;
+    @PostMapping("/postante/register")
+    public ResponseEntity<PostanteResponse> registrarPostante(@RequestBody Postante postante) throws IOException { 
+        var response = postanteService.registrar(postante, null); 
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-    @PostMapping(value = "/postante/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> registrarPostante(@RequestBody Postante postante) { 
-        try {
-            Postante nuevo = postanteService.registrar(postante, null);
-            return ResponseEntity.ok(nuevo);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
-    @PostMapping("/reclutador/login")
-    public ResponseEntity<?> loginReclutador(@RequestBody Map<String, String> credentials) {
-        return reclutadorRepository.findByEmail(credentials.get("email"))
-            .filter(r -> r.getPassword().equals(credentials.get("password")))
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.status(401).build());
-    }
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
-        
-        if (username == null || password == null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Faltan credenciales"));
-        }
-
-        var postante = postanteRepository.findByEmail(username);
-        if (postante.isPresent() && postante.get().getPassword().equals(password)) {
-            Postante p = postante.get();
-            Map<String, Object> response = new HashMap<>();
-            response.put("id", p.getId());
-            response.put("username", p.getUsername());
-            String nombreCompletoDinamico = (p.getNombres() + " " + p.getApellidos()).trim();
-            response.put("nombreCompleto", nombreCompletoDinamico);
-            
-            response.put("email", p.getEmail());
-            response.put("tipo", "postante"); 
-            return ResponseEntity.ok(response);
-        }
-        
-        var reclutador = reclutadorRepository.findByEmail(username);
-        if (reclutador.isPresent() && reclutador.get().getPassword().equals(password)) {
-            Reclutador r = reclutador.get();
-            Map<String, Object> response = new HashMap<>();
-            response.put("id", r.getId());
-            response.put("username", r.getUsername());
-            String nombreCompletoDinamico = (r.getNombres() + " " + r.getApellidos()).trim();
-            response.put("nombreCompleto", nombreCompletoDinamico);
-            response.put("email", r.getEmail());
-            response.put("empresa", r.getEmpresa());
-            response.put("tipo", "reclutador");
-            return ResponseEntity.ok(response);
-        }
-        
-        return ResponseEntity.status(401).body(Map.of("error", "Usuario o contraseña incorrectos"));
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest credentials) {
+        AuthResponse response = authService.login(credentials);
+        return ResponseEntity.ok(response);
     }
     
     @PutMapping("/postante/{id}")
-    public ResponseEntity<?> actualizarPostante(@PathVariable Long id, @RequestBody Map<String, String> datos) {
-        return postanteRepository.findById(id)
-            .map(postante -> {
-                if (datos.containsKey("nombres")) postante.setNombres(datos.get("nombres"));
-                if (datos.containsKey("apellidos")) postante.setApellidos(datos.get("apellidos"));
-                if (datos.containsKey("email")) postante.setEmail(datos.get("email"));
-                if (datos.containsKey("telefono")) postante.setTelefono(datos.get("telefono"));
-                if (datos.containsKey("carrera")) postante.setCarrera(datos.get("carrera"));
-                if (datos.containsKey("password") && !datos.get("password").isEmpty()) {
-                    postante.setPassword(datos.get("password"));
-                }
-                
-                postanteRepository.save(postante);
-                return ResponseEntity.ok(Map.of("mensaje", "Perfil de postulante actualizado"));
-            })
-            .orElse(ResponseEntity.notFound().build());
-    }
-    
-    @PutMapping("/reclutador/{id}")
-    public ResponseEntity<?> actualizarReclutador(@PathVariable Long id, @RequestBody Map<String, String> datos) {
-        return reclutadorRepository.findById(id)
-            .map(reclutador -> {
-                if (datos.containsKey("nombres")) reclutador.setNombres(datos.get("nombres"));
-                if (datos.containsKey("apellidos")) reclutador.setApellidos(datos.get("apellidos"));
-                if (datos.containsKey("email")) reclutador.setEmail(datos.get("email"));
-                if (datos.containsKey("empresa")) reclutador.setEmpresa(datos.get("empresa"));
-                if (datos.containsKey("password") && !datos.get("password").isEmpty()) {
-                    reclutador.setPassword(datos.get("password"));
-                }
-                reclutadorRepository.save(reclutador);
-                return ResponseEntity.ok(Map.of("mensaje", "Perfil de reclutador actualizado"));
-            })
-            .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<MensajeResponse> actualizarPostante(
+            @PathVariable Long id, 
+            @Valid @RequestBody PostanteUpdate dto) {
+        postanteService.actualizarPerfil(id, dto);
+        return ResponseEntity.ok(new MensajeResponse("Perfil de postulante actualizado con éxito"));
     }
 }

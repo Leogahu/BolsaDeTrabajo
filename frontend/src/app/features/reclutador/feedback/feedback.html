@@ -1,0 +1,22 @@
+<div class="page-content">
+  <h1>Feedback a candidatos</h1>
+  <p class="lead">Retroalimentación registrada en los procesos de selección (campo motivo).</p>
+
+  @if (loading()) {
+    <p class="muted">Cargando feedback...</p>
+  } @else if (feedbackItems().length === 0) {
+    <div class="card">
+      <p class="muted">Aún no hay comentarios registrados. Al actualizar el estado de un candidato puedes incluir un motivo que aparecerá aquí.</p>
+    </div>
+  } @else {
+    <div class="cards-grid">
+      @for (item of feedbackItems(); track item.candidate) {
+        <article class="card">
+          <h2>{{ item.candidate }}</h2>
+          <p class="role">{{ item.role }}</p>
+          <p>{{ item.comment }}</p>
+        </article>
+      }
+    </div>
+  }
+</div>

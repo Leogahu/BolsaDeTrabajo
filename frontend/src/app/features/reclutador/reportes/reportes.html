@@ -1,0 +1,28 @@
+<div class="page-content">
+  <h1>Reportes</h1>
+  <p class="lead">Visualiza el rendimiento de tus procesos de selección.</p>
+
+  @if (loading()) {
+    <p class="muted">Cargando métricas...</p>
+  }
+
+  <div class="metrics-grid">
+    @for (metric of metrics(); track metric.label) {
+      <article class="card metric-card">
+        <span>{{ metric.label }}</span>
+        <strong>{{ metric.value }}</strong>
+      </article>
+    }
+  </div>
+
+  <div class="card chart-placeholder">
+    <h3>Evolución mensual de postulaciones</h3>
+    <div class="bars">
+      <div style="height: 40%"></div>
+      <div style="height: 65%"></div>
+      <div style="height: 55%"></div>
+      <div style="height: 80%"></div>
+      <div style="height: 70%"></div>
+    </div>
+  </div>
+</div>

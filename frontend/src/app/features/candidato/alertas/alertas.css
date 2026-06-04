@@ -1,0 +1,46 @@
+.alerts-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+}
+
+.cards-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.alert-card .frequency {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.filters-panel {
+  height: fit-content;
+}
+
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+@media (max-width: 900px) {
+  .alerts-layout {
+    grid-template-columns: 1fr;
+  }
+}

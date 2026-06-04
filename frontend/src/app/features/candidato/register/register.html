@@ -1,0 +1,72 @@
+<div class="signup-container">
+  <section class="hero-side">
+    <a routerLink="/" class="logo">
+      <img src="assets/logo.png" alt="Logo" class="logo-img">
+      <span class="logo-text">ChapaTuChamba</span>
+    </a>
+
+    <div class="hero-content">
+      <h1>Tu carrera empieza aquí.</h1>
+      <p>Únete a miles de talentos jóvenes descubriendo oportunidades reales en empresas que valoran tu potencial.</p>
+    </div>
+
+    <div class="social-proof">
+      <div class="avatars">
+        <div class="avatar-box" style="background-image: url('https://i.pravatar.cc/150?u=1')"></div>
+        <div class="avatar-box" style="background-image: url('https://i.pravatar.cc/150?u=2')"></div>
+        <div class="avatar-box" style="background-image: url('https://i.pravatar.cc/150?u=3')"></div>
+        <div class="more-count">+2k</div>
+      </div>
+      <span class="proof-text">Candidatos registrados</span>
+    </div>
+  </section>
+
+  <section class="form-side">
+    <div class="form-wrapper">
+      <h2>Crea tu cuenta</h2>
+      <p class="subtitle">Regístrate para encontrar tu primer empleo ideal.</p>
+
+      <div class="user-selector">
+        <button type="button" class="selector-btn active">Postulante</button>
+        <button type="button" class="selector-btn" routerLink="/reclutador/register">Empresa</button>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="alert-error">{{ errorMessage() }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="input-group">
+          <label>Nombre de usuario</label>
+          <input type="text" formControlName="username" placeholder="Ej. juanito123">
+        </div>
+        <div class="input-group">
+          <label>Nombres</label>
+          <input type="text" formControlName="nombres" placeholder="Ej. Juan Andrés">
+        </div>
+        <div class="input-group">
+          <label>Apellidos</label>
+          <input type="text" formControlName="apellidos" placeholder="Ej. Pérez Quispe">
+        </div>
+        <div class="input-group">
+          <label>Correo electrónico</label>
+          <input type="email" formControlName="email" placeholder="tu@correo.com">
+        </div>
+        <div class="input-group">
+          <label>Contraseña</label>
+          <div class="input-group-password">
+            <input [type]="hidePassword() ? 'password' : 'text'" formControlName="password" placeholder="Crea una contraseña">
+            <span class="material-symbols-outlined toggle-icon" (click)="togglePassword()">
+              {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+            </span>
+          </div>
+        </div>
+        <button type="submit" class="btn-submit" [disabled]="form.invalid || loading()">
+          {{ loading() ? 'Creando cuenta...' : 'Crear Cuenta →' }}
+        </button>
+      </form>
+
+      <p class="login-link">¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión</a></p>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,95 @@
+<div class="page-content">
+  <h1>{{ editId() ? 'Editar vacante' : 'Publicar empleo' }}</h1>
+  <p class="lead">Completa los pasos para publicar o actualizar una vacante.</p>
+
+  @if (message()) {
+    <div class="alert-error">{{ message() }}</div>
+  }
+
+  <div class="step-indicator">
+    @for (step of [1,2,3,4]; track step) {
+      <div class="step" [class.active]="currentStep() === step" [class.completed]="currentStep() > step">
+        <div class="step-circle">{{ currentStep() > step ? '✓' : step }}</div>
+        <span>Paso {{ step }}</span>
+      </div>
+    }
+  </div>
+
+  <form [formGroup]="form" class="card form-card">
+    @if (currentStep() === 1) {
+      <div class="input-group">
+        <label>Título del puesto</label>
+        <input formControlName="titulo">
+      </div>
+      <div class="input-group">
+        <label>Tipo de puesto</label>
+        <select formControlName="tipoPuesto">
+          <option value="">Seleccionar</option>
+          <option>Practicas Preprofesionales</option>
+          <option>Practicas Profesionales</option>
+          <option>Empleo Junior</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Ubicación</label>
+        <input formControlName="ubicacion">
+      </div>
+    }
+
+    @if (currentStep() === 2) {
+      <div class="input-group">
+        <label>Descripción</label>
+        <textarea rows="5" formControlName="descripcion"></textarea>
+      </div>
+      <div class="input-group">
+        <label>Requisitos</label>
+        <textarea rows="5" formControlName="requisitos"></textarea>
+      </div>
+    }
+
+    @if (currentStep() === 3) {
+      <div class="input-group">
+        <label>Modalidad</label>
+        <select formControlName="tipoModalidad">
+          <option value="">Seleccionar</option>
+          <option>Remoto</option>
+          <option>Presencial</option>
+          <option>Hibrido</option>
+        </select>
+      </div>
+      <div class="grid-2">
+        <div class="input-group">
+          <label>Salario mínimo</label>
+          <input type="number" formControlName="salarioMinimo">
+        </div>
+        <div class="input-group">
+          <label>Salario máximo</label>
+          <input type="number" formControlName="salarioMaximo">
+        </div>
+      </div>
+    }
+
+    @if (currentStep() === 4) {
+      <div class="review-box">
+        <p><strong>Título:</strong> {{ form.value.titulo }}</p>
+        <p><strong>Tipo:</strong> {{ form.value.tipoPuesto }}</p>
+        <p><strong>Ubicación:</strong> {{ form.value.ubicacion }}</p>
+        <p><strong>Modalidad:</strong> {{ form.value.tipoModalidad }}</p>
+        <p><strong>Rango salarial:</strong> S/ {{ form.value.salarioMinimo }} - S/ {{ form.value.salarioMaximo }}</p>
+      </div>
+    }
+
+    <div class="action-buttons">
+      @if (currentStep() > 1) {
+        <button type="button" class="btn-secondary" (click)="prevStep()">Atrás</button>
+      }
+      @if (currentStep() < 4) {
+        <button type="button" class="btn-primary" (click)="nextStep()">Siguiente</button>
+      } @else {
+        <button type="button" class="btn-primary" (click)="publish()" [disabled]="publishing()">
+          {{ publishing() ? 'Publicando...' : (editId() ? 'Guardar cambios' : 'Publicar empleo') }}
+        </button>
+      }
+    </div>
+  </form>
+</div>

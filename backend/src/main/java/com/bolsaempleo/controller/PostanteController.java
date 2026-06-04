@@ -1,135 +1,97 @@
 package com.bolsaempleo.controller;
 
+import com.bolsaempleo.dto.DescripcionUpdate;
+import com.bolsaempleo.dto.PostanteForm;
+import com.bolsaempleo.dto.Request.CertificadoRequest;
+import com.bolsaempleo.dto.Response.CertificadoResponse;
+import com.bolsaempleo.dto.Response.MensajeResponse;
+import com.bolsaempleo.dto.Response.PostanteResponse;
+import com.bolsaempleo.dto.Response.PostulacionEstadoResponse;
+import com.bolsaempleo.model.Habilidad;
 import com.bolsaempleo.model.Postante;
-import com.bolsaempleo.repository.PostanteRepository;
+import com.bolsaempleo.service.CertificadoService;
 import com.bolsaempleo.service.PostanteService;
-import com.bolsaempleo.service.ArchivoService; 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/api/postantes")
+@RequestMapping("/api/v1/postantes")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class PostanteController {
     
     private final PostanteService postanteService;
-    private final PostanteRepository postanteRepository;
-    private final ArchivoService archivoService; 
+    private final CertificadoService certificadoService;
     
-    public PostanteController(PostanteService postanteService, 
-                              PostanteRepository postanteRepository, 
-                              ArchivoService archivoService) { 
-        this.postanteService = postanteService;
-        this.postanteRepository = postanteRepository;
-        this.archivoService = archivoService;
-    }
-    
-    @PostMapping("/register")
-    public ResponseEntity<?> registrar(@ModelAttribute Postante postante,
-                                       @RequestParam(value = "cvFile", required = false) MultipartFile cvFile) {
-        try {
-            Postante nuevo = postanteService.registrar(postante, cvFile);
-            return ResponseEntity.ok(nuevo);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PostanteResponse> registrar(
+            @ModelAttribute Postante postante,
+            @RequestParam(value = "cvFile", required = false) MultipartFile cvFile) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(postanteService.registrar(postante, cvFile));
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerPorId(@PathVariable Long id) {
-        return postanteService.buscarPorId(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<PostanteResponse> obtenerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(postanteService.buscarPorId(id));
     }
     
     @PostMapping("/{id}/habilidades")
-    public ResponseEntity<?> agregarHabilidades(@PathVariable Long id,
-                                                 @RequestBody List<String> habilidades) {
-        try {
-            Postante postante = postanteService.agregarHabilidades(id, habilidades);
-            return ResponseEntity.ok(postante);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<PostanteResponse> agregarHabilidades(
+            @PathVariable Long id,
+            @RequestBody List<String> habilidades) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(postanteService.agregarHabilidades(id, habilidades));
     }
 
     @PutMapping("/{id}/descripcion")
-    public ResponseEntity<?> actualizarDescripcion(@PathVariable Long id, @RequestBody Map<String, String> body) {
-        return postanteRepository.findById(id)
-                .map(postante -> {
-                    String nuevaDescripcion = body.get("descripcion");
-                    postante.setDescripcion(nuevaDescripcion);
-                    postanteRepository.save(postante); 
-                    return ResponseEntity.ok(Map.of("message", "Descripción actualizada con éxito"));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<MensajeResponse> actualizarDescripcion(
+            @PathVariable Long id, 
+            @Valid @RequestBody DescripcionUpdate dto) {
+        postanteService.actualizarDescripcion(id, dto);
+        return ResponseEntity.ok(new MensajeResponse("Descripción actualizada con éxito"));
     }
 
     @GetMapping("/{id}/habilidades")
-    public ResponseEntity<?> obtenerHabilidades(@PathVariable Long id) {
+    public ResponseEntity<List<Habilidad>> obtenerHabilidades(@PathVariable Long id) {
         return ResponseEntity.ok(postanteService.obtenerHabilidades(id));
     }
     
     @PutMapping("/habilidades/{habilidadId}/verificar")
-    public ResponseEntity<?> verificarHabilidad(@PathVariable Long habilidadId) {
-        try {
-            postanteService.verificarHabilidad(habilidadId);
-            return ResponseEntity.ok(Map.of("mensaje", "Habilidad verificada"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<MensajeResponse> verificarHabilidad(@PathVariable Long habilidadId) {
+        postanteService.verificarHabilidad(habilidadId);
+        return ResponseEntity.ok(new MensajeResponse("Habilidad verificada"));
     }
     
     @GetMapping("/{id}/postulaciones")
-    public ResponseEntity<?> obtenerPostulaciones(@PathVariable Long id) {
-        return ResponseEntity.ok(postanteService.obtenerPostulaciones(id));
+    public ResponseEntity<List<PostulacionEstadoResponse>> obtenerPostulaciones(@PathVariable Long id) {
+        return ResponseEntity.ok(postanteService.obtenerPostulacionesResponse(id));
     }
 
-    @PutMapping("/{id}/completo")
-    public ResponseEntity<?> actualizarPerfilCompleto(
+    @GetMapping("/{id}/certificados")
+    public ResponseEntity<List<CertificadoResponse>> obtenerCertificados(@PathVariable Long id) {
+        return ResponseEntity.ok(certificadoService.listarPorPostante(id));
+    }
+
+    @PostMapping("/{id}/certificados")
+    public ResponseEntity<CertificadoResponse> crearCertificado(
             @PathVariable Long id,
-            @RequestParam("nombres") String nombres,      
-            @RequestParam("apellidos") String apellidos,  
-            @RequestParam("descripcion") String descripcion,
-            @RequestParam("carrera") String carrera,
-            @RequestParam("institucion") String institucion,
-            @RequestParam("egresado") Boolean egresado,     
-            @RequestParam("telefono") String telefono,     
-            @RequestParam(value = "cvFile", required = false) MultipartFile cvFile,
-            @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile) { 
+            @Valid @RequestBody CertificadoRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(certificadoService.crear(id, request));
+    }
+
+    @PutMapping(value = "/{id}/completo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MensajeResponse> actualizarPerfilCompleto(
+            @PathVariable Long id,
+            @ModelAttribute PostanteForm formDto) throws IOException { 
         
-        return postanteRepository.findById(id)
-                .map(postante -> {
-                    try {
-                        postante.setNombres(nombres);
-                        postante.setApellidos(apellidos);
-                        postante.setDescripcion(descripcion);
-                        postante.setCarrera(carrera);
-                        postante.setInstitucion(institucion);
-                        postante.setEgresado(egresado);
-                        postante.setTelefono(telefono);   
-
-                        if (cvFile != null && !cvFile.isEmpty()) {
-                            String urlCv = archivoService.subirArchivo(cvFile, "cv_" + id);
-                            postante.setCvPath(urlCv);
-                        }
-
-                        if (fotoFile != null && !fotoFile.isEmpty()) {
-                            String urlFoto = archivoService.subirArchivo(fotoFile, "foto_" + id);
-                            postante.setFotoPerfil(urlFoto);
-                        }
-                        
-                        postanteRepository.save(postante);
-                        return ResponseEntity.ok(Map.of("message", "Perfil actualizado con éxito"));
-
-                    } catch (Exception e) {
-                        System.err.println("Error procesando archivos en Azure Storage: " + e.getMessage());
-                        return ResponseEntity.internalServerError().body(Map.of("error", "Error al procesar el guardado en la nube de Azure."));
-                    }
-                })
-                .orElse(ResponseEntity.notFound().build());
+        postanteService.actualizarPerfilCompleto(id, formDto);
+        return ResponseEntity.ok(new MensajeResponse("Perfil actualizado con éxito"));
     }
 }

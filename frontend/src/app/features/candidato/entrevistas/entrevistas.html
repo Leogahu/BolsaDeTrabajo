@@ -1,0 +1,31 @@
+<div class="page-content">
+  <h1>Simulador de entrevistas</h1>
+  <p class="lead">Practica respuestas con preguntas frecuentes de reclutadores junior-friendly.</p>
+
+  <div class="card stats-card">
+    <span>Progreso: {{ completedCount() }} / {{ questions.length }} preguntas practicadas</span>
+  </div>
+
+  <div class="card simulator-card">
+    <div class="progress">Pregunta {{ currentQuestion() + 1 }} de {{ questions.length }}</div>
+    <h2>{{ questions[currentQuestion()] }}</h2>
+    <textarea rows="6" placeholder="Escribe tu respuesta aquí..." [ngModel]="answer()" (ngModelChange)="answer.set($event)"></textarea>
+    @if (feedback()) {
+      <p class="alert-success">{{ feedback() }}</p>
+    }
+    <div class="actions">
+      <button type="button" class="btn-secondary" (click)="prevQuestion()" [disabled]="currentQuestion() === 0">Anterior</button>
+      <button type="button" class="btn-secondary" (click)="evaluateAnswer()">Evaluar respuesta</button>
+      <button type="button" class="btn-primary" (click)="nextQuestion()" [disabled]="currentQuestion() === questions.length - 1">Siguiente</button>
+    </div>
+  </div>
+
+  <div class="tips card">
+    <h3>Consejos rápidos</h3>
+    <ul>
+      <li>Usa el método STAR: situación, tarea, acción y resultado.</li>
+      <li>Menciona aprendizajes concretos de tus proyectos académicos.</li>
+      <li>Mantén respuestas entre 1 y 2 minutos.</li>
+    </ul>
+  </div>
+</div>

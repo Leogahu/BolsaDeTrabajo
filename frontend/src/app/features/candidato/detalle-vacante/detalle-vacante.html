@@ -1,0 +1,45 @@
+<div class="page-content">
+  <a routerLink="/candidato/explorar-vacantes" class="back-link">← Volver a oportunidades</a>
+
+  @if (message()) {
+    <div class="alert-success">{{ message() }}</div>
+  }
+
+  @if (job(); as current) {
+    <div class="detail-grid">
+      <section class="card detail-main">
+        <div class="job-header">
+          <div class="company-logo">{{ companyName().substring(0, 2).toUpperCase() }}</div>
+          <div>
+            <h1>{{ current.titulo }}</h1>
+            <div class="job-meta">
+              <span>📍 {{ current.ubicacion || 'No especificada' }}</span>
+              <span>💻 {{ current.tipoModalidad || 'No especificado' }}</span>
+              <span>💵 {{ salaryLabel() }}</span>
+            </div>
+            <div class="pill-container">
+              <span class="pill pill-blue">{{ current.tipoPuesto }}</span>
+            </div>
+          </div>
+        </div>
+
+        <h2>Descripción</h2>
+        <p class="section-text">{{ current.descripcion || 'Sin descripción.' }}</p>
+
+        <h2>Requisitos</h2>
+        <p class="section-text">{{ current.requisitos || 'Sin requisitos especificados.' }}</p>
+      </section>
+
+      <aside class="card detail-side">
+        <h3>{{ companyName() }}</h3>
+        <p class="muted">Empresa publicadora</p>
+        <button type="button" class="btn-primary" (click)="apply()" [disabled]="applying()">
+          {{ applying() ? 'Postulando...' : 'Postular ahora' }}
+        </button>
+        <button type="button" class="btn-secondary" routerLink="/candidato/postulaciones">Ver mis postulaciones</button>
+      </aside>
+    </div>
+  } @else if (!message()) {
+    <p class="muted">Cargando vacante...</p>
+  }
+</div>

@@ -1,0 +1,26 @@
+<div class="page-content">
+  <h1>Mis Postulaciones</h1>
+  <p class="lead">Mantén un control claro del estado de cada vacante a la que aplicaste.</p>
+
+  @if (loading()) {
+    <p class="muted">Cargando postulaciones...</p>
+  } @else if (applications().length === 0) {
+    <div class="card empty-card">
+      <p>Aún no te has postulado a ninguna vacante.</p>
+      <a routerLink="/candidato/explorar-vacantes" class="btn-primary">Explorar vacantes</a>
+    </div>
+  } @else {
+    <div class="cards-grid">
+      @for (app of applications(); track app.id) {
+        <article class="card item-card">
+          <h2>{{ title(app) }}</h2>
+          <p>{{ company(app) }}</p>
+          <span class="status">{{ statusLabel(app.estado) }}</span>
+          @if (app.fechaPostulacion) {
+            <small class="muted">Postulado: {{ app.fechaPostulacion }}</small>
+          }
+        </article>
+      }
+    </div>
+  }
+</div>

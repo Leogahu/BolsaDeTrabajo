@@ -1,0 +1,52 @@
+<div class="page-content">
+  <h1>¡Hola, {{ userName() }}!</h1>
+  <p class="lead">Estás a un paso de tu primera gran oportunidad.</p>
+
+  <div class="dashboard-grid">
+    <div class="col-left">
+      <div class="card profile-card">
+        <div class="card-header-row">
+          <h3>Fuerza del Perfil</h3>
+          <span class="score">85%</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-fill" style="width: 85%"></div>
+        </div>
+        <p class="muted">Tu perfil es atractivo para reclutadores. Completa tu portafolio para alcanzar el 100%.</p>
+        <div class="actions-row">
+          <a routerLink="/candidato/perfil/editar" class="btn-primary">Editar perfil</a>
+          <a routerLink="/candidato/explorar-vacantes" class="btn-secondary">Ver vacantes</a>
+        </div>
+      </div>
+
+      <h2 class="section-title">Acciones recomendadas</h2>
+      <div class="card">
+        <ul class="quick-list">
+          <li><a routerLink="/candidato/explorar-vacantes">Explorar vacantes recomendadas</a></li>
+          <li><a routerLink="/candidato/habilidades">Tomar pruebas de habilidades</a></li>
+          <li><a routerLink="/candidato/entrevistas">Practicar en el simulador</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="card">
+        <h3>Estado de Postulaciones</h3>
+        <ul class="status-list">
+          <li><span>● Postulado</span> <strong>{{ applicationStats().postulado }}</strong></li>
+          <li><span>● En proceso</span> <strong>{{ applicationStats().proceso }}</strong></li>
+          <li><span>● Entrevista</span> <strong>{{ applicationStats().entrevista }}</strong></li>
+        </ul>
+        <a routerLink="/candidato/postulaciones" class="link-inline">Ver todas</a>
+      </div>
+
+      <div class="card">
+        <h3>Feedback Reciente</h3>
+        <div class="feedback-box">
+          <p class="quote">"Excelente actitud en la entrevista técnica. Demuestra mucho potencial para crecer en el equipo."</p>
+          <span class="muted">María López · Reclutadora TechCorp</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

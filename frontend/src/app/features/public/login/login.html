@@ -1,0 +1,94 @@
+<div class="login-container">
+  <section class="hero-side">
+    <a routerLink="/" class="logo">
+      <img src="assets/logo.png" alt="Logo" class="logo-img">
+      <span class="logo-text">ChapaTuChamba</span>
+    </a>
+    
+    <div class="hero-content">
+      <h1>Bienvenido de nuevo.</h1>
+      <p>Tu próxima oportunidad te está esperando. Accede a tu cuenta para continuar tu crecimiento profesional.</p>
+    </div>
+  </section>
+
+  <section class="form-side">
+    <div class="form-wrapper">
+      <h2>Iniciar Sesión</h2>
+      <p class="subtitle">Ingresa tus credenciales para continuar.</p>
+
+      @if (errorMessage()) {
+        <div class="error-alert-box" style="background-color: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; font-weight: 500;">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        
+        <div class="input-group">
+          <label for="email">Correo electrónico</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            placeholder="tu@correo.com">
+          
+          @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+            <small style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">
+              Por favor, ingresa un correo electrónico válido.
+            </small>
+          }
+        </div>
+
+        <div class="input-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label for="contrasena">Contraseña</label>
+            <a href="#" style="color: var(--primary-blue); font-size: 12px; text-decoration: none; font-weight: 600;">¿Olvidaste tu contraseña?</a>
+          </div>
+          <div class="input-group-password" style="position: relative; display: flex; align-items: center;">
+            <input 
+              [type]="hidePassword() ? 'password' : 'text'" 
+              id="contrasena" 
+              formControlName="password" 
+              placeholder="••••••••">
+            
+            <span 
+              class="material-symbols-outlined" 
+              id="togglePassword" 
+              style="cursor: pointer; position: absolute; right: 12px; user-select: none;"
+              (click)="togglePasswordVisibility()">
+              {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+            </span>
+          </div>
+          
+          @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+            <small style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">
+              La contraseña debe contener un mínimo de 4 caracteres.
+            </small>
+          }
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="loginForm.invalid">
+          Ingresar &rarr;
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>O continúa con</span>
+      </div>
+
+      <div class="social-auth">
+        <button class="btn-social" type="button">
+          <img src="https://cdn-icons-png.flaticon.com/128/300/300221.png" alt="Google"> Google
+        </button>
+        <button class="btn-social" type="button">
+          <img src="https://cdn-icons-png.flaticon.com/128/145/145807.png" alt="LinkedIn"> LinkedIn
+        </button>
+      </div>
+
+      <p class="register-link">
+        ¿No tienes una cuenta? 
+        <a routerLink="/candidato/register">Regístrate aquí</a>
+      </p>
+    </div>
+  </section>
+</div>
