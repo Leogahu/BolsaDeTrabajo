@@ -6,6 +6,7 @@ import { AuthService } from '../../../core/services/auth';
 import { PostanteService } from '../../../core/services/postante';
 import { ProyectoService } from '../../../core/services/proyecto';
 import { Proyecto } from '../../../shared/models/proyecto';
+import { Aval } from '../../../shared/models/postante';
 
 @Component({
   selector: 'app-editar-perfil',
@@ -24,6 +25,7 @@ export class EditarPerfil implements OnInit {
   saving = signal(false);
   message = signal<string | null>(null);
   projects = signal<Proyecto[]>([]);
+  avales = signal<Aval[]>([]);
   avatarPreview = signal<string | null>(null);
 
   form = this.fb.group({
@@ -41,6 +43,13 @@ export class EditarPerfil implements OnInit {
     titulo: [''],
     urlEvidencia: [''],
     descripcion: [''],
+  });
+
+  avalForm = this.fb.group({
+    nombreAvalador: [''],
+    cargoInstitucion: [''],
+    comentarioAval: [''],
+    contactoEmail: [''],
   });
 
   ngOnInit(): void {
@@ -65,6 +74,13 @@ export class EditarPerfil implements OnInit {
     });
 
     this.loadProjects(userId);
+    this.loadAvales(userId);
+  }
+
+  loadAvales(userId: number): void {
+    this.postanteService.getAvales(userId).subscribe({
+      next: (list) => this.avales.set(list),
+    });
   }
 
   loadProjects(userId: number): void {
@@ -102,12 +118,18 @@ export class EditarPerfil implements OnInit {
     this.saving.set(true);
     this.postanteService.updateProfileComplete(userId, formData).subscribe({
       next: () => {
-        this.auth.updateSessionUser({
-          nombres: raw.nombres ?? '',
-          apellidos: raw.apellidos ?? '',
-          nombreCompleto: `${raw.nombres ?? ''} ${raw.apellidos ?? ''}`.trim(),
+        this.postanteService.getProfile(userId).subscribe({
+          next: (profile) => {
+            this.auth.updateSessionUser({
+              nombres: profile.nombres ?? raw.nombres ?? '',
+              apellidos: profile.apellidos ?? raw.apellidos ?? '',
+              nombreCompleto: `${profile.nombres ?? ''} ${profile.apellidos ?? ''}`.trim(),
+              fotoPerfil: profile.fotoPerfil,
+            });
+            this.router.navigate(['/candidato/perfil']);
+          },
+          error: () => this.router.navigate(['/candidato/perfil']),
         });
-        this.router.navigate(['/candidato/perfil']);
       },
       error: () => {
         this.message.set('Error al guardar el perfil.');
@@ -156,6 +178,33 @@ export class EditarPerfil implements OnInit {
     if (!id || !userId) return;
     this.proyectoService.delete(id).subscribe({
       next: () => this.loadProjects(userId),
+    });
+  }
+
+  saveAval(): void {
+    const userId = this.auth.currentUser()?.id;
+    if (!userId) return;
+    const raw = this.avalForm.getRawValue();
+    if (!raw.nombreAvalador) return;
+
+    this.postanteService.addAval(userId, {
+      nombreAvalador: raw.nombreAvalador,
+      cargoInstitucion: raw.cargoInstitucion ?? '',
+      comentarioAval: raw.comentarioAval ?? '',
+      contactoEmail: raw.contactoEmail ?? '',
+    }).subscribe({
+      next: () => {
+        this.avalForm.reset({ nombreAvalador: '', cargoInstitucion: '', comentarioAval: '', contactoEmail: '' });
+        this.loadAvales(userId);
+      },
+    });
+  }
+
+  deleteAval(id: number): void {
+    const userId = this.auth.currentUser()?.id;
+    if (!userId) return;
+    this.postanteService.deleteAval(id).subscribe({
+      next: () => this.loadAvales(userId),
     });
   }
 }

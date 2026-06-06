@@ -1,41 +1,54 @@
-<div class="page-content">
-  <h1>Portal de empresa</h1>
-  <p class="lead">Configura la información de tu organización en la plataforma.</p>
+<div class="portal-page">
+  <header class="portal-hero">
+    <h1>Portal de empresa</h1>
+    <p>Configura tu perfil de reclutador y la información de tu organización.</p>
+  </header>
 
   @if (message()) {
-    <div class="alert-success">{{ message() }}</div>
+    <div class="alert-success page-alert">{{ message() }}</div>
   }
 
-  <div class="card profile-card">
-    <div class="avatar">{{ companyName().substring(0, 2).toUpperCase() }}</div>
-    <div>
-      <h2>{{ companyName() }}</h2>
-      <p>Representante: {{ recruiterName() }}</p>
-    </div>
-  </div>
+  <div class="portal-layout">
+    <section class="card profile-card">
+      <div class="avatar-section">
+        <img [src]="avatarUrl()" alt="Foto de perfil" class="profile-photo">
+        <label class="upload-btn">
+          <span class="material-symbols-outlined">photo_camera</span>
+          Cambiar foto
+          <input type="file" accept="image/*" hidden (change)="onPhotoSelected($event)">
+        </label>
+      </div>
+      <div>
+        <h2>{{ companyName() }}</h2>
+        <p>{{ recruiterName() }}</p>
+        @if (cargo()) {
+          <span class="chip">{{ cargo() }}</span>
+        }
+      </div>
+    </section>
 
-  <form class="card form-card" (ngSubmit)="save()">
-    <h3>Datos del reclutador y empresa</h3>
-    <div class="form-grid">
-      <label>
-        Nombres
-        <input type="text" [ngModel]="nombres()" (ngModelChange)="nombres.set($event)" name="nombres">
+    <form class="card form-section" (ngSubmit)="save()">
+      <h3>Datos del reclutador</h3>
+      <div class="form-grid">
+        <label>Nombres<input type="text" [ngModel]="nombres()" (ngModelChange)="nombres.set($event)" name="nombres"></label>
+        <label>Apellidos<input type="text" [ngModel]="apellidos()" (ngModelChange)="apellidos.set($event)" name="apellidos"></label>
+        <label>Correo<input type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email"></label>
+        <label>Teléfono<input type="text" [ngModel]="telefono()" (ngModelChange)="telefono.set($event)" name="telefono"></label>
+        <label>Cargo<input type="text" [ngModel]="cargo()" (ngModelChange)="cargo.set($event)" name="cargo" placeholder="Ej. HR Manager"></label>
+      </div>
+
+      <h3>Información de la empresa</h3>
+      <div class="form-grid">
+        <label>Nombre empresa<input type="text" [ngModel]="companyName()" (ngModelChange)="companyName.set($event)" name="empresa"></label>
+        <label>Sector<input type="text" [ngModel]="sector()" (ngModelChange)="sector.set($event)" name="sector" placeholder="Ej. Tecnología"></label>
+      </div>
+      <label class="full-width">Descripción de la empresa
+        <textarea rows="4" [ngModel]="descripcion()" (ngModelChange)="descripcion.set($event)" name="descripcion" placeholder="Cuéntanos sobre tu empresa y cultura..."></textarea>
       </label>
-      <label>
-        Apellidos
-        <input type="text" [ngModel]="apellidos()" (ngModelChange)="apellidos.set($event)" name="apellidos">
-      </label>
-      <label>
-        Correo electrónico
-        <input type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email">
-      </label>
-      <label>
-        Nombre de la empresa
-        <input type="text" [ngModel]="companyName()" (ngModelChange)="companyName.set($event)" name="empresa">
-      </label>
-    </div>
-    <button type="submit" class="btn-primary" [disabled]="saving()">
-      {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
-    </button>
-  </form>
+
+      <button type="submit" class="btn-primary" [disabled]="saving()">
+        {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+    </form>
+  </div>
 </div>

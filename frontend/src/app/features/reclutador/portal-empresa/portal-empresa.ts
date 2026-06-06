@@ -20,6 +20,11 @@ export class PortalEmpresa implements OnInit {
   email = signal('');
   nombres = signal('');
   apellidos = signal('');
+  telefono = signal('');
+  cargo = signal('');
+  sector = signal('');
+  descripcion = signal('');
+  fotoPreview = signal<string | null>(null);
   saving = signal(false);
   message = signal<string | null>(null);
 
@@ -34,13 +39,24 @@ export class PortalEmpresa implements OnInit {
         this.email.set(profile.email);
         this.nombres.set(profile.nombres);
         this.apellidos.set(profile.apellidos);
-      },
-      error: () => {
-        this.companyName.set(user.empresa || 'Mi Empresa');
-        this.recruiterName.set(user.nombreCompleto || 'Reclutador');
-        this.email.set(user.email || '');
+        this.telefono.set(profile.telefono || '');
+        this.cargo.set(profile.cargo || '');
+        this.sector.set(profile.sector || '');
+        this.descripcion.set(profile.descripcion || '');
+        if (profile.fotoPerfil) {
+          this.fotoPreview.set(profile.fotoPerfil);
+          this.auth.updateSessionUser({ fotoPerfil: profile.fotoPerfil });
+        }
       },
     });
+  }
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.fotoPreview.set(URL.createObjectURL(file));
+    (this as unknown as { _fotoFile: File })._fotoFile = file;
   }
 
   save(): void {
@@ -50,19 +66,29 @@ export class PortalEmpresa implements OnInit {
     this.saving.set(true);
     this.message.set(null);
 
-    this.reclutadorService.updateProfile(userId, {
-      nombres: this.nombres(),
-      apellidos: this.apellidos(),
-      email: this.email(),
-      empresa: this.companyName(),
-    }).subscribe({
+    const formData = new FormData();
+    formData.append('nombres', this.nombres());
+    formData.append('apellidos', this.apellidos());
+    formData.append('email', this.email());
+    formData.append('empresa', this.companyName());
+    formData.append('telefono', this.telefono());
+    formData.append('cargo', this.cargo());
+    formData.append('sector', this.sector());
+    formData.append('descripcion', this.descripcion());
+
+    const foto = (this as unknown as { _fotoFile?: File })._fotoFile;
+    if (foto) formData.append('fotoFile', foto);
+
+    this.reclutadorService.updateProfileComplete(userId, formData).subscribe({
       next: (profile) => {
         this.auth.updateSessionUser({
           empresa: profile.empresa,
           nombreCompleto: `${profile.nombres} ${profile.apellidos}`.trim(),
           email: profile.email,
+          fotoPerfil: profile.fotoPerfil,
         });
-        this.message.set('Perfil de empresa actualizado correctamente.');
+        if (profile.fotoPerfil) this.fotoPreview.set(profile.fotoPerfil);
+        this.message.set('Perfil actualizado correctamente.');
         this.saving.set(false);
       },
       error: (err) => {
@@ -70,5 +96,9 @@ export class PortalEmpresa implements OnInit {
         this.saving.set(false);
       },
     });
+  }
+
+  avatarUrl(): string {
+    return this.fotoPreview() || this.auth.avatarUrl(this.recruiterName());
   }
 }

@@ -3,13 +3,16 @@
     <h1>Alertas de empleo</h1>
     <p class="lead">Recibe notificaciones cuando aparezcan vacantes que coincidan con tus preferencias.</p>
 
+    @if (message()) {
+      <div class="alert-success">{{ message() }}</div>
+    }
+
     <div class="cards-grid">
-      @for (alert of alerts(); track $index; let i = $index) {
+      @for (alert of alerts(); track alert.id) {
         <article class="card alert-card">
-          <h2>{{ alert.title }}</h2>
-          <p>{{ alert.keyword }} · {{ alert.modality }}</p>
-          <span class="frequency">{{ alert.frequency }}</span>
-          <button type="button" class="btn-secondary" (click)="removeAlert(i)">Eliminar</button>
+          <h2>{{ alert.keyword }}</h2>
+          <p>{{ alert.modalidad }} · {{ alert.frecuencia }}</p>
+          <button type="button" class="btn-secondary" (click)="removeAlert(alert.id)">Eliminar</button>
         </article>
       } @empty {
         <p class="muted">No tienes alertas configuradas. Crea una desde el panel lateral.</p>
@@ -27,7 +30,7 @@
           <article class="card alert-card">
             <h2>{{ job.titulo }}</h2>
             <p>{{ companyName(job) }}</p>
-            <span class="frequency">{{ job.tipoModalidad }}</span>
+            <a [routerLink]="['/candidato/vacante', job.id]" class="btn-primary">Ver vacante</a>
           </article>
         }
       </div>
@@ -35,7 +38,7 @@
   </div>
 
   <aside class="card filters-panel">
-    <h3>Preferencias</h3>
+    <h3>Nueva alerta</h3>
     <div class="input-group">
       <label>Palabra clave</label>
       <input [ngModel]="keyword()" (ngModelChange)="keyword.set($event)">
@@ -55,6 +58,8 @@
         <option>Semanal</option>
       </select>
     </div>
-    <button type="button" class="btn-primary" (click)="saveAlert()">Guardar alerta</button>
+    <button type="button" class="btn-primary" (click)="saveAlert()" [disabled]="saving()">
+      {{ saving() ? 'Guardando...' : 'Guardar alerta' }}
+    </button>
   </aside>
 </div>

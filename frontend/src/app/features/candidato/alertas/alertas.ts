@@ -1,34 +1,32 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth';
+import { AlertaService, AlertaEmpleo } from '../../../core/services/alerta';
 import { JobService } from '../../../core/services/job';
 import { JobOffer } from '../../../shared/models/job-offer';
-
-interface JobAlert {
-  title: string;
-  company: string;
-  frequency: string;
-  keyword: string;
-  modality: string;
-}
 
 @Component({
   selector: 'app-alertas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './alertas.html',
   styleUrl: './alertas.css',
 })
 export class Alertas implements OnInit {
+  private auth = inject(AuthService);
+  private alertaService = inject(AlertaService);
   private jobService = inject(JobService);
-  private readonly storageKey = 'jobAlerts';
 
   keyword = signal('Frontend');
   modality = signal('Remoto');
   frequency = signal('Diaria');
-  alerts = signal<JobAlert[]>([]);
+  alerts = signal<AlertaEmpleo[]>([]);
   matches = signal<JobOffer[]>([]);
   loading = signal(false);
+  saving = signal(false);
+  message = signal<string | null>(null);
 
   ngOnInit(): void {
     this.loadAlerts();
@@ -36,33 +34,42 @@ export class Alertas implements OnInit {
   }
 
   loadAlerts(): void {
-    const raw = localStorage.getItem(this.storageKey);
-    if (raw) {
-      try {
-        this.alerts.set(JSON.parse(raw) as JobAlert[]);
-      } catch { /* ignore */ }
-    }
+    const userId = this.auth.currentUser()?.id;
+    if (!userId) return;
+    this.alertaService.list(userId).subscribe({
+      next: (alerts) => this.alerts.set(alerts),
+    });
   }
 
   saveAlert(): void {
-    const alert: JobAlert = {
-      title: `Alerta: ${this.keyword()}`,
-      company: 'Cualquier empresa',
-      frequency: this.frequency(),
+    const userId = this.auth.currentUser()?.id;
+    if (!userId) return;
+    this.saving.set(true);
+    this.alertaService.create(userId, {
       keyword: this.keyword(),
-      modality: this.modality(),
-    };
-    const updated = [...this.alerts(), alert];
-    this.alerts.set(updated);
-    localStorage.setItem(this.storageKey, JSON.stringify(updated));
-    this.searchMatches();
+      modalidad: this.modality(),
+      frecuencia: this.frequency(),
+    }).subscribe({
+      next: () => {
+        this.loadAlerts();
+        this.searchMatches();
+        this.message.set('Alerta guardada correctamente.');
+        this.saving.set(false);
+      },
+      error: () => {
+        this.message.set('No se pudo guardar la alerta.');
+        this.saving.set(false);
+      },
+    });
   }
 
-  removeAlert(index: number): void {
-    const updated = this.alerts().filter((_, i) => i !== index);
-    this.alerts.set(updated);
-    localStorage.setItem(this.storageKey, JSON.stringify(updated));
-    this.searchMatches();
+  removeAlert(id: number): void {
+    this.alertaService.delete(id).subscribe({
+      next: () => {
+        this.loadAlerts();
+        this.searchMatches();
+      },
+    });
   }
 
   searchMatches(): void {
@@ -70,7 +77,7 @@ export class Alertas implements OnInit {
     this.jobService.getJobs(0, 50).subscribe({
       next: (page) => {
         const keywords = this.alerts().map(a => a.keyword.toLowerCase());
-        const modalities = this.alerts().map(a => a.modality);
+        const modalities = this.alerts().map(a => a.modalidad).filter(Boolean);
 
         const filtered = page.content.filter(job => {
           const title = (job.titulo ?? '').toLowerCase();

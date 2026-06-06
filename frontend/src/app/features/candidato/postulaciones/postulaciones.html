@@ -2,6 +2,10 @@
   <h1>Mis Postulaciones</h1>
   <p class="lead">Mantén un control claro del estado de cada vacante a la que aplicaste.</p>
 
+  @if (message()) {
+    <div class="alert-success banner">{{ message() }}</div>
+  }
+
   @if (loading()) {
     <p class="muted">Cargando postulaciones...</p>
   } @else if (applications().length === 0) {
@@ -18,6 +22,14 @@
           <span class="status">{{ statusLabel(app.estado) }}</span>
           @if (app.fechaPostulacion) {
             <small class="muted">Postulado: {{ app.fechaPostulacion }}</small>
+          }
+          @if (app.motivo) {
+            <p class="feedback-note">{{ app.motivo }}</p>
+          }
+          @if (canChat(app.estado)) {
+            <button type="button" class="btn-secondary chat-btn" (click)="openChat(app)">
+              Abrir chat con reclutador
+            </button>
           }
         </article>
       }

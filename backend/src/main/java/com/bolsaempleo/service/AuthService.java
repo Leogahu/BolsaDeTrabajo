@@ -79,9 +79,12 @@ public class AuthService {
         return new AuthResponse(
                 base.id(),
                 base.username(),
+                base.nombres(),
+                base.apellidos(),
                 base.nombreCompleto(),
                 base.email(),
                 base.empresa(),
+                base.fotoPerfil(),
                 base.tipo(),
                 token
         );

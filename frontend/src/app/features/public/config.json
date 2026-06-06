@@ -1,0 +1,5 @@
+{
+  "apiUrl": "http://localhost:8080/api/v1",
+  "uploadUrl": "http://localhost:8080/uploads",
+  "wsUrl": "ws://localhost:8080/ws"
+}

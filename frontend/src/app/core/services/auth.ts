@@ -78,7 +78,8 @@ export class AuthService {
             nombreCompleto: userData.nombreCompleto || `${userData.nombres ?? ''} ${userData.apellidos ?? ''}`.trim(),
             email: userData.email,
             username: userData.username,
-            empresa: userData.empresa
+            empresa: userData.empresa,
+            fotoPerfil: userData.fotoPerfil
           }
         };
 
@@ -112,8 +113,14 @@ export class AuthService {
   }
 
   avatarUrl(name?: string): string {
-    const display = name || this.currentUser()?.nombreCompleto || 'Usuario';
+    const user = this.currentUser();
+    if (user?.fotoPerfil) return user.fotoPerfil;
+    const display = name || user?.nombreCompleto || 'Usuario';
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(display)}&background=0052EA&color=fff`;
+  }
+
+  userTipoApi(): 'POSTANTE' | 'RECLUTADOR' {
+    return this.userType() === 'reclutador' ? 'RECLUTADOR' : 'POSTANTE';
   }
 }
 

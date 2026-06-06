@@ -10,10 +10,10 @@
     </div>
   } @else {
     <div class="cards-grid">
-      @for (item of feedbackItems(); track item.candidate) {
+      @for (item of feedbackItems(); track $index) {
         <article class="card">
           <h2>{{ item.candidate }}</h2>
-          <p class="role">{{ item.role }}</p>
+          <p class="role">{{ item.role }} · {{ item.estado }}</p>
           <p>{{ item.comment }}</p>
         </article>
       }

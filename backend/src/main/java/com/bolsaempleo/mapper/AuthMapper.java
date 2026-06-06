@@ -12,11 +12,13 @@ public interface AuthMapper {
 
     @Mapping(target = "nombreCompleto", source = ".", qualifiedByName = "mapNombrePostante")
     @Mapping(target = "empresa", ignore = true)
+    @Mapping(target = "fotoPerfil", source = "fotoPerfil")
     @Mapping(target = "tipo", constant = "postante")
     @Mapping(target = "token", ignore = true)
     AuthResponse toAuthResponse(Postante postante);
 
     @Mapping(target = "nombreCompleto", source = ".", qualifiedByName = "mapNombreReclutador")
+    @Mapping(target = "fotoPerfil", source = "fotoPerfil")
     @Mapping(target = "tipo", constant = "reclutador")
     @Mapping(target = "token", ignore = true)
     AuthResponse toAuthResponse(Reclutador reclutador);

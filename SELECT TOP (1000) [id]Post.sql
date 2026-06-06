@@ -34,12 +34,17 @@ TRUNCATE TABLE dbo.postantes;
 DBCC CHECKIDENT ('dbo.postantes', RESEED, 0);
 
 SELECT TOP (1000) [id]
+      ,[apellidos]
+      ,[nombres]
       ,[email]
       ,[empresa]
-      ,[nombres]
-      ,[apellidos]
       ,[password]
       ,[username]
+      ,[cargo]
+      ,[descripcion]
+      ,[foto_perfil]
+      ,[sector]
+      ,[telefono]
   FROM [dbo].[reclutadores]
   
 SELECT TOP (1000) [id]

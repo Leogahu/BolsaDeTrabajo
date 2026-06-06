@@ -1,3 +1,13 @@
 package com.bolsaempleo.dto.Response;
 
-public record MensajeResponse(String mensaje) {}
+import java.time.LocalDateTime;
+
+public record MensajeResponse(
+    Long id,
+    Long conversacionId,
+    String remitenteTipo,
+    Long remitenteId,
+    String contenido,
+    boolean leido,
+    LocalDateTime fechaEnvio
+) {}

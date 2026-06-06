@@ -1,81 +1,198 @@
-<div class="page-content">
+<div class="perfil-page">
   @if (profile(); as p) {
-    <div class="profile-header-card card">
-      <img [src]="avatarUrl()" alt="Avatar" class="profile-avatar">
-      <div class="profile-details">
-        <h1>{{ fullName() }}</h1>
-        <p class="profile-tagline">
-          {{ p.carrera ? p.carrera + ' | Perfil Profesional' : 'Añade tu carrera o título profesional' }}
-        </p>
-        <a routerLink="/candidato/perfil/editar" class="btn-primary">Editar Perfil</a>
-      </div>
-    </div>
-
-    <div class="sections-grid">
-      <section class="card">
-        <h2>Resumen profesional</h2>
-        <p>{{ p.descripcion || 'Aún no has agregado un resumen profesional.' }}</p>
-      </section>
-
-      <section class="card">
-        <h2>Educación</h2>
-        @if (p.carrera || p.institucion) {
-          <div class="education-item">
-            <h4>{{ p.carrera || 'Carrera Profesional' }}</h4>
-            <p>{{ p.institucion || 'Institución' }}</p>
-            <span class="edu-date">{{ p.egresado ? 'Egresado' : 'Estudiante' }}</span>
+    <header class="profile-hero">
+      <div class="profile-hero-inner">
+        <div class="avatar-wrap">
+          <img [src]="avatarUrl()" alt="Avatar" class="profile-avatar">
+          <span class="avatar-ring"></span>
+        </div>
+        <div class="profile-hero-text">
+          <span class="profile-badge">Perfil profesional</span>
+          <h1>{{ fullName() }}</h1>
+          <p class="profile-tagline">
+            {{ p.carrera || 'Añade tu carrera o título profesional' }}
+            @if (p.institucion) {
+              <span class="dot">·</span> {{ p.institucion }}
+            }
+          </p>
+          <div class="profile-chips">
+            @if (p.egresado !== undefined && p.egresado !== null) {
+              <span class="chip">{{ p.egresado ? 'Egresado' : 'Estudiante' }}</span>
+            }
+            @if (p.email) {
+              <span class="chip chip-outline">{{ p.email }}</span>
+            }
+            @if (p.telefono) {
+              <span class="chip chip-outline">{{ p.telefono }}</span>
+            }
           </div>
-        } @else {
-          <p class="muted">No has añadido información académica.</p>
-        }
+          <a routerLink="/candidato/perfil/editar" class="btn-edit">
+            <span class="material-symbols-outlined">edit</span>
+            Editar perfil
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="sections-layout">
+      <section class="profile-section card">
+        <div class="section-header">
+          <span class="material-symbols-outlined section-icon">person</span>
+          <div>
+            <h2>Resumen profesional</h2>
+            <p class="section-subtitle">Tu propuesta de valor ante reclutadores</p>
+          </div>
+        </div>
+        <div class="section-body">
+          @if (p.descripcion) {
+            <p class="description-text">{{ p.descripcion }}</p>
+          } @else {
+            <p class="empty-state">Aún no has agregado un resumen profesional. Cuéntale a las empresas quién eres y qué buscas.</p>
+          }
+        </div>
       </section>
 
-      <section class="card">
-        <h2>Currículum Vitae</h2>
-        @if (p.cvPath) {
-          <a [href]="p.cvPath" target="_blank" class="btn-secondary">Verificar CV</a>
-        } @else {
-          <p class="warning">Aún no has subido tu CV. Ve a editar perfil para añadirlo.</p>
-        }
+      <section class="profile-section card">
+        <div class="section-header">
+          <span class="material-symbols-outlined section-icon">school</span>
+          <div>
+            <h2>Educación</h2>
+            <p class="section-subtitle">Formación académica</p>
+          </div>
+        </div>
+        <div class="section-body">
+          @if (p.carrera || p.institucion) {
+            <div class="info-block">
+              <h4>{{ p.carrera || 'Carrera profesional' }}</h4>
+              <p>{{ p.institucion || 'Institución no especificada' }}</p>
+              <span class="meta-tag">{{ p.egresado ? 'Egresado' : 'En curso' }}</span>
+            </div>
+          } @else {
+            <p class="empty-state">No has añadido información académica.</p>
+          }
+        </div>
       </section>
 
-      <section class="card">
-        <h2>Certificaciones</h2>
-        @if (certificados().length === 0) {
-          <p class="muted">Completa pruebas de habilidades para obtener certificados.</p>
-        } @else {
-          @for (cert of certificados(); track cert.id) {
-            <div class="project-item">
-              <h4>{{ cert.nombreCurso }}</h4>
-              <p>{{ cert.institucionEmisora }}</p>
-              @if (cert.fechaEmision) {
-                <span class="edu-date">{{ cert.fechaEmision }}</span>
+      <section class="profile-section card">
+        <div class="section-header">
+          <span class="material-symbols-outlined section-icon">description</span>
+          <div>
+            <h2>Currículum Vitae</h2>
+            <p class="section-subtitle">Documento para postulaciones</p>
+          </div>
+        </div>
+        <div class="section-body">
+          @if (p.cvPath) {
+            <a [href]="p.cvPath" target="_blank" class="cv-link">
+              <span class="material-symbols-outlined">download</span>
+              Ver / descargar CV
+            </a>
+          } @else {
+            <div class="warning-box">
+              <span class="material-symbols-outlined">info</span>
+              <p>Aún no has subido tu CV. Ve a editar perfil para añadirlo.</p>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="profile-section card">
+        <div class="section-header">
+          <span class="material-symbols-outlined section-icon">verified</span>
+          <div>
+            <h2>Certificaciones</h2>
+            <p class="section-subtitle">Pruebas de habilidades completadas</p>
+          </div>
+        </div>
+        <div class="section-body">
+          @if (certificados().length === 0) {
+            <p class="empty-state">Completa pruebas de habilidades para obtener certificados visibles en tu perfil.</p>
+          } @else {
+            <div class="list-items">
+              @for (cert of certificados(); track cert.id) {
+                <article class="list-item">
+                  <div class="list-item-icon cert-icon">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                  </div>
+                  <div>
+                    <h4>{{ cert.nombreCurso }}</h4>
+                    <p>{{ cert.institucionEmisora }}</p>
+                    @if (cert.fechaEmision) {
+                      <span class="meta-tag">{{ cert.fechaEmision }}</span>
+                    }
+                  </div>
+                </article>
               }
             </div>
           }
-        }
+        </div>
       </section>
 
-      <section class="card">
-        <h2>Proyectos</h2>
-        @if (projects().length === 0) {
-          <p class="muted">No registras proyectos en tu portafolio.</p>
-        } @else {
-          @for (proj of projects(); track proj.id) {
-            <div class="project-item">
-              <div class="project-header">
-                <h4>{{ proj.titulo }}</h4>
-                @if (proj.urlEvidencia) {
-                  <a [href]="proj.urlEvidencia" target="_blank">🔗</a>
-                }
-              </div>
-              <p>{{ proj.descripcion }}</p>
+      <section class="profile-section card">
+        <div class="section-header">
+          <span class="material-symbols-outlined section-icon">verified_user</span>
+          <div>
+            <h2>Avales académicos</h2>
+            <p class="section-subtitle">Recomendaciones de docentes o mentores</p>
+          </div>
+        </div>
+        <div class="section-body">
+          @if (avales().length === 0) {
+            <p class="empty-state">Agrega avales desde editar perfil para reforzar tu credibilidad.</p>
+          } @else {
+            @for (aval of avales(); track aval.id) {
+              <article class="list-item">
+                <div class="list-item-icon cert-icon">
+                  <span class="material-symbols-outlined">person</span>
+                </div>
+                <div>
+                  <h4>{{ aval.nombreAvalador }}</h4>
+                  <p>{{ aval.cargoInstitucion }}</p>
+                  @if (aval.comentarioAval) {
+                    <p class="aval-comment">"{{ aval.comentarioAval }}"</p>
+                  }
+                </div>
+              </article>
+            }
+          }
+        </div>
+      </section>
+
+      <section class="profile-section card profile-section-wide">
+        <div class="section-header">
+          <span class="material-symbols-outlined section-icon">folder_open</span>
+          <div>
+            <h2>Proyectos</h2>
+            <p class="section-subtitle">Portafolio académico y personal</p>
+          </div>
+        </div>
+        <div class="section-body">
+          @if (projects().length === 0) {
+            <p class="empty-state">No registras proyectos en tu portafolio. Agrega los que demuestren tu experiencia.</p>
+          } @else {
+            <div class="projects-grid">
+              @for (proj of projects(); track proj.id) {
+                <article class="project-card">
+                  <div class="project-card-header">
+                    <h4>{{ proj.titulo }}</h4>
+                    @if (proj.urlEvidencia) {
+                      <a [href]="proj.urlEvidencia" target="_blank" class="project-link" title="Ver evidencia">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                      </a>
+                    }
+                  </div>
+                  <p>{{ proj.descripcion }}</p>
+                </article>
+              }
             </div>
           }
-        }
+        </div>
       </section>
     </div>
   } @else {
-    <p class="muted">Cargando perfil...</p>
+    <div class="loading-state">
+      <span class="material-symbols-outlined spin">progress_activity</span>
+      <p>Cargando perfil...</p>
+    </div>
   }
 </div>

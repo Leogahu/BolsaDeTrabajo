@@ -10,6 +10,11 @@ export interface ReclutadorProfile {
   apellidos: string;
   email: string;
   empresa: string;
+  telefono?: string;
+  cargo?: string;
+  descripcion?: string;
+  fotoPerfil?: string;
+  sector?: string;
 }
 
 export interface ReclutadorUpdatePayload {
@@ -30,6 +35,10 @@ export class ReclutadorService {
 
   updateProfile(id: number, data: ReclutadorUpdatePayload): Observable<ReclutadorProfile> {
     return this.http.put<ReclutadorProfile>(`${API_BASE}/reclutadores/${id}`, data);
+  }
+
+  updateProfileComplete(id: number, formData: FormData): Observable<ReclutadorProfile> {
+    return this.http.put<ReclutadorProfile>(`${API_BASE}/reclutadores/${id}/completo`, formData);
   }
 }
 

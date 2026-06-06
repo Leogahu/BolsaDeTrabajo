@@ -32,6 +32,17 @@ public class Reclutador {
     
     @Column(nullable = false)
     private String empresa;
+
+    private String telefono;
+
+    private String cargo;
+
+    @Column(columnDefinition = "TEXT")
+    private String descripcion;
+
+    private String fotoPerfil;
+
+    private String sector;
     
     @OneToMany(mappedBy = "reclutador", cascade = CascadeType.ALL)
     @JsonIgnore

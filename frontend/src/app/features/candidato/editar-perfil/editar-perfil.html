@@ -1,87 +1,231 @@
-<div class="page-content">
-  <a routerLink="/candidato/perfil" class="back-link">← Volver al perfil</a>
-  <h1>Editar perfil</h1>
-  <p class="lead">Actualiza tu información profesional, CV y proyectos.</p>
+<div class="editar-page">
+  <header class="editar-header">
+    <a routerLink="/candidato/perfil" class="back-link">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Volver al perfil
+    </a>
+    <h1>Editar perfil</h1>
+    <p class="lead">Actualiza tu información profesional, CV y proyectos.</p>
+  </header>
 
   @if (message()) {
-    <div class="alert-error">{{ message() }}</div>
+    <div class="alert-error page-alert">{{ message() }}</div>
   }
 
-  <div class="card form-card">
-    <div class="avatar-edit">
-      <img [src]="avatarPreview() || auth.avatarUrl()" alt="Avatar">
-      <label class="link-btn">
-        Cambiar foto
-        <input #photoInput type="file" accept="image/*" hidden (change)="onPhotoSelected($event)">
-      </label>
-    </div>
+  <div class="editar-layout">
+    <section class="edit-section card">
+      <div class="section-title-bar">
+        <span class="material-symbols-outlined">photo_camera</span>
+        <div>
+          <h2>Foto de perfil</h2>
+          <p>Imagen que verán los reclutadores</p>
+        </div>
+      </div>
+      <div class="avatar-edit">
+        <img [src]="avatarPreview() || auth.avatarUrl()" alt="Avatar">
+        <label class="upload-btn">
+          <span class="material-symbols-outlined">upload</span>
+          Cambiar foto
+          <input #photoInput type="file" accept="image/*" hidden (change)="onPhotoSelected($event)">
+        </label>
+      </div>
+    </section>
 
     <form [formGroup]="form" (ngSubmit)="saveProfile(cvInput, photoInput)">
-      <div class="grid-2">
-        <div class="input-group">
-          <label>Nombres</label>
-          <input formControlName="nombres">
+      <section class="edit-section card">
+        <div class="section-title-bar">
+          <span class="material-symbols-outlined">badge</span>
+          <div>
+            <h2>Información personal</h2>
+            <p>Datos básicos de contacto</p>
+          </div>
         </div>
-        <div class="input-group">
-          <label>Apellidos</label>
-          <input formControlName="apellidos">
+        <div class="section-content grid-2">
+          <div class="input-group">
+            <label>Nombres</label>
+            <input formControlName="nombres" placeholder="Tus nombres">
+          </div>
+          <div class="input-group">
+            <label>Apellidos</label>
+            <input formControlName="apellidos" placeholder="Tus apellidos">
+          </div>
+          <div class="input-group">
+            <label>Teléfono</label>
+            <input formControlName="telefono" placeholder="Ej. +51 999 999 999">
+          </div>
         </div>
-        <div class="input-group">
-          <label>Carrera</label>
-          <input formControlName="carrera">
-        </div>
-        <div class="input-group">
-          <label>Institución</label>
-          <input formControlName="institucion">
-        </div>
-        <div class="input-group">
-          <label>Teléfono</label>
-          <input formControlName="telefono">
-        </div>
-        <div class="input-group">
-          <label>Estado académico</label>
-          <select formControlName="egresado">
-            <option value="false">Estudiante</option>
-            <option value="true">Egresado</option>
-          </select>
-        </div>
-      </div>
+      </section>
 
-      <div class="input-group">
-        <label>Descripción</label>
-        <textarea rows="4" formControlName="descripcion"></textarea>
-      </div>
+      <section class="edit-section card">
+        <div class="section-title-bar">
+          <span class="material-symbols-outlined">school</span>
+          <div>
+            <h2>Formación académica</h2>
+            <p>Tu trayectoria educativa</p>
+          </div>
+        </div>
+        <div class="section-content grid-2">
+          <div class="input-group">
+            <label>Carrera</label>
+            <input formControlName="carrera" placeholder="Ej. Ingeniería de Software">
+          </div>
+          <div class="input-group">
+            <label>Institución</label>
+            <input formControlName="institucion" placeholder="Universidad o instituto">
+          </div>
+          <div class="input-group">
+            <label>Estado académico</label>
+            <select formControlName="egresado">
+              <option value="false">Estudiante</option>
+              <option value="true">Egresado</option>
+            </select>
+          </div>
+        </div>
+      </section>
 
-      <div class="input-group">
-        <label>CV (PDF)</label>
-        <input #cvInput type="file" accept=".pdf,application/pdf">
-      </div>
+      <section class="edit-section card">
+        <div class="section-title-bar">
+          <span class="material-symbols-outlined">description</span>
+          <div>
+            <h2>Resumen profesional</h2>
+            <p>Cuéntale a las empresas sobre ti</p>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="input-group">
+            <label>Descripción</label>
+            <textarea rows="5" formControlName="descripcion" placeholder="Describe tu experiencia, objetivos y fortalezas..."></textarea>
+          </div>
+        </div>
+      </section>
 
-      <button type="submit" class="btn-primary" [disabled]="saving()">
-        {{ saving() ? 'Guardando...' : 'Guardar perfil' }}
-      </button>
+      <section class="edit-section card">
+        <div class="section-title-bar">
+          <span class="material-symbols-outlined">article</span>
+          <div>
+            <h2>Currículum Vitae</h2>
+            <p>Sube tu CV en formato PDF</p>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="input-group file-group">
+            <label>Archivo CV (PDF)</label>
+            <input #cvInput type="file" accept=".pdf,application/pdf" class="file-input">
+          </div>
+          <button type="submit" class="btn-save" [disabled]="saving()">
+            <span class="material-symbols-outlined">save</span>
+            {{ saving() ? 'Guardando...' : 'Guardar perfil' }}
+          </button>
+        </div>
+      </section>
     </form>
-  </div>
 
-  <div class="card form-card">
-    <h2>Proyectos</h2>
-    <form [formGroup]="projectForm" (ngSubmit)="saveProject()" class="project-form">
-      <input formControlName="titulo" placeholder="Título del proyecto">
-      <input formControlName="urlEvidencia" placeholder="URL de evidencia">
-      <textarea rows="3" formControlName="descripcion" placeholder="Descripción"></textarea>
-      <button type="submit" class="btn-secondary">
-        {{ projectForm.value.id ? 'Actualizar proyecto' : 'Guardar proyecto' }}
-      </button>
-    </form>
-
-    @for (project of projects(); track project.id) {
-      <div class="project-row">
-        <span>{{ project.titulo }}</span>
-        <div class="row-actions">
-          <button type="button" (click)="editProject(project)">Editar</button>
-          <button type="button" (click)="deleteProject(project.id)">Eliminar</button>
+    <section class="edit-section card edit-section-wide">
+      <div class="section-title-bar">
+        <span class="material-symbols-outlined">verified</span>
+        <div>
+          <h2>Avales académicos</h2>
+          <p>Referencias de docentes o mentores</p>
         </div>
       </div>
-    }
+
+      <form [formGroup]="avalForm" (ngSubmit)="saveAval()" class="project-form">
+        <div class="section-content grid-2">
+          <div class="input-group">
+            <label>Nombre del avalador</label>
+            <input formControlName="nombreAvalador" placeholder="Ej. Dr. Juan Pérez">
+          </div>
+          <div class="input-group">
+            <label>Cargo / institución</label>
+            <input formControlName="cargoInstitucion" placeholder="Ej. Director de carrera - UTP">
+          </div>
+        </div>
+        <div class="section-content grid-2">
+          <div class="input-group">
+            <label>Email de contacto</label>
+            <input formControlName="contactoEmail" type="email" placeholder="avalador@universidad.edu">
+          </div>
+          <div class="input-group">
+            <label>Comentario del aval</label>
+            <input formControlName="comentarioAval" placeholder="Breve recomendación">
+          </div>
+        </div>
+        <button type="submit" class="btn-secondary-action">Agregar aval</button>
+      </form>
+
+      @if (avales().length === 0) {
+        <p class="empty-note">Aún no tienes avales registrados.</p>
+      } @else {
+        <div class="project-list">
+          @for (aval of avales(); track aval.id) {
+            <div class="project-row">
+              <div class="project-row-info">
+                <strong>{{ aval.nombreAvalador }}</strong>
+                <span>{{ aval.cargoInstitucion }}</span>
+                @if (aval.comentarioAval) {
+                  <span class="aval-comment">{{ aval.comentarioAval }}</span>
+                }
+              </div>
+              <div class="row-actions">
+                <button type="button" class="action-delete" (click)="deleteAval(aval.id)">Eliminar</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="edit-section card edit-section-wide">
+      <div class="section-title-bar">
+        <span class="material-symbols-outlined">folder_open</span>
+        <div>
+          <h2>Proyectos</h2>
+          <p>Portafolio de trabajos y evidencias</p>
+        </div>
+      </div>
+
+      <form [formGroup]="projectForm" (ngSubmit)="saveProject()" class="project-form">
+        <div class="section-content grid-2">
+          <div class="input-group">
+            <label>Título</label>
+            <input formControlName="titulo" placeholder="Nombre del proyecto">
+          </div>
+          <div class="input-group">
+            <label>URL de evidencia</label>
+            <input formControlName="urlEvidencia" placeholder="https://github.com/...">
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="input-group">
+            <label>Descripción</label>
+            <textarea rows="3" formControlName="descripcion" placeholder="¿Qué hiciste y qué aprendiste?"></textarea>
+          </div>
+          <button type="submit" class="btn-secondary-action">
+            {{ projectForm.value.id ? 'Actualizar proyecto' : 'Agregar proyecto' }}
+          </button>
+        </div>
+      </form>
+
+      @if (projects().length === 0) {
+        <p class="empty-note">Aún no tienes proyectos registrados.</p>
+      } @else {
+        <div class="project-list">
+          @for (project of projects(); track project.id) {
+            <div class="project-row">
+              <div class="project-row-info">
+                <strong>{{ project.titulo }}</strong>
+                @if (project.urlEvidencia) {
+                  <a [href]="project.urlEvidencia" target="_blank">{{ project.urlEvidencia }}</a>
+                }
+              </div>
+              <div class="row-actions">
+                <button type="button" class="action-edit" (click)="editProject(project)">Editar</button>
+                <button type="button" class="action-delete" (click)="deleteProject(project.id)">Eliminar</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
   </div>
 </div>

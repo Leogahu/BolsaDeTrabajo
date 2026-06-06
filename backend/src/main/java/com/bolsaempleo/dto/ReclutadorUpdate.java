@@ -7,5 +7,9 @@ public record ReclutadorUpdate(
     String apellidos,
     @Email String email,
     String empresa,
+    String telefono,
+    String cargo,
+    String descripcion,
+    String sector,
     String password
 ) {}

@@ -1,5 +1,6 @@
 package com.bolsaempleo.service;
 
+import com.bolsaempleo.dto.ReclutadorForm;
 import com.bolsaempleo.dto.ReclutadorUpdate;
 import com.bolsaempleo.dto.Request.AvisoRequest;
 import com.bolsaempleo.dto.Response.AvisoResponse;
@@ -7,8 +8,10 @@ import com.bolsaempleo.dto.Response.ReclutadorResponse;
 import com.bolsaempleo.exception.DuplicateResourceException;
 import com.bolsaempleo.exception.ResourceNotFoundException;
 import com.bolsaempleo.mapper.ReclutadorMapper;
+import com.bolsaempleo.model.Notificacion;
 import com.bolsaempleo.model.Postulacion;
 import com.bolsaempleo.model.Reclutador;
+import com.bolsaempleo.repository.AlertaEmpleoRepository;
 import com.bolsaempleo.repository.PostulacionRepository;
 import com.bolsaempleo.repository.ReclutadorRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,9 @@ public class ReclutadorService {
     private final com.bolsaempleo.repository.PostulacionEstadoRepository postulacionEstadoRepository;
     private final ReclutadorMapper reclutadorMapper;
     private final PasswordEncoder passwordEncoder;
+    private final ArchivoService archivoService;
+    private final AlertaEmpleoRepository alertaEmpleoRepository;
+    private final NotificacionService notificacionService;
     
     @Transactional(rollbackFor = Exception.class)
     public ReclutadorResponse registrar(Reclutador reclutador) {
@@ -55,8 +61,34 @@ public class ReclutadorService {
         if (dto.apellidos() != null) reclutador.setApellidos(dto.apellidos());
         if (dto.email() != null) reclutador.setEmail(dto.email());
         if (dto.empresa() != null) reclutador.setEmpresa(dto.empresa());
+        if (dto.telefono() != null) reclutador.setTelefono(dto.telefono());
+        if (dto.cargo() != null) reclutador.setCargo(dto.cargo());
+        if (dto.descripcion() != null) reclutador.setDescripcion(dto.descripcion());
+        if (dto.sector() != null) reclutador.setSector(dto.sector());
         if (dto.password() != null && !dto.password().isBlank()) {
             reclutador.setPassword(passwordEncoder.encode(dto.password()));
+        }
+
+        return reclutadorMapper.toResponse(reclutadorRepository.save(reclutador));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ReclutadorResponse actualizarPerfilCompleto(Long id, ReclutadorForm form) throws java.io.IOException {
+        Reclutador reclutador = reclutadorRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Reclutador", id));
+
+        if (form.nombres() != null) reclutador.setNombres(form.nombres());
+        if (form.apellidos() != null) reclutador.setApellidos(form.apellidos());
+        if (form.email() != null) reclutador.setEmail(form.email());
+        if (form.empresa() != null) reclutador.setEmpresa(form.empresa());
+        if (form.telefono() != null) reclutador.setTelefono(form.telefono());
+        if (form.cargo() != null) reclutador.setCargo(form.cargo());
+        if (form.descripcion() != null) reclutador.setDescripcion(form.descripcion());
+        if (form.sector() != null) reclutador.setSector(form.sector());
+
+        if (form.fotoFile() != null && !form.fotoFile().isEmpty()) {
+            String urlFoto = archivoService.subirArchivo(form.fotoFile(), "foto_rec_" + id);
+            reclutador.setFotoPerfil(urlFoto);
         }
 
         return reclutadorMapper.toResponse(reclutadorRepository.save(reclutador));
@@ -78,7 +110,30 @@ public class ReclutadorService {
         postulacion.setReclutador(reclutador);
         postulacion.setFechaPublicacion(LocalDateTime.now());
         
-        return reclutadorMapper.toAvisoResponse(postulacionRepository.save(postulacion));
+        Postulacion saved = postulacionRepository.save(postulacion);
+        notificarAlertasCoincidentes(saved);
+        return reclutadorMapper.toAvisoResponse(saved);
+    }
+
+    private void notificarAlertasCoincidentes(Postulacion postulacion) {
+        String tituloLower = postulacion.getTitulo().toLowerCase();
+        alertaEmpleoRepository.findByActivaTrue().forEach(alerta -> {
+            boolean keywordMatch = alerta.getKeyword() == null
+                || tituloLower.contains(alerta.getKeyword().toLowerCase());
+            boolean modalityMatch = alerta.getModalidad() == null
+                || alerta.getModalidad().isBlank()
+                || alerta.getModalidad().equalsIgnoreCase(postulacion.getTipoModalidad());
+            if (keywordMatch && modalityMatch && alerta.getPostante() != null) {
+                notificacionService.crear(
+                    alerta.getPostante().getId(),
+                    Notificacion.TipoUsuario.POSTANTE,
+                    "Nueva vacante para tu alerta",
+                    "Se publicó \"" + postulacion.getTitulo() + "\" en " + postulacion.getReclutador().getEmpresa(),
+                    Notificacion.TipoNotificacion.VACANTE,
+                    postulacion.getId()
+                );
+            }
+        });
     }
     
     @Transactional(readOnly = true)

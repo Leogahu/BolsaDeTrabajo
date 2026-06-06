@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/**", "/api/v1/reclutadores/register").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/postulaciones/**").permitAll() 
                 .requestMatchers("/swagger-ui/**", "/api-docs/**").permitAll()
+                .requestMatchers("/ws/**", "/uploads/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

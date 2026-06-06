@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE } from '../constants/api';
-import { Habilidad, PostanteProfile, PostulacionEstado, Certificado } from '../../shared/models/postante';
+import { Habilidad, PostanteProfile, PostulacionEstado, Certificado, Aval } from '../../shared/models/postante';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +47,18 @@ export class PostanteService {
       nombreCurso,
       institucionEmisora: institucionEmisora ?? 'ChapaTuChamba',
     });
+  }
+
+  getAvales(id: number): Observable<Aval[]> {
+    return this.http.get<Aval[]>(`${API_BASE}/postantes/${id}/avales`);
+  }
+
+  addAval(id: number, data: Partial<Aval>): Observable<Aval> {
+    return this.http.post<Aval>(`${API_BASE}/postantes/${id}/avales`, data);
+  }
+
+  deleteAval(avalId: number): Observable<void> {
+    return this.http.delete<void>(`${API_BASE}/postantes/avales/${avalId}`);
   }
 }
 

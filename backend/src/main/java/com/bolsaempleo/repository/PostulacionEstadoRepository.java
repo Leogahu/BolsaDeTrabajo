@@ -27,4 +27,7 @@ public interface PostulacionEstadoRepository extends JpaRepository<PostulacionEs
     Optional<PostulacionEstado> findByPostulacionIdAndPostanteIdWithDetails(
         @Param("postulacionId") Long postulacionId,
         @Param("postanteId") Long postanteId);
+
+    @Query("SELECT pe FROM PostulacionEstado pe JOIN FETCH pe.postante JOIN FETCH pe.postulacion p JOIN FETCH p.reclutador WHERE pe.id = :id")
+    Optional<PostulacionEstado> findByIdWithDetails(@Param("id") Long id);
 }

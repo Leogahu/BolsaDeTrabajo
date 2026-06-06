@@ -43,6 +43,14 @@ export interface Certificado {
   fechaEmision?: string;
 }
 
+export interface Aval {
+  id: number;
+  nombreAvalador: string;
+  cargoInstitucion?: string;
+  comentarioAval?: string;
+  contactoEmail?: string;
+}
+
 export interface Habilidad {
   id: number;
   nombre: string;

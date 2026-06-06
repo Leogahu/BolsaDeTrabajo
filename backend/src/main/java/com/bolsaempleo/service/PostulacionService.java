@@ -31,6 +31,8 @@ public class PostulacionService {
     private final PostanteRepository postanteRepository;
     private final PostulacionMapper postulacionMapper;
     private final PostulacionEstadoMapper postulacionEstadoMapper;
+    private final NotificacionService notificacionService;
+    private final ChatService chatService;
     
     @Transactional(rollbackFor = Exception.class)
     public PostulacionEstadoResponse postularResponse(Long postulacionId, Long postanteId) {
@@ -59,7 +61,20 @@ public class PostulacionService {
         estado.setFechaPostulacion(LocalDateTime.now());
         estado.setFechaActualizacion(LocalDateTime.now());
         
-        return postulacionEstadoRepository.save(estado);
+        PostulacionEstado saved = postulacionEstadoRepository.save(estado);
+
+        if (postulacion.getReclutador() != null) {
+            notificacionService.crear(
+                postulacion.getReclutador().getId(),
+                com.bolsaempleo.model.Notificacion.TipoUsuario.RECLUTADOR,
+                "Nueva postulación",
+                postante.getNombres() + " " + postante.getApellidos() + " postuló a \"" + postulacion.getTitulo() + "\"",
+                com.bolsaempleo.model.Notificacion.TipoNotificacion.POSTULACION,
+                saved.getId()
+            );
+        }
+
+        return saved;
     }
     
     @Transactional(readOnly = true)
@@ -124,14 +139,62 @@ public class PostulacionService {
 
     @Transactional(rollbackFor = Exception.class)
     public PostulacionEstado actualizarEstado(Long id, PostulacionEstado.EstadoPostulacion nuevoEstado, String motivo) {
-        PostulacionEstado estado = postulacionEstadoRepository.findById(id)
+        PostulacionEstado estado = postulacionEstadoRepository.findByIdWithDetails(id)
             .orElseThrow(() -> new ResourceNotFoundException("Estado de Postulacion", id));
         
         estado.setEstado(nuevoEstado);
         estado.setFechaActualizacion(LocalDateTime.now());
         estado.setMotivo(motivo);
         
-        return postulacionEstadoRepository.save(estado);
+        PostulacionEstado saved = postulacionEstadoRepository.save(estado);
+        notificarCambioEstado(saved, motivo);
+
+        if (nuevoEstado == PostulacionEstado.EstadoPostulacion.CONTACTARAN) {
+            chatService.crearConversacionDesdeEstado(saved);
+        }
+
+        return saved;
+    }
+
+    private void notificarCambioEstado(PostulacionEstado estado, String motivo) {
+        String tituloVacante = estado.getPostulacion() != null ? estado.getPostulacion().getTitulo() : "Vacante";
+        String empresa = estado.getPostulacion() != null && estado.getPostulacion().getReclutador() != null
+            ? estado.getPostulacion().getReclutador().getEmpresa() : "Empresa";
+
+        if (estado.getPostante() != null) {
+            notificacionService.crear(
+                estado.getPostante().getId(),
+                com.bolsaempleo.model.Notificacion.TipoUsuario.POSTANTE,
+                "Actualización de postulación",
+                "Tu postulación a \"" + tituloVacante + "\" cambió a: " + estado.getEstado().name()
+                    + (motivo != null && !motivo.isBlank() ? ". " + motivo : ""),
+                com.bolsaempleo.model.Notificacion.TipoNotificacion.POSTULACION,
+                estado.getId()
+            );
+        }
+
+        if (estado.getEstado() == PostulacionEstado.EstadoPostulacion.CONTACTARAN
+            && estado.getPostulacion() != null && estado.getPostulacion().getReclutador() != null) {
+            notificacionService.crear(
+                estado.getPostulacion().getReclutador().getId(),
+                com.bolsaempleo.model.Notificacion.TipoUsuario.RECLUTADOR,
+                "Candidato listo para contactar",
+                estado.getPostante().getNombres() + " puede ser contactado para \"" + tituloVacante + "\"",
+                com.bolsaempleo.model.Notificacion.TipoNotificacion.SISTEMA,
+                estado.getId()
+            );
+        }
+
+        if (motivo != null && !motivo.isBlank() && estado.getPostante() != null) {
+            notificacionService.crear(
+                estado.getPostante().getId(),
+                com.bolsaempleo.model.Notificacion.TipoUsuario.POSTANTE,
+                "Feedback de " + empresa,
+                motivo,
+                com.bolsaempleo.model.Notificacion.TipoNotificacion.FEEDBACK,
+                estado.getId()
+            );
+        }
     }
     
     @Transactional(readOnly = true)

@@ -1,23 +1,35 @@
-<div class="page-content">
-  <h1>Gestión de candidatos</h1>
-  <p class="lead">Revisa postulantes y actualiza el estado de cada proceso.</p>
+<div class="gestion-page">
+  <header class="gestion-header">
+    <div>
+      <h1>Gestión de candidatos</h1>
+      <p class="lead">Revisa postulantes, actualiza procesos y comunícate con talento junior.</p>
+    </div>
+    <div class="header-stats">
+      <span class="stat-chip">{{ jobs().length }} vacantes</span>
+      <span class="stat-chip">{{ candidates().length }} candidatos</span>
+    </div>
+  </header>
 
   @if (message()) {
-    <div class="alert-success">{{ message() }}</div>
+    <div class="alert-success banner">{{ message() }}</div>
+  }
+  @if (errorMessage()) {
+    <div class="alert-error banner">{{ errorMessage() }}</div>
   }
 
-  <div class="layout-grid">
-    <aside class="card jobs-list">
-      <h3>Vacantes</h3>
+  <div class="gestion-layout">
+    <aside class="panel jobs-panel">
+      <h3>Vacantes activas</h3>
       @for (job of jobs(); track job.id) {
         <button
           type="button"
-          class="job-item"
+          class="job-card"
           [class.active]="selectedJobId() === job.id"
           (click)="selectJob(job.id!)">
-          {{ job.titulo }}
+          <strong>{{ job.titulo }}</strong>
+          <span>{{ job.ubicacion }}</span>
           @if (job.cantidadCandidatos != null) {
-            <span class="badge-count">{{ job.cantidadCandidatos }}</span>
+            <span class="count-badge">{{ job.cantidadCandidatos }} postulantes</span>
           }
         </button>
       } @empty {
@@ -25,42 +37,119 @@
       }
     </aside>
 
-    <section class="card candidates-panel">
-      <div class="panel-header">
-        <h3>Candidatos</h3>
-        <div class="status-actions">
-          @for (opt of statusOptions; track opt.value) {
-            <button type="button" class="btn-secondary" (click)="updateStatus(opt.value)">
-              {{ opt.label }}
+    <section class="panel candidates-panel">
+      <div class="panel-title">
+        <h3>Candidatos · {{ selectedJobTitle() }}</h3>
+      </div>
+      @if (candidates().length === 0) {
+        <p class="muted empty">No hay candidatos para esta vacante.</p>
+      } @else {
+        <div class="candidates-list">
+          @for (c of candidates(); track c.id) {
+            <button
+              type="button"
+              class="candidate-row"
+              [class.selected]="selectedCandidate()?.id === c.id"
+              (click)="selectCandidate(c)">
+              <img class="candidate-avatar" [src]="candidateAvatar(c)" [alt]="candidateName(c)">
+              <div class="candidate-brief">
+                <strong>{{ candidateName(c) }}</strong>
+                <span>{{ c.postante?.carrera || c.postante?.email }}</span>
+              </div>
+              <span class="status-pill" [style.background]="statusColor(c.estado) + '22'" [style.color]="statusColor(c.estado)">
+                {{ statusLabel(c.estado) }}
+              </span>
             </button>
           }
         </div>
-      </div>
+      }
+    </section>
 
-      @if (candidates().length === 0) {
-        <p class="muted">No hay candidatos para esta vacante.</p>
-      } @else {
-        @for (candidate of candidates(); track candidate.id) {
-          <article
-            class="candidate-item"
-            [class.selected]="selectedCandidateId() === candidate.id"
-            (click)="selectCandidate(candidate.id)">
-            <div class="candidate-info">
-              <strong>{{ candidateName(candidate) }}</strong>
-              <span class="muted">{{ candidate.postante?.email }}</span>
-              @if (candidate.postante?.carrera) {
-                <span class="muted">{{ candidate.postante?.carrera }}</span>
-              }
+    <section class="panel detail-panel">
+      @if (selectedCandidate(); as c) {
+        <div class="detail-header">
+          <img class="detail-avatar" [src]="candidateAvatar(c)" [alt]="candidateName(c)">
+          <h3>{{ candidateName(c) }}</h3>
+          <span class="status-pill large" [style.background]="statusColor(c.estado) + '22'" [style.color]="statusColor(c.estado)">
+            {{ statusLabel(c.estado) }}
+          </span>
+        </div>
+
+        @if (candidateProfile(); as p) {
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Email</label>
+              <span>{{ p.email }}</span>
             </div>
-            <div class="candidate-meta">
-              <span class="status-badge">{{ statusLabel(candidate.estado) }}</span>
-              @if (candidate.postante?.cvPath) {
-                <a [href]="candidate.postante!.cvPath!" target="_blank" class="btn-link" (click)="$event.stopPropagation()">Ver CV</a>
-              }
+            <div class="detail-item">
+              <label>Carrera</label>
+              <span>{{ p.carrera || '—' }}</span>
             </div>
-          </article>
+            <div class="detail-item">
+              <label>Institución</label>
+              <span>{{ p.institucion || '—' }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Teléfono</label>
+              <span>{{ p.telefono || '—' }}</span>
+            </div>
+          </div>
+          @if (p.descripcion) {
+            <div class="detail-block">
+              <label>Resumen</label>
+              <p>{{ p.descripcion }}</p>
+            </div>
+          }
+          @if (p.cvPath) {
+            <a [href]="p.cvPath" target="_blank" class="cv-btn">
+              <span class="material-symbols-outlined">description</span> Ver CV
+            </a>
+          }
         }
+
+        @if (c.motivo) {
+          <div class="feedback-box">
+            <label>Último comentario</label>
+            <p>{{ c.motivo }}</p>
+          </div>
+        }
+
+        <div class="action-bar">
+          <button type="button" class="btn-primary" (click)="openStatusModal()">Actualizar estado</button>
+          <button type="button" class="btn-secondary" (click)="openChat()">
+            <span class="material-symbols-outlined">chat</span> Abrir chat
+          </button>
+        </div>
+      } @else {
+        <div class="empty-detail">
+          <span class="material-symbols-outlined">person_search</span>
+          <p>Selecciona un candidato para ver su perfil y gestionar el proceso.</p>
+        </div>
       }
     </section>
   </div>
+
+  @if (showStatusModal()) {
+    <div class="modal-overlay" (click)="showStatusModal.set(false)">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3>Actualizar estado del candidato</h3>
+        <div class="input-group">
+          <label>Nuevo estado</label>
+          <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)">
+            @for (opt of statusOptions; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Comentario / feedback (opcional)</label>
+          <textarea rows="3" [ngModel]="statusMotivo()" (ngModelChange)="statusMotivo.set($event)" placeholder="Retroalimentación para el candidato..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="showStatusModal.set(false)">Cancelar</button>
+          <button type="button" class="btn-primary" (click)="confirmStatusUpdate()">Guardar</button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth';
 import { PostanteService } from '../../../core/services/postante';
 import { ProyectoService } from '../../../core/services/proyecto';
-import { PostanteProfile, Certificado } from '../../../shared/models/postante';
+import { PostanteProfile, Certificado, Aval } from '../../../shared/models/postante';
 import { Proyecto } from '../../../shared/models/proyecto';
 
 @Component({
@@ -22,6 +22,7 @@ export class Perfil implements OnInit {
   profile = signal<PostanteProfile | null>(null);
   projects = signal<Proyecto[]>([]);
   certificados = signal<Certificado[]>([]);
+  avales = signal<Aval[]>([]);
 
   ngOnInit(): void {
     const userId = this.auth.currentUser()?.id;
@@ -37,6 +38,10 @@ export class Perfil implements OnInit {
 
     this.postanteService.getCertificados(userId).subscribe({
       next: (certs) => this.certificados.set(certs),
+    });
+
+    this.postanteService.getAvales(userId).subscribe({
+      next: (list) => this.avales.set(list),
     });
   }
 

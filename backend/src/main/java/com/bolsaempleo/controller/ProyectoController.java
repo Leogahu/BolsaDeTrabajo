@@ -1,7 +1,7 @@
 package com.bolsaempleo.controller;
 
 import com.bolsaempleo.dto.Request.ProyectoRequest;
-import com.bolsaempleo.dto.Response.MensajeResponse;
+import com.bolsaempleo.dto.Response.ApiMessageResponse;
 import com.bolsaempleo.dto.Response.ProyectoResponse;
 import com.bolsaempleo.service.ProyectoService;
 import jakarta.validation.Valid;
@@ -41,8 +41,8 @@ public class ProyectoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MensajeResponse> eliminarProyecto(@PathVariable Long id) {
+    public ResponseEntity<ApiMessageResponse> eliminarProyecto(@PathVariable Long id) {
         proyectoService.eliminarProyecto(id);
-        return ResponseEntity.ok(new MensajeResponse("Proyecto eliminado con éxito"));
+        return ResponseEntity.ok(new ApiMessageResponse("Proyecto eliminado con éxito"));
     }
 }

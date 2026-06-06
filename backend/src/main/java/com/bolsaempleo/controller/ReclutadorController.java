@@ -1,5 +1,6 @@
 package com.bolsaempleo.controller;
 
+import com.bolsaempleo.dto.ReclutadorForm;
 import com.bolsaempleo.dto.ReclutadorUpdate;
 import com.bolsaempleo.dto.Request.AvisoRequest;
 import com.bolsaempleo.dto.Response.AvisoResponse;
@@ -10,9 +11,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -38,6 +41,13 @@ public class ReclutadorController {
             @PathVariable Long id,
             @Valid @RequestBody ReclutadorUpdate dto) {
         return ResponseEntity.ok(reclutadorService.actualizar(id, dto));
+    }
+
+    @PutMapping(value = "/{id}/completo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ReclutadorResponse> actualizarPerfilCompleto(
+            @PathVariable Long id,
+            @ModelAttribute ReclutadorForm form) throws IOException {
+        return ResponseEntity.ok(reclutadorService.actualizarPerfilCompleto(id, form));
     }
     
     @PostMapping("/{id}/postulaciones")

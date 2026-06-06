@@ -3,7 +3,7 @@ package com.bolsaempleo.controller;
 import com.bolsaempleo.dto.Request.LoginRequest;
 import com.bolsaempleo.dto.PostanteUpdate;
 import com.bolsaempleo.dto.Response.AuthResponse;
-import com.bolsaempleo.dto.Response.MensajeResponse;
+import com.bolsaempleo.dto.Response.ApiMessageResponse;
 import com.bolsaempleo.dto.Response.PostanteResponse;
 import com.bolsaempleo.model.Postante;
 import com.bolsaempleo.service.AuthService;
@@ -38,10 +38,10 @@ public class AuthController {
     }
     
     @PutMapping("/postante/{id}")
-    public ResponseEntity<MensajeResponse> actualizarPostante(
+    public ResponseEntity<ApiMessageResponse> actualizarPostante(
             @PathVariable Long id, 
             @Valid @RequestBody PostanteUpdate dto) {
         postanteService.actualizarPerfil(id, dto);
-        return ResponseEntity.ok(new MensajeResponse("Perfil de postulante actualizado con éxito"));
+        return ResponseEntity.ok(new ApiMessageResponse("Perfil de postulante actualizado con éxito"));
     }
 }

@@ -1,11 +1,9 @@
 <div class="dashboard-container" [class.recruiter-panel]="isRecruiter()">
   <aside class="sidebar" [class.open]="sidebarOpen()">
-    @if (isRecruiter()) {
-      <div class="sidebar-header">
-        <div class="sidebar-logo">ChapaTuChamba</div>
-        <div class="sidebar-subtitle">Panel de Control</div>
-      </div>
-    }
+    <div class="sidebar-header">
+      <div class="sidebar-logo">ChapaTuChamba</div>
+      <div class="sidebar-subtitle">Panel de Control</div>
+    </div>
 
     <nav class="sidebar-nav">
       @for (item of navItems(); track item.route) {
@@ -48,21 +46,27 @@
       <div class="dropdown-container">
         <button type="button" class="icon-btn" (click)="toggleNotif($event)">
           <span class="material-symbols-outlined">notifications</span>
-          @if (notifications().length) {
+          @if (unreadNotifCount() > 0) {
             <span class="notif-dot"></span>
           }
         </button>
         @if (notifOpen()) {
-          <div class="dropdown-menu" (click)="$event.stopPropagation()">
-            <div class="dropdown-header">Notificaciones</div>
+          <div class="dropdown-menu notif-dropdown" (click)="$event.stopPropagation()">
+            <div class="dropdown-header-row">
+              <span class="dropdown-header">Notificaciones</span>
+              @if (unreadNotifCount() > 0) {
+                <button type="button" class="link-btn" (click)="markAllNotifsRead()">Marcar todas</button>
+              }
+            </div>
             @if (notifications().length === 0) {
               <p class="empty-dropdown">Sin notificaciones</p>
             } @else {
               <ul class="notif-list">
-                @for (notif of notifications(); track $index) {
-                  <li>
-                    <span>{{ notif }}</span>
-                    <button type="button" (click)="removeNotif($index)">×</button>
+                @for (notif of notifications(); track notif.id) {
+                  <li [class.unread]="!notif.leida" (click)="markNotifRead(notif)">
+                    <strong>{{ notif.titulo }}</strong>
+                    <p>{{ notif.mensaje }}</p>
+                    <small>{{ notif.tipo }}</small>
                   </li>
                 }
               </ul>
@@ -74,17 +78,29 @@
       <div class="dropdown-container">
         <button type="button" class="icon-btn" (click)="toggleMsg($event)">
           <span class="material-symbols-outlined">mail</span>
+          @if (unreadMsgCount() > 0) {
+            <span class="notif-dot"></span>
+          }
         </button>
         @if (msgOpen()) {
-          <div class="dropdown-menu" (click)="$event.stopPropagation()">
-            <div class="dropdown-header">Mensajes Recientes</div>
-            <div class="chat-item">
-              <img [src]="auth.avatarUrl('Ana Recruiter')" alt="Avatar">
-              <div class="chat-info">
-                <strong>Ana de TechCorp</strong>
-                <p>¿Tienes disponibilidad mañana?</p>
-              </div>
-            </div>
+          <div class="dropdown-menu msg-dropdown" (click)="$event.stopPropagation()">
+            <div class="dropdown-header">Mensajes recientes</div>
+            @if (conversations().length === 0) {
+              <p class="empty-dropdown">No tienes conversaciones activas</p>
+            } @else {
+              @for (conv of conversations(); track conv.id) {
+                <button type="button" class="chat-item" (click)="openChatFromDropdown(conv)">
+                  <img [src]="convAvatar(conv)" alt="Avatar">
+                  <div class="chat-info">
+                    <strong>{{ convName(conv) }}</strong>
+                    <p>{{ conv.ultimoMensaje || 'Sin mensajes' }}</p>
+                  </div>
+                  @if (conv.mensajesNoLeidos > 0) {
+                    <span class="unread-badge">{{ conv.mensajesNoLeidos }}</span>
+                  }
+                </button>
+              }
+            }
           </div>
         }
       </div>
@@ -95,8 +111,12 @@
         </button>
         @if (profileOpen()) {
           <div class="dropdown-menu small-dropdown" (click)="$event.stopPropagation()">
-            <button type="button" class="drop-item" (click)="goToProfileSettings()">Configurar perfil</button>
+            <div class="profile-menu-header">
+              <img [src]="avatarUrl()" alt="">
+              <span>{{ userName() }}</span>
+            </div>
             <hr>
+            <button type="button" class="drop-item" (click)="goToProfileSettings()">Configurar perfil</button>
             <button type="button" class="drop-item logout" (click)="logout()">Cerrar sesión</button>
           </div>
         }
@@ -107,4 +127,69 @@
   <main class="main-content">
     <router-outlet />
   </main>
+
+  <!-- Chat flotante -->
+  <div class="chat-fab-container">
+    @if (!chatOpen()) {
+      <button type="button" class="chat-fab" (click)="toggleChatPanel()">
+        <span class="material-symbols-outlined">chat</span>
+        @if (unreadMsgCount() > 0) {
+          <span class="fab-badge">{{ unreadMsgCount() }}</span>
+        }
+      </button>
+    }
+
+    @if (chatOpen()) {
+      <div class="chat-panel" [class.expanded]="chatExpanded()">
+        <div class="chat-panel-header">
+          <h3>@if (chatExpanded() && activeConversation()) { {{ convName(activeConversation()!) }} } @else { Mensajes }</h3>
+          <div class="chat-header-actions">
+            @if (chatExpanded()) {
+              <button type="button" (click)="closeChat()"><span class="material-symbols-outlined">arrow_back</span></button>
+            }
+            <button type="button" (click)="chatOpen.set(false); closeChat()"><span class="material-symbols-outlined">close</span></button>
+          </div>
+        </div>
+
+        @if (!chatExpanded()) {
+          <div class="chat-conv-list">
+            @for (conv of conversations(); track conv.id) {
+              <button type="button" class="chat-conv-item" (click)="openConversation(conv)">
+                <img [src]="convAvatar(conv)" alt="">
+                <div>
+                  <strong>{{ convName(conv) }}</strong>
+                  <p>{{ conv.ultimoMensaje }}</p>
+                </div>
+                @if (conv.mensajesNoLeidos > 0) {
+                  <span class="unread-badge">{{ conv.mensajesNoLeidos }}</span>
+                }
+              </button>
+            } @empty {
+              <p class="empty-chat">Las conversaciones se abren cuando un reclutador te contacta (estado "Te contactarán").</p>
+            }
+          </div>
+        } @else if (activeConversation(); as conv) {
+          <div class="chat-messages">
+            @for (msg of messages(); track msg.id) {
+              <div class="chat-bubble" [class.own]="isOwnMessage(msg)">
+                {{ msg.contenido }}
+                <small>{{ msg.fechaEnvio }}</small>
+              </div>
+            }
+          </div>
+          <div class="chat-input-row">
+            <input
+              type="text"
+              placeholder="Escribe un mensaje..."
+              [ngModel]="newMessage()"
+              (ngModelChange)="newMessage.set($event)"
+              (keyup.enter)="sendMessage()">
+            <button type="button" class="send-btn" (click)="sendMessage()" [disabled]="chatLoading()">
+              <span class="material-symbols-outlined">send</span>
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
 </div>

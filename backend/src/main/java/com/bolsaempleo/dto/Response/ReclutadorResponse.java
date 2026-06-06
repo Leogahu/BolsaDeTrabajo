@@ -6,16 +6,10 @@ public record ReclutadorResponse(
     String nombres,
     String apellidos,
     String email,
-    String empresa
-) {
-    public static ReclutadorResponse fromEntity(com.bolsaempleo.model.Reclutador r) {
-        return new ReclutadorResponse(
-            r.getId(),
-            r.getUsername(),
-            r.getNombres(),
-            r.getApellidos(),
-            r.getEmail(),
-            r.getEmpresa()
-        );
-    }
-}
+    String empresa,
+    String telefono,
+    String cargo,
+    String descripcion,
+    String fotoPerfil,
+    String sector
+) {}

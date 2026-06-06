@@ -1,9 +1,10 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, APP_INITIALIZER, provideZoneChangeDetection, inject } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { jwtInterceptor } from './core/interceptors/jwt-interceptor';
+import { ConfigService } from './core/services/config'; 
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -11,6 +12,15 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()), 
     provideHttpClient(
       withInterceptors([jwtInterceptor])
-    )
+    ),
+    
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => {
+        const configService = inject(ConfigService); 
+        return () => configService.cargarConfiguracion();
+      },
+      multi: true
+    }
   ]
 };

@@ -18,5 +18,6 @@ export interface UserSession {
     email: string;
     username: string;
     empresa?: string;
+    fotoPerfil?: string;
   } | null;
 }
