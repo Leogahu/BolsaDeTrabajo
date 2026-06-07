@@ -7,6 +7,8 @@ import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,5 +52,12 @@ public class SwaggerConfig {
                                 .bearerFormat("JWT")
                                 .description("Token JWT del endpoint POST /api/v1/auth/login")))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
+    }
+    @Bean
+    public GroupedOpenApi apiGroup() {
+        return GroupedOpenApi.builder()
+                .group("api")
+                .pathsToMatch("/api/v1/**")
+                .build();
     }
 }
