@@ -1,1 +1,1 @@
-export const API_BASE = '/api/v1';
+export const API_BASE_FALLBACK = '/api/v1';

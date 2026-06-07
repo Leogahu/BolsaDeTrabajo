@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_BASE } from '../constants/api';
+import { ConfigService } from './config';
 
 export interface ReclutadorProfile {
   id: number;
@@ -27,18 +27,21 @@ export interface ReclutadorUpdatePayload {
 
 @Injectable({ providedIn: 'root' })
 export class ReclutadorService {
-  private http = inject(HttpClient);
+  private http          = inject(HttpClient);
+  private configService = inject(ConfigService);
+
+  private get api(): string { return this.configService.apiUrl; }
 
   getProfile(id: number): Observable<ReclutadorProfile> {
-    return this.http.get<ReclutadorProfile>(`${API_BASE}/reclutadores/${id}`);
+    return this.http.get<ReclutadorProfile>(`${this.api}/reclutadores/${id}`);
   }
 
   updateProfile(id: number, data: ReclutadorUpdatePayload): Observable<ReclutadorProfile> {
-    return this.http.put<ReclutadorProfile>(`${API_BASE}/reclutadores/${id}`, data);
+    return this.http.put<ReclutadorProfile>(`${this.api}/reclutadores/${id}`, data);
   }
 
   updateProfileComplete(id: number, formData: FormData): Observable<ReclutadorProfile> {
-    return this.http.put<ReclutadorProfile>(`${API_BASE}/reclutadores/${id}/completo`, formData);
+    return this.http.put<ReclutadorProfile>(`${this.api}/reclutadores/${id}/completo`, formData);
   }
 }
 

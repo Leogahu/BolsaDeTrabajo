@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_BASE } from '../constants/api';
+import { ConfigService } from './config';
 
 export interface Conversacion {
   id: number;
@@ -30,21 +30,24 @@ export interface Mensaje {
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
-  private http = inject(HttpClient);
+  private http          = inject(HttpClient);
+  private configService = inject(ConfigService);
+
+  private get api(): string { return this.configService.apiUrl; }
 
   listConversations(userId: number, tipo: 'POSTANTE' | 'RECLUTADOR'): Observable<Conversacion[]> {
     const path = tipo === 'POSTANTE'
-      ? `${API_BASE}/chat/conversaciones/postante/${userId}`
-      : `${API_BASE}/chat/conversaciones/reclutador/${userId}`;
+      ? `${this.api}/chat/conversaciones/postante/${userId}`
+      : `${this.api}/chat/conversaciones/reclutador/${userId}`;
     return this.http.get<Conversacion[]>(path);
   }
 
   getFromPostulacion(estadoId: number): Observable<Conversacion> {
-    return this.http.get<Conversacion>(`${API_BASE}/chat/conversaciones/postulacion-estado/${estadoId}`);
+    return this.http.get<Conversacion>(`${this.api}/chat/conversaciones/postulacion-estado/${estadoId}`);
   }
 
   getMessages(conversacionId: number): Observable<Mensaje[]> {
-    return this.http.get<Mensaje[]>(`${API_BASE}/chat/conversaciones/${conversacionId}/mensajes`);
+    return this.http.get<Mensaje[]>(`${this.api}/chat/conversaciones/${conversacionId}/mensajes`);
   }
 
   sendMessage(conversacionId: number, remitenteTipo: string, remitenteId: number, contenido: string): Observable<Mensaje> {
@@ -52,7 +55,7 @@ export class ChatService {
       .set('remitenteTipo', remitenteTipo)
       .set('remitenteId', remitenteId);
     return this.http.post<Mensaje>(
-      `${API_BASE}/chat/conversaciones/${conversacionId}/mensajes`,
+      `${this.api}/chat/conversaciones/${conversacionId}/mensajes`,
       { contenido },
       { params }
     );
@@ -60,12 +63,12 @@ export class ChatService {
 
   markRead(conversacionId: number, lectorTipo: string, lectorId: number): Observable<void> {
     const params = new HttpParams().set('lectorTipo', lectorTipo).set('lectorId', lectorId);
-    return this.http.put<void>(`${API_BASE}/chat/conversaciones/${conversacionId}/leidos`, {}, { params });
+    return this.http.put<void>(`${this.api}/chat/conversaciones/${conversacionId}/leidos`, {}, { params });
   }
 
   countUnread(userId: number, tipo: 'POSTANTE' | 'RECLUTADOR'): Observable<{ count: number }> {
     const params = new HttpParams().set('usuarioId', userId).set('tipo', tipo);
-    return this.http.get<{ count: number }>(`${API_BASE}/chat/no-leidos`, { params });
+    return this.http.get<{ count: number }>(`${this.api}/chat/no-leidos`, { params });
   }
 }
 

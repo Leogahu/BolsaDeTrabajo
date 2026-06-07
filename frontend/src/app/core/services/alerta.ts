@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_BASE } from '../constants/api';
+import { ConfigService } from './config';
 
 export interface AlertaEmpleo {
   id: number;
@@ -14,18 +14,21 @@ export interface AlertaEmpleo {
 
 @Injectable({ providedIn: 'root' })
 export class AlertaService {
-  private http = inject(HttpClient);
+  private http          = inject(HttpClient);
+  private configService = inject(ConfigService);
+
+  private get api(): string { return this.configService.apiUrl; }
 
   list(postanteId: number): Observable<AlertaEmpleo[]> {
-    return this.http.get<AlertaEmpleo[]>(`${API_BASE}/alertas-empleo/postante/${postanteId}`);
+    return this.http.get<AlertaEmpleo[]>(`${this.api}/alertas-empleo/postante/${postanteId}`);
   }
 
   create(postanteId: number, data: { keyword: string; modalidad?: string; frecuencia?: string }): Observable<AlertaEmpleo> {
-    return this.http.post<AlertaEmpleo>(`${API_BASE}/alertas-empleo/postante/${postanteId}`, data);
+    return this.http.post<AlertaEmpleo>(`${this.api}/alertas-empleo/postante/${postanteId}`, data);
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${API_BASE}/alertas-empleo/${id}`);
+    return this.http.delete<void>(`${this.api}/alertas-empleo/${id}`);
   }
 }
 
