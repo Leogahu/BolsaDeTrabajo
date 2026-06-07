@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/reclutadores")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class ReclutadorController {
     

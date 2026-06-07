@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/alertas-empleo")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class AlertaEmpleoController {
 

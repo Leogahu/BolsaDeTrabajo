@@ -27,7 +27,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/postantes")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class PostanteController {
     

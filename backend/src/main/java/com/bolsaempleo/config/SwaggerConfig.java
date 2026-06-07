@@ -16,6 +16,9 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
+    // Valor inyectado desde application.properties:
+    //   local:      http://localhost:8080
+    //   producción: https://bolsadetrabajo-1t58.onrender.com  (var APP_BACKEND_URL en Render)
     @Value("${app.backend-url:http://localhost:8080}")
     private String backendUrl;
 
@@ -25,20 +28,27 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("Bolsa de Trabajo API")
                         .version("1.0.0")
-                        .description("API REST para la plataforma de Bolsa de Trabajo")
+                        .description("API REST — ChapaTuChamba")
                         .contact(new Contact().name("Equipo Bolsa de Trabajo")))
+
                 .servers(List.of(
-                        new Server().url(backendUrl).description("Servidor activo"),
-                        new Server().url("https://bolsadetrabajo-1t58.onrender.com").description("Render (Producción)"),
-                        new Server().url("http://localhost:8080").description("Local (Desarrollo)")
+                        new Server()
+                                .url(backendUrl)
+                                .description("Servidor activo"),
+                        new Server()
+                                .url("https://bolsadetrabajo-1t58.onrender.com")
+                                .description("Render (Producción)"),
+                        new Server()
+                                .url("http://localhost:8080")
+                                .description("Local (Desarrollo)")
                 ))
-               
+
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
-                                .description("Pega el token JWT obtenido del endpoint /api/v1/auth/login")))
+                                .description("Token JWT del endpoint POST /api/v1/auth/login")))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
     }
 }
