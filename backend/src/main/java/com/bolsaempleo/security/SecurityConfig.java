@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/swagger-ui/**",
                     "/swagger-ui.html",
-                    "/api-docs",           // springdoc.swagger-ui.path
+                    "/api-docs",           
                     "/api-docs/**",
                     "/api-docs-json",     
                     "/api-docs-json/**",
@@ -83,10 +83,10 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
             "http://localhost:4200",                               // Angular local
-            "http://localhost:8080",                               // Backend local (Swagger UI self)
+            "http://localhost:8080",                               
             "https://bolsadetrabajo-frontend.onrender.com",        // Frontend Render
-            "https://bolsadetrabajo-1t58.onrender.com",            // Backend Render (Swagger UI self)
-            frontendUrl                                            // Variable dinámica
+            "https://bolsadetrabajo-1t58.onrender.com",            
+            frontendUrl                                          
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));

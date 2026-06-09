@@ -3,6 +3,7 @@ package com.bolsaempleo.controller;
 import com.bolsaempleo.dto.ReclutadorForm;
 import com.bolsaempleo.dto.ReclutadorUpdate;
 import com.bolsaempleo.dto.Request.AvisoRequest;
+import com.bolsaempleo.dto.Request.RegisterReclutadorRequest;
 import com.bolsaempleo.dto.Response.AvisoResponse;
 import com.bolsaempleo.dto.Response.ReclutadorResponse;
 import com.bolsaempleo.model.Reclutador;
@@ -26,7 +27,17 @@ public class ReclutadorController {
     private final ReclutadorService reclutadorService;
     
     @PostMapping("/register")
-    public ResponseEntity<ReclutadorResponse> registrar(@Valid @RequestBody Reclutador reclutador) {
+    public ResponseEntity<ReclutadorResponse> registrar(
+            @Valid @RequestBody RegisterReclutadorRequest dto) {
+ 
+        Reclutador reclutador = new Reclutador();
+        reclutador.setUsername(dto.username());
+        reclutador.setNombres(dto.nombres());
+        reclutador.setApellidos(dto.apellidos());
+        reclutador.setEmail(dto.email());
+        reclutador.setPassword(dto.password()); // 
+        reclutador.setEmpresa(dto.empresa());
+ 
         return ResponseEntity.status(HttpStatus.CREATED).body(reclutadorService.registrar(reclutador));
     }
     

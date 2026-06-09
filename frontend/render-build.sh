@@ -20,7 +20,7 @@ echo "==> Reemplazando URLs en: $CONFIG_PATH"
 sed -i \
   -e 's|http://localhost:8080/api/v1|https://bolsadetrabajo-1t58.onrender.com/api/v1|g' \
   -e 's|http://localhost:8080/uploads|https://bolsadetrabajo-1t58.onrender.com/uploads|g' \
-  -e 's|ws://localhost:8080/ws|wss://bolsadetrabajo-1t58.onrender.com/ws|g' \
+  -e 's|ws://localhost:8080/ws|https://bolsadetrabajo-1t58.onrender.com/ws|g' \
   "$CONFIG_PATH"
 
 echo "==> config.json final:"

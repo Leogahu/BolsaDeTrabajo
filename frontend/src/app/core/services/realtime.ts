@@ -20,10 +20,6 @@ export class RealtimeService {
   readonly message$      = new Subject<Mensaje>();
   readonly conversation$ = new Subject<Conversacion>();
   readonly connected$    = new Subject<boolean>();
-
-  // wsUrl viene de config.json:
-  //   local:      ws://localhost:8080/ws
-  //   producción: wss://bolsadetrabajo-1t58.onrender.com/ws
   private get wsUrl(): string { return this.configService.wsUrl; }
 
   connect(): void {
@@ -36,7 +32,6 @@ export class RealtimeService {
     }
 
     this.client = new Client({
-      // SockJS acepta tanto ws:// como wss:// y la URL completa
       webSocketFactory: () => new SockJS(this.wsUrl),
       reconnectDelay: 5000,
       heartbeatIncoming: 10000,

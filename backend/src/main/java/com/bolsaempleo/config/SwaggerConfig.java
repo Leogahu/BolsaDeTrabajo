@@ -20,7 +20,7 @@ public class SwaggerConfig {
 
     // Valor inyectado desde application.properties:
     //   local:      http://localhost:8080
-    //   producción: https://bolsadetrabajo-1t58.onrender.com  (var APP_BACKEND_URL en Render)
+    //   producción: https://bolsadetrabajo-1t58.onrender.com 
     @Value("${app.backend-url:http://localhost:8080}")
     private String backendUrl;
 

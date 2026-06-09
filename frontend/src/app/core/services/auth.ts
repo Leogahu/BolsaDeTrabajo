@@ -41,7 +41,6 @@ export class AuthService {
   readonly currentUser = computed(() => this.sessionState().user);
   readonly selectedUserTypeRegister = signal<'postante' | 'reclutador'>('postante');
 
-  // URL resuelta en runtime — nunca es undefined
   private get api(): string { return this.configService.apiUrl; }
 
   private loadInitialSession(): UserSession {

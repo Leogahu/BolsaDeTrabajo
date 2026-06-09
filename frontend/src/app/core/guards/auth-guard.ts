@@ -13,7 +13,6 @@ export const authGuard = (requiredRole?: 'postante' | 'reclutador'): CanActivate
     }
 
     if (requiredRole && authService.userType() !== requiredRole) {
-      // Si está logueado pero intenta cruzar de panel (ej. Reclutador en panel de Candidato)
       const redirectPath = authService.userType() === 'reclutador' ? '/reclutador/dashboard' : '/candidato/dashboard';
       router.navigate([redirectPath]);
       return false;

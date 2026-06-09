@@ -1,6 +1,7 @@
 package com.bolsaempleo.controller;
 
 import com.bolsaempleo.dto.Request.LoginRequest;
+import com.bolsaempleo.dto.Request.RegisterPostanteRequest;
 import com.bolsaempleo.dto.PostanteUpdate;
 import com.bolsaempleo.dto.Response.AuthResponse;
 import com.bolsaempleo.dto.Response.ApiMessageResponse;
@@ -25,8 +26,17 @@ public class AuthController {
     private final PostanteService postanteService;
 
     @PostMapping("/postante/register")
-    public ResponseEntity<PostanteResponse> registrarPostante(@RequestBody Postante postante) throws IOException { 
-        var response = postanteService.registrar(postante, null); 
+    public ResponseEntity<PostanteResponse> registrarPostante(
+            @Valid @RequestBody RegisterPostanteRequest dto) throws IOException {
+
+        Postante postante = new Postante();
+        postante.setUsername(dto.username());
+        postante.setNombres(dto.nombres());
+        postante.setApellidos(dto.apellidos());
+        postante.setEmail(dto.email());
+        postante.setPassword(dto.password()); //
+
+        var response = postanteService.registrar(postante, null);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
