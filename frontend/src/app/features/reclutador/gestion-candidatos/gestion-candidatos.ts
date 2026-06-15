@@ -28,6 +28,7 @@ export class GestionCandidatos implements OnInit {
   candidates = signal<PostulacionEstado[]>([]);
   selectedCandidate = signal<PostulacionEstado | null>(null);
   candidateProfile = signal<PostanteProfile | null>(null);
+  candidateSkills = signal<{ id: number; nombre: string; verificada?: boolean }[]>([]);
   message = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
@@ -69,10 +70,14 @@ export class GestionCandidatos implements OnInit {
   selectCandidate(candidate: PostulacionEstado): void {
     this.selectedCandidate.set(candidate);
     this.errorMessage.set(null);
+    this.candidateSkills.set([]);
     const postanteId = candidate.postante?.id;
     if (postanteId) {
       this.postanteService.getProfile(postanteId).subscribe({
         next: (profile) => this.candidateProfile.set(profile),
+      });
+      this.postanteService.getSkills(postanteId).subscribe({
+        next: (skills) => this.candidateSkills.set(skills),
       });
     }
   }
@@ -122,10 +127,17 @@ export class GestionCandidatos implements OnInit {
     });
   }
 
-  candidateAvatar(candidate: PostulacionEstado): string {
+  candidateAvatar(candidate: PostulacionEstado): string | null {
     const p = candidate.postante;
-    if (p?.fotoPerfil) return p.fotoPerfil;
-    return this.auth.avatarUrl(this.candidateName(candidate));
+    if (p?.fotoPerfil?.trim()) return p.fotoPerfil;
+    return null;
+  }
+
+  candidateInitials(candidate: PostulacionEstado): string {
+    const p = candidate.postante;
+    const first = p?.nombres?.charAt(0) ?? '';
+    const last = p?.apellidos?.charAt(0) ?? '';
+    return (first + last).toUpperCase() || '?';
   }
 
   candidateName(candidate: PostulacionEstado): string {

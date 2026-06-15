@@ -1,25 +1,50 @@
-.simulator-card {
+.entrevistas-page {
+  max-width: 960px;
+}
+
+.banner {
+  margin-bottom: 20px;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
   margin-bottom: 24px;
 }
 
-.progress {
-  color: #2563eb;
-  font-weight: 700;
-  margin-bottom: 12px;
+.feature-card {
+  display: grid;
+  gap: 16px;
 }
 
-.simulator-card textarea {
-  width: 100%;
-  margin: 16px 0;
-  padding: 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  resize: vertical;
+.feature-icon {
+  font-size: 40px;
+  color: #0052ea;
 }
 
-.actions {
-  display: flex;
-  gap: 12px;
+.cv-card .feature-icon {
+  color: #7c3aed;
+}
+
+.feature-card h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.feature-card p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.feature-list {
+  margin: 0;
+  padding-left: 20px;
+  color: #475569;
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
 }
 
 .tips ul {
@@ -27,4 +52,277 @@
   color: #475569;
   display: grid;
   gap: 8px;
+}
+
+/* Interview panel */
+.interview-panel {
+  border: 2px solid #0052ea;
+  box-shadow: 0 8px 30px rgba(0, 82, 234, 0.12);
+}
+
+.interview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.interview-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #eff6ff;
+  color: #0052ea;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0052ea, #7c3aed);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.question-text {
+  font-size: 20px;
+  color: #0f172a;
+  margin: 0 0 20px;
+  line-height: 1.4;
+}
+
+.quiz-options {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.quiz-option:hover:not(:disabled) {
+  border-color: #0052ea;
+  background: #f8fafc;
+}
+
+.quiz-option.selected {
+  border-color: #0052ea;
+  background: #eff6ff;
+}
+
+.quiz-option.correct {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.quiz-option.incorrect {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+.option-letter {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.quiz-option.selected .option-letter {
+  background: #0052ea;
+  color: #fff;
+}
+
+.option-text {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.correct-icon {
+  color: #16a34a;
+}
+
+.incorrect-icon {
+  color: #dc2626;
+}
+
+.explanation-box {
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.explanation-box.success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.explanation-box.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* Result panel */
+.result-panel {
+  text-align: center;
+  padding: 40px 24px;
+}
+
+.result-icon {
+  font-size: 56px;
+  color: #0052ea;
+  margin-bottom: 12px;
+}
+
+.score-circle {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 24px 0 16px;
+}
+
+.score-value {
+  font-size: 64px;
+  font-weight: 800;
+  color: var(--score-color, #0052ea);
+}
+
+.score-total {
+  font-size: 24px;
+  color: #64748b;
+}
+
+.level-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.result-feedback {
+  max-width: 520px;
+  margin: 20px auto 32px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.result-panel .btn-primary,
+.result-panel .btn-secondary {
+  margin: 0 6px;
+}
+
+/* CV Review */
+.cv-review-panel {
+  display: grid;
+  gap: 24px;
+}
+
+.cv-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cv-header h2 {
+  margin: 0;
+  flex: 1;
+}
+
+.cv-header .material-symbols-outlined {
+  font-size: 32px;
+  color: #7c3aed;
+}
+
+.cv-score {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.review-section h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: #1e293b;
+}
+
+.review-section p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.review-section ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.review-section li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.strengths li .material-symbols-outlined {
+  color: #16a34a;
+  font-size: 20px;
+}
+
+.recommendations li .material-symbols-outlined {
+  color: #d97706;
+  font-size: 20px;
+}
+
+.review-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 8px;
 }

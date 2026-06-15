@@ -51,7 +51,11 @@
               class="candidate-row"
               [class.selected]="selectedCandidate()?.id === c.id"
               (click)="selectCandidate(c)">
-              <img class="candidate-avatar" [src]="candidateAvatar(c)" [alt]="candidateName(c)">
+              @if (candidateAvatar(c); as photo) {
+                <img class="candidate-avatar" [src]="photo" [alt]="candidateName(c)">
+              } @else {
+                <span class="candidate-avatar initials">{{ candidateInitials(c) }}</span>
+              }
               <div class="candidate-brief">
                 <strong>{{ candidateName(c) }}</strong>
                 <span>{{ c.postante?.carrera || c.postante?.email }}</span>
@@ -68,7 +72,11 @@
     <section class="panel detail-panel">
       @if (selectedCandidate(); as c) {
         <div class="detail-header">
-          <img class="detail-avatar" [src]="candidateAvatar(c)" [alt]="candidateName(c)">
+          @if (candidateAvatar(c); as photo) {
+            <img class="detail-avatar" [src]="photo" [alt]="candidateName(c)">
+          } @else {
+            <span class="detail-avatar initials">{{ candidateInitials(c) }}</span>
+          }
           <h3>{{ candidateName(c) }}</h3>
           <span class="status-pill large" [style.background]="statusColor(c.estado) + '22'" [style.color]="statusColor(c.estado)">
             {{ statusLabel(c.estado) }}
@@ -104,6 +112,22 @@
             <a [href]="p.cvPath" target="_blank" class="cv-btn">
               <span class="material-symbols-outlined">description</span> Ver CV
             </a>
+          }
+
+          @if (candidateSkills().length > 0) {
+            <div class="skills-section">
+              <label>Habilidades</label>
+              <div class="skills-chips">
+                @for (skill of candidateSkills(); track skill.id) {
+                  <span class="skill-chip" [class.verified]="skill.verificada">
+                    @if (skill.verificada) {
+                      <span class="material-symbols-outlined">verified</span>
+                    }
+                    {{ skill.nombre }}
+                  </span>
+                }
+              </div>
+            </div>
           }
         }
 

@@ -1,58 +1,139 @@
-<div class="page-content">
-  <h1>Pruebas de habilidades</h1>
-  <p class="lead">Valida tus competencias para destacar frente a los reclutadores.</p>
+<div class="page-content habilidades-page">
+  <header class="page-header">
+    <div>
+      <h1>Pruebas de habilidades</h1>
+      <p class="lead">Valida tus competencias con evaluaciones profesionales y destaca frente a los reclutadores.</p>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card verified">
+        <span class="stat-value">{{ verifiedCount() }}</span>
+        <span class="stat-label">Verificadas</span>
+      </div>
+      <div class="stat-card pending">
+        <span class="stat-value">{{ pendingCount() }}</span>
+        <span class="stat-label">Pendientes</span>
+      </div>
+    </div>
+  </header>
 
   <div class="card add-skill-box">
+    <span class="material-symbols-outlined add-icon">add_circle</span>
     <input
       type="text"
-      placeholder="Ej. JavaScript, Figma, SQL..."
+      placeholder="Ej. JavaScript, Figma, SQL, Comunicación..."
       [ngModel]="newSkill()"
-      (ngModelChange)="newSkill.set($event)">
+      (ngModelChange)="newSkill.set($event)"
+      (keyup.enter)="addSkill()">
     <button type="button" class="btn-primary" (click)="addSkill()">Agregar habilidad</button>
   </div>
 
-  @if (activeQuiz(); as quizData) {
-    <div class="card quiz-card">
-      <h3>Prueba: {{ quizData.skill.nombre }}</h3>
-      <p>{{ quizData.quiz.question }}</p>
-      <div class="quiz-options">
-        @for (option of quizData.quiz.options; track $index) {
-          <label class="quiz-option">
-            <input
-              type="radio"
-              name="quizAnswer"
-              [value]="$index"
-              [checked]="selectedAnswer() === $index"
-              (change)="selectedAnswer.set($index)">
-            {{ option }}
-          </label>
+  @if (activeQuiz(); as state) {
+    <div class="card quiz-panel">
+      <div class="quiz-header">
+        <div class="quiz-badge">
+          <span class="material-symbols-outlined">quiz</span>
+          Certificación · {{ state.skill.nombre }}
+        </div>
+        @if (!state.finished) {
+          <span class="quiz-progress-text">Pregunta {{ state.currentIndex + 1 }} de {{ state.quiz.questions.length }}</span>
         }
       </div>
-      @if (quizResult()) {
-        <p [class]="quizResult()?.includes('Aprobaste') ? 'alert-success' : 'alert-error'">{{ quizResult() }}</p>
+
+      @if (!state.finished) {
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+        </div>
+
+        @if (currentQuestion(); as q) {
+          <div class="question-context">
+            <span class="material-symbols-outlined">info</span>
+            {{ q.context }}
+          </div>
+          <h3 class="question-text">{{ q.question }}</h3>
+
+          <div class="quiz-options">
+            @for (option of q.options; track $index) {
+              <button
+                type="button"
+                class="quiz-option"
+                [class.selected]="selectedAnswer() === $index"
+                [class.correct]="state.showExplanation && $index === q.correctIndex"
+                [class.incorrect]="state.showExplanation && selectedAnswer() === $index && $index !== q.correctIndex"
+                [disabled]="state.showExplanation"
+                (click)="selectAnswer($index)">
+                <span class="option-letter">{{ ['A','B','C','D'][$index] }}</span>
+                <span class="option-text">{{ option }}</span>
+                @if (state.showExplanation && $index === q.correctIndex) {
+                  <span class="material-symbols-outlined option-icon correct-icon">check_circle</span>
+                }
+                @if (state.showExplanation && selectedAnswer() === $index && $index !== q.correctIndex) {
+                  <span class="material-symbols-outlined option-icon incorrect-icon">cancel</span>
+                }
+              </button>
+            }
+          </div>
+
+          @if (state.showExplanation) {
+            <div class="explanation-box" [class.success]="isCurrentCorrect()" [class.error]="!isCurrentCorrect()">
+              <strong>{{ isCurrentCorrect() ? '¡Correcto!' : 'Incorrecto' }}</strong>
+              <p>{{ q.explanation }}</p>
+            </div>
+          }
+        }
+
+        <div class="quiz-actions">
+          <button type="button" class="btn-secondary" (click)="cancelTest()">Cancelar</button>
+          @if (!state.showExplanation) {
+            <button type="button" class="btn-primary" (click)="confirmAnswer()" [disabled]="selectedAnswer() === null">
+              Confirmar respuesta
+            </button>
+          } @else {
+            <button type="button" class="btn-primary" (click)="nextQuestion()" [disabled]="testing()">
+              {{ state.currentIndex >= state.quiz.questions.length - 1 ? (testing() ? 'Verificando...' : 'Finalizar prueba') : 'Siguiente pregunta' }}
+            </button>
+          }
+        </div>
+      } @else {
+        <div class="quiz-result-panel" [class.passed]="quizResult()?.includes('aprobada') || quizResult()?.includes('Certificación')">
+          <span class="material-symbols-outlined result-icon">
+            {{ quizResult()?.includes('aprobada') || quizResult()?.includes('Certificación') ? 'emoji_events' : 'sentiment_dissatisfied' }}
+          </span>
+          <h3>{{ quizResult()?.includes('aprobada') || quizResult()?.includes('Certificación') ? '¡Habilidad verificada!' : 'Prueba no superada' }}</h3>
+          <p>{{ quizResult() }}</p>
+          <div class="score-display">
+            <span class="score-value">{{ correctCount() }}</span>
+            <span class="score-label">/ {{ state.quiz.questions.length }} correctas</span>
+          </div>
+          <button type="button" class="btn-primary" (click)="cancelTest()">Cerrar</button>
+        </div>
       }
-      <div class="quiz-actions">
-        <button type="button" class="btn-secondary" (click)="cancelTest()">Cancelar</button>
-        <button type="button" class="btn-primary" (click)="submitTest()" [disabled]="selectedAnswer() === null || testing()">
-          {{ testing() ? 'Verificando...' : 'Enviar respuesta' }}
-        </button>
-      </div>
     </div>
   }
 
   <div class="skills-grid">
     @for (skill of skills(); track skill.id) {
-      <article class="card skill-card">
-        <h3>{{ skill.nombre }}</h3>
+      <article class="card skill-card" [class.verified-card]="skill.verificada">
+        <div class="skill-card-header">
+          <span class="material-symbols-outlined skill-icon">{{ skill.verificada ? 'verified' : 'pending_actions' }}</span>
+          <h3>{{ skill.nombre }}</h3>
+        </div>
         <span class="badge" [class.verified]="skill.verificada">
-          {{ skill.verificada ? 'Verificada' : 'Pendiente' }}
+          {{ skill.verificada ? 'Verificada' : 'Pendiente de verificación' }}
         </span>
         @if (!skill.verificada) {
-          <button type="button" class="btn-secondary" (click)="startTest(skill)">Tomar prueba</button>
+          <p class="skill-hint">Evaluación de 4 preguntas · mínimo 3 correctas</p>
+          <button type="button" class="btn-primary skill-btn" (click)="startTest(skill)">
+            <span class="material-symbols-outlined">play_arrow</span> Iniciar prueba
+          </button>
+        } @else {
+          <p class="skill-hint verified-hint">Certificación visible en tu perfil</p>
         }
       </article>
     } @empty {
-      <p class="muted">Aún no registras habilidades. Agrega la primera arriba.</p>
+      <div class="empty-state card">
+        <span class="material-symbols-outlined">school</span>
+        <p>Aún no registras habilidades. Agrega la primera arriba para comenzar tu certificación.</p>
+      </div>
     }
   </div>
 </div>

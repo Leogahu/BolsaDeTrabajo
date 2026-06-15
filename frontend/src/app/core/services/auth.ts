@@ -113,9 +113,12 @@ export class AuthService {
 
   avatarUrl(name?: string): string {
     const user = this.currentUser();
-    if (user?.fotoPerfil) return user.fotoPerfil;
     const display = name ?? user?.nombreCompleto ?? 'Usuario';
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(display)}&background=0052EA&color=fff`;
+
+    // Solo usar la foto del usuario logueado cuando se pide su propio avatar (sin name)
+    if (!name && user?.fotoPerfil?.trim()) return user.fotoPerfil;
+
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(display)}&background=0052EA&color=fff&size=128&bold=true`;
   }
 
   userTipoApi(): 'POSTANTE' | 'RECLUTADOR' {

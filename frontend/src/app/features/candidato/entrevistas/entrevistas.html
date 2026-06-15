@@ -1,31 +1,181 @@
-<div class="page-content">
-  <h1>Simulador de entrevistas</h1>
-  <p class="lead">Practica respuestas con preguntas frecuentes de reclutadores junior-friendly.</p>
-
-  <div class="card stats-card">
-    <span>Progreso: {{ completedCount() }} / {{ questions.length }} preguntas practicadas</span>
-  </div>
-
-  <div class="card simulator-card">
-    <div class="progress">Pregunta {{ currentQuestion() + 1 }} de {{ questions.length }}</div>
-    <h2>{{ questions[currentQuestion()] }}</h2>
-    <textarea rows="6" placeholder="Escribe tu respuesta aquí..." [ngModel]="answer()" (ngModelChange)="answer.set($event)"></textarea>
-    @if (feedback()) {
-      <p class="alert-success">{{ feedback() }}</p>
-    }
-    <div class="actions">
-      <button type="button" class="btn-secondary" (click)="prevQuestion()" [disabled]="currentQuestion() === 0">Anterior</button>
-      <button type="button" class="btn-secondary" (click)="evaluateAnswer()">Evaluar respuesta</button>
-      <button type="button" class="btn-primary" (click)="nextQuestion()" [disabled]="currentQuestion() === questions.length - 1">Siguiente</button>
+<div class="page-content entrevistas-page">
+  <header class="page-header">
+    <div>
+      <h1>Simulador de entrevistas con IA</h1>
+      <p class="lead">Entrenamiento personalizado con preguntas generadas según tu perfil profesional y revisión inteligente de CV.</p>
     </div>
-  </div>
+  </header>
 
-  <div class="tips card">
-    <h3>Consejos rápidos</h3>
-    <ul>
-      <li>Usa el método STAR: situación, tarea, acción y resultado.</li>
-      <li>Menciona aprendizajes concretos de tus proyectos académicos.</li>
-      <li>Mantén respuestas entre 1 y 2 minutos.</li>
-    </ul>
-  </div>
+  @if (errorMessage()) {
+    <div class="alert-error banner">{{ errorMessage() }}</div>
+  }
+
+  @switch (viewMode()) {
+    @case ('home') {
+      <div class="home-grid">
+        <div class="card feature-card interview-card">
+          <span class="material-symbols-outlined feature-icon">psychology</span>
+          <h2>Entrevista personalizada</h2>
+          <p>La IA generará 10 preguntas de opción múltiple basadas en tu carrera, habilidades y perfil. Cada pregunta tiene 4 opciones con una respuesta correcta.</p>
+          <ul class="feature-list">
+            <li>10 preguntas adaptadas a tu perfil</li>
+            <li>4 opciones por pregunta (1 correcta)</li>
+            <li>Calificación y retroalimentación al finalizar</li>
+          </ul>
+          <button type="button" class="btn-primary" (click)="startInterview()" [disabled]="loading()">
+            {{ loading() ? 'Generando entrevista...' : 'Iniciar entrevista con IA' }}
+          </button>
+        </div>
+
+        <div class="card feature-card cv-card">
+          <span class="material-symbols-outlined feature-icon">description</span>
+          <h2>Revisión de CV</h2>
+          <p>Obtén recomendaciones profesionales de la IA sobre tu perfil y currículum para mejorar tus oportunidades laborales.</p>
+          <ul class="feature-list">
+            <li>Evaluación general de tu perfil</li>
+            <li>Fortalezas identificadas</li>
+            <li>Recomendaciones accionables</li>
+          </ul>
+          <button type="button" class="btn-secondary" (click)="reviewCv()" [disabled]="loading()">
+            {{ loading() ? 'Analizando perfil...' : 'Revisar mi CV con IA' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="tips card">
+        <h3>Consejos para aprovechar el simulador</h3>
+        <ul>
+          <li>Completa tu perfil y habilidades antes de iniciar para preguntas más precisas.</li>
+          <li>Lee cada opción con calma antes de responder.</li>
+          <li>Usa la revisión de CV para identificar áreas de mejora en tu perfil.</li>
+        </ul>
+      </div>
+    }
+
+    @case ('interview') {
+      <div class="card interview-panel">
+        <div class="interview-header">
+          <div class="interview-badge">
+            <span class="material-symbols-outlined">smart_toy</span>
+            Entrevista IA · Pregunta {{ currentIndex() + 1 }} de {{ questions().length }}
+          </div>
+          <button type="button" class="btn-text" (click)="goHome()">Salir</button>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+        </div>
+
+        @if (currentQuestion(); as q) {
+          <h2 class="question-text">{{ q.question }}</h2>
+
+          <div class="quiz-options">
+            @for (option of q.options; track $index) {
+              <button
+                type="button"
+                class="quiz-option"
+                [class.selected]="selectedAnswer() === $index"
+                [class.correct]="showExplanation() && correctIndex() === $index"
+                [class.incorrect]="showExplanation() && selectedAnswer() === $index && correctIndex() !== $index"
+                [disabled]="showExplanation()"
+                (click)="selectAnswer($index)">
+                <span class="option-letter">{{ ['A','B','C','D'][$index] }}</span>
+                <span class="option-text">{{ option }}</span>
+                @if (showExplanation() && correctIndex() === $index) {
+                  <span class="material-symbols-outlined correct-icon">check_circle</span>
+                }
+                @if (showExplanation() && selectedAnswer() === $index && correctIndex() !== $index) {
+                  <span class="material-symbols-outlined incorrect-icon">cancel</span>
+                }
+              </button>
+            }
+          </div>
+
+          @if (showExplanation()) {
+            <div class="explanation-box" [class.success]="isCurrentCorrect()" [class.error]="!isCurrentCorrect()">
+              <strong>{{ isCurrentCorrect() ? '¡Correcto!' : 'Incorrecto' }}</strong>
+              <p>{{ isCurrentCorrect() ? 'Buena elección. Continúa con la siguiente pregunta.' : 'La respuesta correcta está marcada en verde.' }}</p>
+            </div>
+          }
+        }
+
+        <div class="quiz-actions">
+          @if (!showExplanation()) {
+            <button type="button" class="btn-primary" (click)="confirmAnswer()" [disabled]="selectedAnswer() === null">
+              Confirmar respuesta
+            </button>
+          } @else {
+            <button type="button" class="btn-primary" (click)="nextQuestion()" [disabled]="loading()">
+              {{ currentIndex() >= questions().length - 1 ? (loading() ? 'Evaluando...' : 'Ver resultados') : 'Siguiente pregunta' }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    @case ('result') {
+      @if (result(); as r) {
+        <div class="card result-panel">
+          <span class="material-symbols-outlined result-icon">emoji_events</span>
+          <h2>Resultado de la entrevista</h2>
+          <div class="score-circle" [style.--score-color]="scoreColor(r.percentage)">
+            <span class="score-value">{{ r.score }}</span>
+            <span class="score-total">/ {{ r.total }}</span>
+          </div>
+          <div class="result-meta">
+            <span class="level-badge" [style.background]="scoreColor(r.percentage) + '22'" [style.color]="scoreColor(r.percentage)">
+              {{ r.level }} · {{ r.percentage | number:'1.0-0' }}%
+            </span>
+          </div>
+          <p class="result-feedback">{{ r.feedback }}</p>
+          <button type="button" class="btn-primary" (click)="goHome()">Volver al inicio</button>
+          <button type="button" class="btn-secondary" (click)="startInterview()">Nueva entrevista</button>
+        </div>
+      }
+    }
+
+    @case ('cv-review') {
+      @if (cvReview(); as review) {
+        <div class="card cv-review-panel">
+          <div class="cv-header">
+            <span class="material-symbols-outlined">auto_awesome</span>
+            <h2>Revisión de CV con IA</h2>
+            <span class="cv-score" [style.color]="scoreColor(review.score)">{{ review.score }}/100</span>
+          </div>
+
+          <div class="review-section">
+            <h3>Evaluación general</h3>
+            <p>{{ review.overallAssessment }}</p>
+          </div>
+
+          @if (review.strengths.length > 0) {
+            <div class="review-section strengths">
+              <h3>Fortalezas</h3>
+              <ul>
+                @for (s of review.strengths; track $index) {
+                  <li><span class="material-symbols-outlined">check</span> {{ s }}</li>
+                }
+              </ul>
+            </div>
+          }
+
+          @if (review.recommendations.length > 0) {
+            <div class="review-section recommendations">
+              <h3>Recomendaciones</h3>
+              <ul>
+                @for (r of review.recommendations; track $index) {
+                  <li><span class="material-symbols-outlined">lightbulb</span> {{ r }}</li>
+                }
+              </ul>
+            </div>
+          }
+
+          <div class="review-actions">
+            <button type="button" class="btn-primary" (click)="goHome()">Volver al inicio</button>
+            <button type="button" class="btn-secondary" (click)="reviewCv()">Nueva revisión</button>
+          </div>
+        </div>
+      }
+    }
+  }
 </div>

@@ -129,6 +129,62 @@
   flex-shrink: 0;
 }
 
+.candidate-avatar.initials,
+.detail-avatar.initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0052ea, #003cab);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  object-fit: unset;
+}
+
+.detail-avatar.initials {
+  font-size: 16px;
+}
+
+.skills-section {
+  margin-bottom: 16px;
+}
+
+.skills-section label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.skills-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.skill-chip.verified {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.skill-chip .material-symbols-outlined {
+  font-size: 16px;
+}
+
 .candidate-brief {
   flex: 1;
   min-width: 0;
