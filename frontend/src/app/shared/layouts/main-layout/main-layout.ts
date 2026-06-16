@@ -39,7 +39,7 @@ export class MainLayout implements OnInit, OnDestroy {
   readonly panel = computed(() => (this.router.url.startsWith('/reclutador') ? 'reclutador' : 'candidato') as 'candidato' | 'reclutador');
   readonly isRecruiter = computed(() => this.panel() === 'reclutador');
   readonly userName = computed(() => this.authService.currentUser()?.nombreCompleto ?? 'Usuario');
-  readonly avatarUrl = computed(() => this.authService.avatarUrl(this.userName()));
+  readonly avatarUrl = computed(() => this.authService.avatarUrl());
 
   sidebarOpen = signal(false);
   notifOpen = signal(false);

@@ -79,12 +79,12 @@ public class OpenAiService {
             }
             """.formatted(profileContext);
 
-        String rawJson = callOpenAi(prompt);                                         // ✅ renamed from "response"
+        String rawJson = callOpenAi(prompt);                                         
         List<InterviewQuestionDto> fullQuestions = parseQuestions(rawJson);
         List<InterviewQuestionPublicDto> publicQuestions = fullQuestions.stream()
             .map(q -> new InterviewQuestionPublicDto(q.question(), q.options()))
             .toList();
-        InterviewGenerateResponse generateResponse =                                  // ✅ renamed from "response"
+        InterviewGenerateResponse generateResponse =                                 
             new InterviewGenerateResponse(publicQuestions, profileContext.trim());
         return new InterviewSessionResult(generateResponse, fullQuestions);
     }

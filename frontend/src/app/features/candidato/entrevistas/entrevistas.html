@@ -1,7 +1,7 @@
 <div class="page-content entrevistas-page">
   <header class="page-header">
     <div>
-      <h1>Simulador de entrevistas con IA</h1>
+      <h1>Simulador de entrevistas</h1>
       <p class="lead">Entrenamiento personalizado con preguntas generadas según tu perfil profesional y revisión inteligente de CV.</p>
     </div>
   </header>
@@ -16,28 +16,28 @@
         <div class="card feature-card interview-card">
           <span class="material-symbols-outlined feature-icon">psychology</span>
           <h2>Entrevista personalizada</h2>
-          <p>La IA generará 10 preguntas de opción múltiple basadas en tu carrera, habilidades y perfil. Cada pregunta tiene 4 opciones con una respuesta correcta.</p>
+          <p>El Asistente Personalizado generará 10 preguntas de opción múltiple basadas en tu carrera, habilidades y perfil. Cada pregunta tiene 4 opciones con una respuesta correcta.</p>
           <ul class="feature-list">
             <li>10 preguntas adaptadas a tu perfil</li>
             <li>4 opciones por pregunta (1 correcta)</li>
             <li>Calificación y retroalimentación al finalizar</li>
           </ul>
           <button type="button" class="btn-primary" (click)="startInterview()" [disabled]="loading()">
-            {{ loading() ? 'Generando entrevista...' : 'Iniciar entrevista con IA' }}
+            {{ loading() ? 'Generando entrevista...' : 'Iniciar entrevista' }}
           </button>
         </div>
 
         <div class="card feature-card cv-card">
           <span class="material-symbols-outlined feature-icon">description</span>
           <h2>Revisión de CV</h2>
-          <p>Obtén recomendaciones profesionales de la IA sobre tu perfil y currículum para mejorar tus oportunidades laborales.</p>
+          <p>Obtén recomendaciones profesionales sobre tu perfil y currículum para mejorar tus oportunidades laborales.</p>
           <ul class="feature-list">
             <li>Evaluación general de tu perfil</li>
             <li>Fortalezas identificadas</li>
             <li>Recomendaciones accionables</li>
           </ul>
           <button type="button" class="btn-secondary" (click)="reviewCv()" [disabled]="loading()">
-            {{ loading() ? 'Analizando perfil...' : 'Revisar mi CV con IA' }}
+            {{ loading() ? 'Analizando perfil...' : 'Revisar mi CV' }}
           </button>
         </div>
       </div>
