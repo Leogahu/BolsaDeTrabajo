@@ -30,6 +30,7 @@
   font-weight: 700;
 }
 .company-logo-img {
+  display: block;
   width: 64px;
   height: 64px;
   border-radius: 12px;
