@@ -9,7 +9,11 @@
     <div class="detail-grid">
       <section class="card detail-main">
         <div class="job-header">
-          <div class="company-logo">{{ companyName().substring(0, 2).toUpperCase() }}</div>
+          @if (companyLogo(); as logo) {
+            <img class="company-logo-img" [src]="logo" [alt]="companyName()">
+          } @else {
+            <div class="company-logo">{{ companyName().substring(0, 2).toUpperCase() }}</div>
+          }
           <div>
             <h1>{{ current.titulo }}</h1>
             <div class="job-meta">

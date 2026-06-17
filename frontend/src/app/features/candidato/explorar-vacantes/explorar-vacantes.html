@@ -46,7 +46,11 @@
     <div class="opportunities-grid">
       @for (job of filteredJobs(); track job.id) {
         <a class="job-card" [routerLink]="['/candidato/vacante', job.id]">
-          <div class="company-logo">{{ companyInitials(job) }}</div>
+          @if (companyLogo(job); as logo) {
+              <img class="company-logo-img" [src]="logo" [alt]="companyName(job)">
+            } @else {
+              <div class="company-logo">{{ companyInitials(job) }}</div>
+            }
           <div class="job-badge">{{ job.tipoPuesto }}</div>
           <div class="job-title">{{ job.titulo }}</div>
           <div class="company-name">{{ companyName(job) }}</div>

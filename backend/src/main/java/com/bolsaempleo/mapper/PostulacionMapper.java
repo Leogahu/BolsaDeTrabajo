@@ -24,9 +24,13 @@ public interface PostulacionMapper {
     @Named("mapEmpresaInfo")
     default EmpresaInfo mapEmpresaInfo(Postulacion postulacion) {
         String nombreEmpresa = "Empresa Aliada";
-        if (postulacion.getReclutador() != null && postulacion.getReclutador().getEmpresa() != null) {
-            nombreEmpresa = postulacion.getReclutador().getEmpresa();
+        String fotoEmpresa = null;
+        if (postulacion.getReclutador() != null) {
+            if (postulacion.getReclutador().getEmpresa() != null) {
+                nombreEmpresa = postulacion.getReclutador().getEmpresa();
+            }
+            fotoEmpresa = postulacion.getReclutador().getFotoPerfil();
         }
-        return new EmpresaInfo(nombreEmpresa, 3);
+        return new EmpresaInfo(nombreEmpresa, 3, fotoEmpresa);
     }
 }

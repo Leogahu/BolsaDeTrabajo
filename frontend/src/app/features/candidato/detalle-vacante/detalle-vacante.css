@@ -29,7 +29,12 @@
   justify-content: center;
   font-weight: 700;
 }
-
+.company-logo-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+}
 .job-meta {
   display: flex;
   flex-wrap: wrap;

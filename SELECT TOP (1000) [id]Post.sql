@@ -70,7 +70,7 @@ SELECT TOP (1000) [id]
   FROM [dbo].[postulacion_estado]
 
 
-DBCC CHECKIDENT ('postulaciones', RESEED);
+DBCC CHECKIDENT ('postantes', RESEED);
 
 DELETE FROM dbo.postulaciones 
 WHERE id IN (7);

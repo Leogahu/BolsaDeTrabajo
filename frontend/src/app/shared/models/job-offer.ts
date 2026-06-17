@@ -13,7 +13,7 @@ export interface JobOffer {
   fechaPublicacion?: string;
   cantidadCandidatos?: number;
   candidatos?: unknown[];
-  empresa?: { nombre?: string; totalVacantes?: number } | string;
+  empresa?: { nombre?: string; totalVacantes?: number; fotoEmpresa?: string } | string;
   nombreEmpresa?: string;
 }
 

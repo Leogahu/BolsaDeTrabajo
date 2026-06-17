@@ -1,3 +1,3 @@
 package com.bolsaempleo.dto;
 
-public record EmpresaInfo(String nombre, int totalVacantes) {}
+public record EmpresaInfo(String nombre, int totalVacantes, String fotoEmpresa) {}

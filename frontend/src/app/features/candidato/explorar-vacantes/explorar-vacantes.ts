@@ -91,7 +91,10 @@ export class ExplorarVacantesComponent implements OnInit {
     if (typeof job.empresa === 'string') return job.empresa;
     return job.empresa?.nombre || job.nombreEmpresa || 'Empresa Aliada';
   }
-
+  companyLogo(job: JobOffer): string | null {
+    if (typeof job.empresa === 'string') return null;
+    return job.empresa?.fotoEmpresa || null;
+  }
   companyInitials(job: JobOffer): string {
     return this.companyName(job).substring(0, 2).toUpperCase();
   }

@@ -38,7 +38,11 @@ export class DetalleVacante implements OnInit {
     if (typeof job.empresa === 'string') return job.empresa;
     return job.empresa?.nombre || job.nombreEmpresa || 'Empresa Confidencial';
   }
-
+  companyLogo(): string | null {
+    const job = this.job();
+    if (!job || typeof job.empresa === 'string') return null;
+    return job.empresa?.fotoEmpresa || null;
+  }
   salaryLabel(): string {
     const job = this.job();
     if (!job) return 'Consultar';

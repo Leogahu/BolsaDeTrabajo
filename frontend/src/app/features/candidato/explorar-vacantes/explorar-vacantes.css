@@ -65,6 +65,13 @@
   border-color: #2563eb;
 }
 
+.company-logo-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-bottom: 16px;
+}
 .opportunities-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
