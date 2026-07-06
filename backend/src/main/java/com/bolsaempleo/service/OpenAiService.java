@@ -11,6 +11,8 @@ import com.bolsaempleo.exception.BusinessRuleException;
 import com.bolsaempleo.exception.ResourceNotFoundException;
 import com.bolsaempleo.model.Habilidad;
 import com.bolsaempleo.model.Postante;
+import java.time.Duration;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import com.bolsaempleo.repository.HabilidadRepository;
 import com.bolsaempleo.repository.PostanteRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -194,14 +197,19 @@ public class OpenAiService {
     private String nullSafe(String value) {
         return value != null && !value.isBlank() ? value : "No especificado";
     }
-
+    private RestClient buildClient() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout((int) Duration.ofSeconds(10).toMillis());
+        factory.setReadTimeout((int) Duration.ofSeconds(60).toMillis()); 
+        return RestClient.builder().requestFactory(factory).build();
+    }
     private String callOpenAi(String prompt) {
         if (apiKey == null || apiKey.isBlank()) {
             throw new BusinessRuleException("La API de OpenAI no está configurada. Asigna la variable OPENAI_API_KEY.");
         }
 
         try {
-            RestClient client = RestClient.create();
+            RestClient client = buildClient();
 
             Map<String, Object> body = Map.of(
                 "model", model,
@@ -230,8 +238,8 @@ public class OpenAiService {
         } catch (BusinessRuleException e) {
             throw e;
         } catch (Exception e) {
-            log.error("Error al llamar a OpenAI: {}", e.getMessage());
-            throw new BusinessRuleException("Error al comunicarse con OpenAI: " + e.getMessage());
+            log.error("Error al llamar a OpenAI", e);
+            throw new BusinessRuleException("Error al comunicarse con OpenAI: " + e.getClass().getSimpleName());
         }
     }
 

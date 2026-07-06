@@ -93,6 +93,12 @@
             </button>
           }
         </div>
+      } @if (testing()) {
+        <div class="quiz-result-panel">
+          <span class="material-symbols-outlined result-icon spin">progress_activity</span>
+          <h3>Verificando resultado...</h3>
+          <p>Estamos registrando tu certificación, un momento.</p>
+        </div>
       } @else {
         <div class="quiz-result-panel" [class.passed]="quizResult()?.includes('aprobada') || quizResult()?.includes('Certificación')">
           <span class="material-symbols-outlined result-icon">

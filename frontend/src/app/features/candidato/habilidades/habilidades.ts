@@ -166,6 +166,7 @@ export class Habilidades implements OnInit {
     this.activeQuiz.set({ ...state, finished: true, showExplanation: false });
 
     if (!passed) {
+      this.testing.set(false);
       this.quizResult.set(`Obtuviste ${score}/${total}. Necesitas al menos ${state.quiz.passingScore} respuestas correctas para verificar la habilidad.`);
       return;
     }
